@@ -1,1 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --light-mode-bg: linear-gradient(
+    90deg,
+    #fcfcfc 0%,
+    #f7f7f7 10%,
+    #f7f7f7 52%,
+    #f7f7f7 90%,
+    #fcfcfc 100%
+  );
+
+  --dark-mode-bg: linear-gradient(
+    90deg,
+    #32324d 0%,
+    #32324d 10%,
+    #2c2c45 52%,
+    #32324d 90%,
+    #32324d 100%
+  );
+
+  --orange-text: #ff7b2c;
+}
+
+* {
+  font-family: "Mulish";
+
+  box-sizing: border-box;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+}
