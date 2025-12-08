@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ toggle, menuOpen, setMenuOpen, onTogg
 
   return (
     <aside 
-      className={`w-[60%] sm:w-[45%] h-screen bg-[#32324D] transition-all duration-300 ease-in-out rounded-r-2xl fixed left-0 top-0 z-50 ${effectiveIsOpen ?  'md:w-[20%]' : 'md:-translate-x-0 md:w-[12%] lg:w-[9%]  -translate-x-[100%]'}`}>
+      className={`w-[60%] sm:w-[45%] h-screen bg-[#32324D] dark:bg-[#212134] transition-all duration-300 ease-in-out rounded-r-2xl fixed left-0 top-0 z-50 ${effectiveIsOpen ?  'md:w-[20%]' : 'md:-translate-x-0 md:w-[12%] lg:w-[9%]  -translate-x-[100%]'}`}>
 
       {/* sidebar toggle button for desktop */}
       <motion.button
@@ -66,7 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({ toggle, menuOpen, setMenuOpen, onTogg
       <div className={`flex flex-col h-full text-white text-sm font-semibold transition-all duration-300 ${toggle ? '' : ''}`}>
 
         {/* logo */}
-        <div className={`p-4 flex justify-center text-(--neutral-700) dark:text-white border-b-2 border-gray-400 font-500 transition-all duration-300 ${toggle ?  'text-[24px]' : 'text-xl'}`}>Eat<span className='text-(--orange-1)'>Easy</span></div>
+        <div className={`p-4 flex justify-center text-white border-b-2 border-gray-400 font-500 transition-all duration-300 ${toggle ?  'text-[24px]' : 'text-xl'}`}>Eat<span className='text-(--orange-1)'>Easy</span></div>
 
         <div className={`flex-1 overflow-y-auto scrollbar-hidden flex flex-col ${effectiveIsOpen ? '' : ''}`}>
 

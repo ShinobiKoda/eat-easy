@@ -68,3 +68,73 @@ body {
 .heading-font{
   font-family: "DM Sans";
 }
+
+/* target range inputs inside the wrapper (update selector if the component uses different class names) */
+.App input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px; /* track height */
+  background: transparent; /* we'll style track via pseudo */
+}
+
+/* track (webkit) */
+.App input[type="range"]::-webkit-slider-runnable-track {
+  border: none;
+}
+
+/* thumb */
+.App input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #615793; /* thumb color */
+  border: 3px solid #fff; /* white rim */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  margin-top: -6px; /* vertically center thumb on track height 10px */
+}
+
+.App input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #615793;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* highlight between handles if the library uses a .selected-range element — example */
+.App .selected-range {
+  background: linear-gradient(90deg, #FFB01D, #FF7B2C); /* active track color */
+}
+
+/* increase touch/hit area without changing visual size */
+.App input[type="range"]::-webkit-slider-thumb {
+  padding: 6px;
+}
+
+/* Overrides for multi-range-slider-react to match app theme */
+.multi-range-slider .bar-inner {
+  background: linear-gradient(90deg, var(--yellow-1), var(--orange-1));
+}
+.multi-range-slider .thumb::before {
+  background-color: var(--purple-2);
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.18), inset 0 2px 6px rgba(255,255,255,0.06);
+}
+.multi-range-slider .bar-left,
+.multi-range-slider .bar-right {
+  background-color: #ffffff;
+}
+
+/* remove the default container border/shadow from the library */
+.multi-range-slider {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* remove inner border on the active area if present */
+.multi-range-slider .bar-inner {
+  border: none !important;
+}

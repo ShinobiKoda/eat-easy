@@ -15,10 +15,6 @@ function GetStarted() {
       <div className="absolute top-6 right-6 z-50">
         <ThemeSwitchButton />
       </div>
-      
-      <div className="w-full lg:hidden space-y-8 flex flex-col justify-center min-h-screen">
-        <PopIn>
-          <div className="w-full overflow-hidden max-w-[600px] mx-auto">
 
       <div className="w-full lg:hidden flex flex-col items-center justify-center min-h-screen max-w-[700px] mx-auto">
         <SlideIn direction="up">

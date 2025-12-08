@@ -4,6 +4,9 @@ import { useState, type MouseEvent } from "react"
 import useIsDesktop from "../hooks/useIsDesktop"
 import Cancel from "/images/Cancel.png"
 import Star from "/images/star.svg"
+import MultiRangeSlider from "multi-range-slider-react";
+// import the component's default styles so we can override them
+import 'multi-range-slider-react/lib/multirangeslider.css';
 
 export type FiltersProps = {
   onClose: () => void;
@@ -35,46 +38,58 @@ const display = (isDesktop: boolean): Variants => {
   };
 }
 
-const ProductTypes = [
-    { name: 'Pizza' },
-    { name: 'Butter' },
-    { name: 'Salad' },
-    { name: 'Soup' },
-    { name: 'Chicken' },
-    { name: 'Grill' },
-    { name: 'Breakfast' },
+const Categories = [
+    { id: 1, name: 'Eat', },
+    { id: 2, name: 'Drink', },
+    { id: 3, name: 'Dessert', }
 ]
 
-// NOTE: component state/hooks are declared inside the component below
+const ProductTypes = [
+    { id: 1, name: 'Pizza' },
+    { id: 2, name: 'Butter' },
+    { id: 3, name: 'Salad' },
+    { id: 4, name: 'Soup' },
+    { id: 5, name: 'Chicken' },
+    { id: 6, name: 'Grill' },
+    { id: 7, name: 'Breakfast' },
+]
 
 const Ratings = [
-    { name: '1' },
-    { name: '2' },
-    { name: '3' },
-    { name: '4' },
-    { name: '5' }
+    { id: 1, name: '1' },
+    { id: 2, name: '2' },
+    { id: 3, name: '3' },
+    { id: 4, name: '4' },
+    { id: 5, name: '5' }
 ]
 
 const Filters: React.FC<FiltersProps> = ({ onClose }) => {
   const isDesktop = useIsDesktop();
 
-    // allow multiple ProductTypes to be selected; store selected indices
-    const [selectedProductType, setSelectedProductType] = useState<number[]>([])
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
 
-    const toggleProductType = (index: number) => {
-        setSelectedProductType(prev =>
-                prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
-        )
+    const toggleCategory = (id: number) => {
+        setSelectedCategory(prev => prev === id ? null : id)
     }
 
-    // allow multiple ratings to be selected; store selected indices
-    const [selectedRatings, setSelectedRatings] = useState<number[]>([])
+    const [selectedProductType, setSelectedProductType] = useState<number | null>(null)
 
-    const toggleRating = (index: number) => {
-        setSelectedRatings(prev =>
-                prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
-        )
+    const toggleProductType = (id: number) => {
+        setSelectedProductType(prev => prev === id ? null : id)
     }
+
+    const [selectedRatings, setSelectedRatings] = useState<number | null>(null)
+
+    const toggleRating = (id: number) => {
+        setSelectedRatings(prev => prev === id ? null : id)
+    }
+
+    // slider state management
+    const [minValue, set_minValue] = useState<number>(2);
+    const [maxValue, set_maxValue] = useState<number>(4);
+    const handleInput = (e: { minValue: number; maxValue: number }) => {
+        set_minValue(e.minValue);
+        set_maxValue(e.maxValue);
+    };
 
   return (
     <motion.div
@@ -83,7 +98,7 @@ const Filters: React.FC<FiltersProps> = ({ onClose }) => {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="z-50 fixed right-0 w-full min-h-screen sm:w-[55%] md:w-[45%] lg:w-[37%] top-[15%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl bg-[#f7f7f7]"
+      className="z-50 fixed right-0 w-full sm:min-h-screen sm:w-[55%] md:w-[45%] lg:w-[450px] top-[15%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl bg-[#f7f7f7]"
     >
       <div className="flex flex-col h-full px-[24px] py-[16px]">
         <div onClick={onClose} className="top-0 my-2 mx-auto w-[134px] h-[5px] bg-[#C0C0CF] rounded-sm sm:hidden" />
@@ -94,75 +109,85 @@ const Filters: React.FC<FiltersProps> = ({ onClose }) => {
         </div>
 
         <div className="flex-1 overflow-y-auto scrollbar-hidden space-y-[24px]">
-            <div>
-                <h1 className="text-[#666687] text-[18px] font-semibold">Select Categories</h1>
+            <div className='space-y-[15px]'>
+                <h1 className="text-[#666687] text-[16px] font-600">Select Categories</h1>
 
-                <div className={`flex w-full justify-between space-x-4 md:space-x-0 lg:space-x-2 text-[15px] text-black`}>
-                    <div
-                        // onClick={() => setMenu(0)}
-                        className={`relative h-fit text-center py-2 px-4 w-20 rounded-2xl cursor-pointer transition-colors duration-300`}
-                    >
-                        Eat
-                    </div>
-
-                    <div
-                        // onClick={() => setMenu(1)}
-                        className={`relative h-fit text-center py-2 px-4 w-20 rounded-2xl cursor-pointer transition-colors duration-300`}
-                    >
-                        Drink
-                    </div>
-
-                    <div
-                        // onClick={() => setMenu(2)}
-                        className={`relative h-fit text-center py-2 px-4 w-20 rounded-2xl cursor-pointer transition-colors duration-300 `}
-                    >
-                        Dessert
-                    </div>
+                <div className='text-[16px] font-600 text-[#8E8EA9] gap-4 flex flex-wrap items-center'>
+                    {Categories.map((cat) => (
+                        <motion.button
+                            key={cat.id}
+                            onClick={() => toggleCategory(cat.id)}
+                            whileTap={{ scale: 0.95 }}
+                            className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 ${selectedCategory === cat.id ? 'bg-amber-500 text-white' : 'bg-[#FFFFFF] border border-gray-500'}`}>
+                            <p>{cat.name}</p>
+                        </motion.button>
+                        ))}
                 </div>
             </div>
 
-            <div>
-                <h1 className="text-[#666687] text-[18px] font-semibold">Select Product Type</h1>
+            <div className='space-y-[15px]'>
+                <h1 className="text-[#666687] text-[16px] font-600">Select Product Type</h1>
 
-                <div className='text-[16px] font-600 text-[#8E8EA9] gap-4 flex flex-wrap justify-center items-center'>
-                    {ProductTypes.map((type, idx) => (
+                <div className='text-[16px] font-600 text-[#8E8EA9] gap-4 flex flex-wrap items-center'>
+                    {ProductTypes.map((type) => (
+                        <motion.button
+                            key={type.id}
+                            onClick={() => toggleProductType(type.id)}
+                            whileTap={{ scale: 0.95 }}
+                            className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 ${selectedProductType === type.id ? 'bg-amber-500 text-white' : 'bg-[#FFFFFF] border border-gray-500'}`}>
+                            <p>{type.name}</p>
+                        </motion.button>
+                        ))}
+                </div>
+            </div>
+
+            <div className='space-y-[15px]'>
+                <h1 className="text-[#666687] text-[16px] font-600">Rating</h1>
+
+                <div className='text-[16px] font-600 text-[#8E8EA9] gap-4 flex flex-wrap  items-center'>
+                    {Ratings.map((rating) => (
                     <motion.button
-                        key={idx}
-                        onClick={() => toggleProductType(idx)}
+                        key={rating.id}
+                        onClick={() => toggleRating(rating.id)}
                         whileTap={{ scale: 0.95 }}
-                        className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 ${selectedProductType.includes(idx) ? 'bg-amber-500 text-white' : 'bg-[#FFFFFF] border-2 border-gray-500'}`}>
-                        <p>{type.name}</p>
+                        className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 border border-gray-500 ${selectedRatings === rating.id ? 'bg-amber-500 text-white' : 'bg-[#FFFFFF]'}`}>
+                        <img src={Star} className='w-[18px] h-[18px]' alt="" />
+                        <p className='text-[16px]'>{rating.name}</p>
                     </motion.button>
                     ))}
                 </div>
             </div>
 
-            <div>
-                <h1 className="text-[#666687] text-[18px] font-semibold">Rating</h1>
+            <div className='space-y-[15px]'>
+                <h1 className="text-[#666687] text-[16px] font-600">Price Range</h1>
 
-                <div className='text-[16px] font-600 text-[#8E8EA9] gap-4 flex flex-wrap justify-center items-center'>
-                    {Ratings.map((Rating, idx) => (
-                    <motion.button
-                        key={idx}
-                        onClick={() => toggleRating(idx)}
-                        whileTap={{ scale: 0.95 }}
-                        className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 border-2 border-gray-500 ${selectedRatings.includes(idx) ? 'bg-amber-500 text-white' : 'bg-[#FFFFFF]'}`}>
-                        <p>{Rating.name}</p>
-                        <img src={Star} className='w-5 h-5 md:w-7 md:h-7' alt="" />
-                    </motion.button>
-                    ))}
+                <div className='space-y-10'>
+                    <div className="App">
+                        <MultiRangeSlider
+                            min={1.0}
+                            max={6.0}
+                            step={1}
+                            minValue={minValue}
+                            maxValue={maxValue}
+                            onInput={(e) => handleInput(e)}
+                        />
+                    </div>
+                    <div className="flex gap-4 items-center">
+                        <div className='text-[14px] font-600 text-[#8E8EA9] rounded-2xl px-[16px] py-[12px] flex items-center bg-[#FFFFFF] border border-gray-500'>Minimum price: ${minValue.toFixed(2)}</div>
+
+                        <div className='w-[16px] border border-[#DCDCE4]'></div>
+
+                        <div className='text-[14px] font-600 text-[#8E8EA9] rounded-2xl px-[16px] py-[12px] flex items-center bg-[#FFFFFF] border border-gray-500'>Maximum price: ${maxValue.toFixed(2)}</div>
+                    </div>
                 </div>
             </div>
-
-            <div>
-                <h1 className="text-[#666687] text-[18px] font-semibold">Rating</h1>
-
+            
+            <div  className='space-y-[15px]'>
+                <motion.button 
+                    whileTap={{ scale: 0.98 }}  
+                    className='rounded-2xl bg-[#32324D] p-4 cursor-pointer w-full'>Apply
+                </motion.button>
             </div>
-
-            <motion.button 
-                whileTap={{ scale: 0.98 }}  
-                className='rounded-2xl bg-[#32324D] p-4 cursor-pointer w-full'>Apply
-            </motion.button>
         </div>
       </div>
     </motion.div>

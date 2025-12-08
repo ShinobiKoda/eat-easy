@@ -11,8 +11,9 @@ import Virtual from "./components/Virtual";
 import Recommend from "./components/Recommend";
 import Recommended from "./components/Recommended";
 import Step1 from "./components/Step1";
+import OrderStatus from "./components/OrderStatus";
 import { useTheme } from "./hooks/useTheme";
-// import ThemeSwitchButton from "./components/ThemeSwitchButton";
+import ThemeSwitchButton from "./components/ThemeSwitchButton";
 
 function App() {
   const location = useLocation();
@@ -29,9 +30,9 @@ function App() {
 
   return (
     <div className="w-full min-h-screen" style={{ backgroundImage }}>
-      {/* <div className="absolute top-6 right-6 z-50">
+      <div className="absolute top-6 right-6 z-50">
         <ThemeSwitchButton />
-      </div> */}
+      </div>
       <Routes>
         <Route path="/" element={<Splash />} />
         <Route path="/get-started" element={<GetStarted />} />
@@ -44,6 +45,7 @@ function App() {
         <Route path="/recommend" element={<Recommend />} />
         <Route path="/step1" element={<Step1 />} />
         <Route path="/recommended" element={<Recommended />} />
+        <Route path="/orderStatus" element={<OrderStatus />} />
         <Route path="*" element={<Welcome />} />
       </Routes>
     </div>

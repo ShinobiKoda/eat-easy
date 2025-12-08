@@ -1,7 +1,7 @@
-import React from 'react'
 import Header from './Header'
 import Sidebar from './Sidebar'
 import Backdrop from './Backdrop'
+import React, { useEffect, useState } from 'react'
 
 interface NavbarProps {
   toggle: boolean
@@ -26,6 +26,25 @@ const Navbar: React.FC<NavbarProps> = ({ toggle, menuOpen, setMenuOpen, toggleNa
       toggleNav()
     }
   }
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile && toggle) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+  }, [toggle]);
 
   return (
     <header className="w-full bg-[#F7F7F7]">
