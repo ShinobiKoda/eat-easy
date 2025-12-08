@@ -45,11 +45,11 @@ const Welcome: React.FC = () => {
   ]
 
   return (
-    <div className="bg-[#F7F7F7] w-full min-h-screen">
+    <div className="w-full min-h-screen">
 
-      <Navbar toggle={toggle} menuOpen={menuOpen} setMenuOpen={setMenuOpen} toggleNav={toggleNav} closeNav={closeNav} title="Food Menu" text="Browse Our Food Menu" text1='Gram Bistro' link='/welcome' />
+      <Navbar showHeader={true} showAside={true} toggle={toggle} menuOpen={menuOpen} setMenuOpen={setMenuOpen} toggleNav={toggleNav} closeNav={closeNav} title="Food Menu" text="Browse Our Food Menu" text1='Gram Bistro' link='/welcome' />
 
-      <div className={`transition-all duration-300 ${!toggle ?  'md:ml-[12%] lg:ml-[9%]' : 'md:ml-[20%]'}`}>
+      <div className={`transition-all duration-300 relative ${!toggle ?  'md:ml-[12%] lg:ml-[9%]' : 'md:ml-[20%]'}`}>
         <div className='max-w-6xl mx-auto flex flex-col p-6 space-y-10'>
           <div className='bg-[#32324D] text-white rounded-3xl hidden md:flex justify-between items-center'>
 
@@ -91,7 +91,7 @@ const Welcome: React.FC = () => {
                 <div key={idx} className='bg-white rounded-2xl sm:w-[80%] md:w-full p-5 space-y-4 shadow-[0_4px_12px_rgba(0,0,0,0.10)]'>
                   <div><img src={option.image} alt="" /></div>
                   <h1 className='lg:text-[22px] text-[16px] font-bold'>{option.title}</h1>
-                  <div className='flex gap-4 md:gap-9 items-center'>
+                  <div className='flex gap-4 md:gap-9 items-center justify-between'>
                     <p className='lg:text-[16px] text-[16px] font-500 text-[#8E8EA9]'>{option.text}</p>
                     <NavLink to={option.link} className="min-w-10">
                       <motion.button whileTap={{ scale: 0.9 }} className='rounded-xl bg-[#FFF2EA] cursor-pointer'><img src={ArrowRight} className='w-12 h-full p-3' alt="" /></motion.button>

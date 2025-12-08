@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ toggle, menuOpen, setMenuOpen, onTogg
 
   return (
     <aside 
-      className={`w-[70%] sm:w-[75%] h-screen bg-[#32324D] transition-all duration-300 ease-in-out rounded-r-2xl fixed left-0 top-0 z-50 ${effectiveIsOpen ?  'md:w-[20%]' : 'md:-translate-x-0 md:w-[12%] lg:w-[9%]  -translate-x-[100%]'}`}>
+      className={`w-[60%] sm:w-[45%] h-screen bg-[#32324D] transition-all duration-300 ease-in-out rounded-r-2xl fixed left-0 top-0 z-50 ${effectiveIsOpen ?  'md:w-[20%]' : 'md:-translate-x-0 md:w-[12%] lg:w-[9%]  -translate-x-[100%]'}`}>
 
       {/* sidebar toggle button for desktop */}
       <motion.button
@@ -66,9 +66,9 @@ const Sidebar: React.FC<SidebarProps> = ({ toggle, menuOpen, setMenuOpen, onTogg
       <div className={`flex flex-col h-full text-white text-sm font-semibold transition-all duration-300 ${toggle ? '' : ''}`}>
 
         {/* logo */}
-        <div className={`p-4 flex justify-center border-b-2 border-gray-400 text-3xl transition-all duration-300 ${toggle ?  'text-3xl' : 'text-xl'}`}>Eat<span className='text-amber-500'>Easy</span></div>
+        <div className={`p-4 flex justify-center text-(--neutral-700) dark:text-white border-b-2 border-gray-400 font-500 transition-all duration-300 ${toggle ?  'text-[24px]' : 'text-xl'}`}>Eat<span className='text-(--orange-1)'>Easy</span></div>
 
-        <div className={`flex-1 overflow-y-auto scrollbar-hidden flex flex-col ${effectiveIsOpen ? '' : 'items-center'}`}>
+        <div className={`flex-1 overflow-y-auto scrollbar-hidden flex flex-col ${effectiveIsOpen ? '' : ''}`}>
 
           {/* profile */}
           <div className={`flex items-center gap-4 px-3 py-4 ${!effectiveIsOpen ? 'flex-row md:flex-col' : ''}`}>
@@ -76,13 +76,13 @@ const Sidebar: React.FC<SidebarProps> = ({ toggle, menuOpen, setMenuOpen, onTogg
             {toggle && (
               <div className={`space-y-1 flex-1 overflow-hidden md:text-[12px] lg:text-[15px]`}>
                 <p className=''>Robert Fox</p>
-                <button className='cursor-pointer hover:text-amber-500'>View Profile</button>
+                <button className='cursor-pointer hover:text-(--orange-1)'>View Profile</button>
               </div>
             )}
           </div>
 
           {/* menu */}
-          <div className='flex justify-center px-3 text-left flex-col space-y-3 mb-6 py-6 border-b-2 border-gray-400'>
+          <div className={`flex justify-center px-3 text-left flex-col space-y-3 mb-6 py-6 border-b-2 border-gray-400 ${toggle ? '' : 'items-center'}`} >
             <h1 className='text-[15px]'>MENU</h1>
 
             <div>
@@ -148,15 +148,15 @@ const Sidebar: React.FC<SidebarProps> = ({ toggle, menuOpen, setMenuOpen, onTogg
             </div>
           </div>
 
-          {/* Logout */}
-          <div className='flex justify-center px-3 text-left flex-col mt-10 space-y-3'>
-            <div>
-              <motion.button 
-                whileTap={{ scale: 0.9 }} className='flex items-center mb-6 space-x-3 cursor-pointer'>
-                <img src={Logout} className='w-11 h-11 hover:bg-gray-600 rounded-2xl p-3' alt="" />
-                <p className={`md:text-[12px] lg:text-[15px] ${effectiveIsOpen ? 'flex' : 'hidden'}`}>Logout</p>
-              </motion.button>
-            </div>
+        </div>
+        {/* Logout */}
+        <div className={`flex justify-center px-3 text-left flex-col pt-5 space-y-3 border-t-2 border-gray-400 ${toggle ? '' : 'items-center'}`}>
+          <div>
+            <motion.button 
+              whileTap={{ scale: 0.9 }} className='flex items-center mb-6 space-x-3 cursor-pointer'>
+              <img src={Logout} className='w-11 h-11 bg-gray-600 rounded-2xl p-3' alt="" />
+              <p className={`md:text-[12px] lg:text-[15px] ${effectiveIsOpen ? 'flex' : 'hidden'}`}>Logout</p>
+            </motion.button>
           </div>
         </div>
       </div>

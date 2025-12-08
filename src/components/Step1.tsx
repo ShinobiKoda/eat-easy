@@ -14,15 +14,6 @@ const Step1: React.FC = () => {
   const [toggle, setToggle] = useState(false)
   const [menuOpen, setMenuOpen] = useState<number | null>(null)
 
-  // allow multiple feelings to be selected; store selected indices
-  const [selectedFeelings, setSelectedFeelings] = useState<number[]>([])
-
-  const toggleFeeling = (index: number) => {
-    setSelectedFeelings(prev =>
-      prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
-    )
-  }
-
   const toggleNav = () => {
     setToggle(prev => !prev)
     if (!toggle) {
@@ -36,6 +27,15 @@ const Step1: React.FC = () => {
   const closeNav = () => {
     setToggle(false)
     setMenuOpen(null)
+  }
+
+  // allow multiple feelings to be selected; store selected indices
+  const [selectedFeelings, setSelectedFeelings] = useState<number[]>([])
+
+  const toggleFeeling = (index: number) => {
+    setSelectedFeelings(prev =>
+      prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
+    )
   }
 
   const Feelings = [
@@ -54,7 +54,7 @@ const Step1: React.FC = () => {
     <div className="bg-[#F7F7F7] w-full min-h-screen">
 
       <div className=''>
-        <Navbar showBack={true} toggle={toggle} menuOpen={menuOpen} setMenuOpen={setMenuOpen} toggleNav={toggleNav} closeNav={closeNav} title="Food Menu &nbsp;&nbsp; | &nbsp;&nbsp; Virtual Assistant" text="Step 1" text1='Step 1' link='/recommend'  />
+        <Navbar showHeader={true} showAside={true} showBack={true} toggle={toggle} menuOpen={menuOpen} setMenuOpen={setMenuOpen} toggleNav={toggleNav} closeNav={closeNav} title="Food Menu &nbsp;&nbsp; | &nbsp;&nbsp; Virtual Assistant" text="Step 1" text1='Step 1' link='/recommend'  />
       </div>
 
       <div className={`transition-all duration-300 ${!toggle ?  'md:ml-[12%] lg:ml-[9%]' : 'md:ml-[20%]'}`}>
@@ -81,13 +81,13 @@ const Step1: React.FC = () => {
             <div className='text-[16px] lg:text-[20px] font-600 text-[#8E8EA9] space-y-4 w-full lg:w-xl flex flex-col items-center'>
                 <NavLink to="/welcome" className="w-full">
                     <motion.button 
-                        whileTap={{ scale: 0.95 }}  
+                        whileTap={{ scale: 0.98 }}  
                         className='p-4 cursor-pointer w-full hover:bg-gray-600 rounded-2xl'>Take me to the menu
                     </motion.button>
                 </NavLink>
-                <NavLink to="/recommended " className="w-full">
+                <NavLink to="/recommended" className="w-full">
                     <motion.button 
-                        whileTap={{ scale: 0.95 }}  
+                        whileTap={{ scale: 0.98 }}  
                         className='rounded-2xl bg-[#32324D] p-4 cursor-pointer w-full'>Continue
                     </motion.button>
                 </NavLink>
