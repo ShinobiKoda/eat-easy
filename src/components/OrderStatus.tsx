@@ -73,7 +73,7 @@ const OrderStatus: React.FC = () => {
                 />
               </div>
 
-              <div className={`space-y-[12px] ${!toggleList ? 'flex' : 'hidden'}`}>
+              <div className={`space-y-[12px] ${!toggleList ? 'flex flex-col' : 'hidden'}`}>
                 {order?.items ? (
                   order.items.map((sent: any) => (
                     <div key={sent.id} className='dark:text-[#FFFFFF] flex justify-between items-center gap-[8px]'>

@@ -35,14 +35,16 @@ export const OrderStatusSchema = () => {
     const interval = setInterval(() => {
       const elapsed = Date.now() - start;
 
-      if (elapsed >= TOTAL_TIME) {
-        setCurrentStatus(status.end);
-        setShowRecommend(false);
-        setShowSubmit(true);
-      } else if (elapsed >= MID_TIME) {
+      if (elapsed == TOTAL_TIME) {
+        setCurrentStatus(status.start);
+        setShowRecommend(true);
+        setShowSubmit(false);
+      } else if (elapsed == MID_TIME) {
         setCurrentStatus(status.mid);
       } else {
-        setCurrentStatus(status.start);
+        setCurrentStatus(status.end);
+        setShowSubmit(true);
+        setShowRecommend(false);
       }
     }, 1000);
 
