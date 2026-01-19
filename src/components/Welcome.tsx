@@ -22,8 +22,8 @@ const Welcome: React.FC = () => {
         }`}
       >
        <Header description="Browse Our Food Menu"/>
-       <div>
-        
+       <div className="">
+
        </div>
       </div>
     </div>

@@ -23,7 +23,7 @@ const SelectRestaurant = () => {
     <div className="w-full">
       <Header title="Food Menu" description="Set Restaurant" />
       <div className="w-full px-6">
-        <MotionContainer className="md:hidden">
+        <MotionContainer className="lg:hidden">
           <SlideIn
             direction="down"
             className="w-full text-center max-w-[327px] mx-auto space-y-3.5"
@@ -78,7 +78,7 @@ const SelectRestaurant = () => {
         </MotionContainer>
       </div>
 
-      <div className="hidden md:flex flex-col items-center justify-center min-h-screen w-full max-w-[900px] mx-auto">
+      <div className="hidden lg:flex flex-col items-center justify-center min-h-screen w-full max-w-[900px] mx-auto">
         <div className="space-y-4 text-center px-8">
           <h1 className="font-medium text-[40px] text-(--neutral-800) heading-font dark:text-white">
             Restaurants based on your selected location.

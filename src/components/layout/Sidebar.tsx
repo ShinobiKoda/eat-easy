@@ -86,7 +86,7 @@ const Sidebar: React.FC = () => {
 
         <div className={`flex flex-col h-full transition-all duration-300`}>
           <div
-            className={`py-[28.4px] flex justify-center items-center text-center transition-all duration-300 text-[24px] border-b border-b-(--neutral-150) dark:bprder-b-(--neutral-700)`}
+            className={`py-[28.4px] flex justify-center items-center text-center transition-all duration-300 text-[24px] border-b border-b-(--neutral-150) dark:border-b-(--neutral-700)`}
           >
             <span className="font-medium text-(--neutral-100)">Eat</span>
             <span className="font-bold text-(--orange-1)">Easy</span>
@@ -343,7 +343,7 @@ const Sidebar: React.FC = () => {
         <button
           aria-label="Close sidebar"
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 z-40 bg-black/30 md:hidden"
+          className="fixed inset-0 z-40 bg-black/30 lg:hidden"
         />
       )}
       <LogoutModal
