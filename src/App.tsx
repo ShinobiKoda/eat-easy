@@ -18,6 +18,8 @@ import ResetPassword from "./components/auth/ResetPassword";
 import SetLocation from "./components/SetLocation";
 import Sidebar from "./components/layout/Sidebar";
 import SelectRestaurant from "./components/SelectRestaurant";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import PublicRoute from "./components/auth/PublicRoute";
 
 function App() {
   const location = useLocation();
@@ -75,22 +77,116 @@ function App() {
         <Routes>
           <Route path="/" element={<Splash />} />
           <Route path="/get-started" element={<GetStarted />} />
-          <Route path="/method" element={<SignUpMethod />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/verify-url" element={<ConfirmLink />} />
-          <Route path="/reset-email-sent" element={<ResetEmailSent />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/set-location" element={<SetLocation />} />
-          <Route path="/set-restaurant" element={<SelectRestaurant />} />
-          <Route path="/welcome" element={<Welcome />} />
-          <Route path="/locations" element={<Locations />} />
-          <Route path="/virtual" element={<Virtual />} />
-          <Route path="/recommend" element={<Recommend />} />
-          <Route path="/step1" element={<Step1 />} />
 
-          <Route path="*" element={<Welcome />} />
+          <Route
+            path="/method"
+            element={
+              <PublicRoute>
+                <SignUpMethod />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PublicRoute>
+                <Signup />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicRoute>
+                <ForgotPassword />
+              </PublicRoute>
+            }
+          />
+          <Route path="/verify-url" element={<ConfirmLink />} />
+          <Route
+            path="/reset-email-sent"
+            element={
+              <PublicRoute>
+                <ResetEmailSent />
+              </PublicRoute>
+            }
+          />
+          <Route path="/reset-password" element={<ResetPassword />} />
+
+          {/* Protected routes - require authentication */}
+          <Route
+            path="/set-location"
+            element={
+              <ProtectedRoute>
+                <SetLocation />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/set-restaurant"
+            element={
+              <ProtectedRoute>
+                <SelectRestaurant />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/welcome"
+            element={
+              <ProtectedRoute>
+                <Welcome />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/locations"
+            element={
+              <ProtectedRoute>
+                <Locations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/virtual"
+            element={
+              <ProtectedRoute>
+                <Virtual />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recommend"
+            element={
+              <ProtectedRoute>
+                <Recommend />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/step1"
+            element={
+              <ProtectedRoute>
+                <Step1 />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="*"
+            element={
+              <ProtectedRoute>
+                <Welcome />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </div>
