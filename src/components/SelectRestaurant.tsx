@@ -4,6 +4,7 @@ import Header from "../components/layout/Header";
 
 const SelectRestaurant = () => {
   const restuarants = [
+    //add images to restuarnts for desktop
     {
       name: "Gram Bistro",
       location: "790 8th Ave, New York",
@@ -27,7 +28,7 @@ const SelectRestaurant = () => {
             direction="down"
             className="w-full text-center max-w-[327px] mx-auto space-y-3.5"
           >
-            <h1 className="heading-font font-medium text-[22px] text-(--neutral-800) dark:text-white">
+            <h1 className="heading-font font-medium text-[22px] text-(--neutral-800) dark:text-white heading-font">
               Share your location with us to order
             </h1>
             <p className="font-medium text-base text-(--neutral-600) dark:text-(--neutral-150)">
@@ -79,10 +80,10 @@ const SelectRestaurant = () => {
 
       <div className="hidden md:flex flex-col items-center justify-center min-h-screen w-full max-w-[900px] mx-auto">
         <div className="space-y-4 text-center px-8">
-          <h1 className="font-medium text-[40px] text-(--neutral-800)">
+          <h1 className="font-medium text-[40px] text-(--neutral-800) heading-font dark:text-white">
             Restaurants based on your selected location.
           </h1>
-          <p className="text-(--neutral-600) font-medium text-base max-w-[500px] mx-auto">
+          <p className="text-(--neutral-600) font-medium text-base max-w-[500px] mx-auto dark:text-(--neutral-150)">
             Please enter your location or allow access to your location to find
             all restaurants that are near you
           </p>
