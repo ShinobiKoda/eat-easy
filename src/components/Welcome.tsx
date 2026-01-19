@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import PopSign from "/images/popsign.png";
-import Location from "/images/Map-pin.png";
-import Time from "/images/time-img.png";
-import Gram from "/images/Gram.png";
+import Header from "./layout/Header";
+
 import Loader from "./Loader";
 
 const Welcome: React.FC = () => {
@@ -23,58 +21,10 @@ const Welcome: React.FC = () => {
           showLoader ? "pointer-events-none overflow-hidden" : ""
         }`}
       >
-        <div className="mx-auto flex flex-col p-6 space-y-10">
-          <div className="bg-[#32324D] text-white rounded-3xl hidden md:flex justify-between items-center">
-            <div className="xl:mx-12 mx-6 py-5 h-fit space-y-1 md:w-[70%] xl:w-[50%]">
-              <p className="xl:text-[32px] lg:text-[28px] md:text-[24px] font-400">
-                Welcome to{" "}
-              </p>
-              <div className="flex items-center">
-                <p className="xl:text-[32px] lg:text-[28px] md:text-[20px] font-bold">
-                  Gram Bistro Restaurant
-                </p>
-                <span className="lg:w-[30px] lg:h-[30px] w-[25px] h-[25px]">
-                  <img src={PopSign} className="w-full h-full" alt="" />
-                </span>
-              </div>
-              <div className="flex space-x-4 mt-5">
-                <div className="flex space-x-2">
-                  <span className="w-5 h-5">
-                    <img src={Location} alt="" />
-                  </span>
-                  <p className="lg:text-[16px] text-[12px] font-500">
-                    790 8th Ave, New York
-                  </p>
-                </div>
-                <div className="flex space-x-2">
-                  <span className="w-5 h-5">
-                    <img src={Time} alt="" />
-                  </span>
-                  <p className="lg:text-[16px] text-[12px] font-500">
-                    Mon - Sun: 12AM - 10 PM
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="max-w-[442px] max-h-[271px] lg:px-10 ">
-              <img src={Gram} className="w-full h-full" alt="" />
-            </div>
-          </div>
-
-          <div className="flex flex-col lg:flex-row justify-between gap-10">
-            <div className="gap-4 lg:max-w-1/2 hidden md:flex flex-col">
-              <h1 className="lg:text-[26px] text-[23px] font-bold">
-                Find Your Flavor: <br /> Two Options to Browse Our Menu
-              </h1>
-              <p className="text-[16px] lg:text-[18px] font-600 text-[#8E8EA9]">
-                We've got you covered! Whether you're feeling adventurous or
-                know exactly what you want, we offer two ways to browse our menu
-                that cater to your mood.
-              </p>
-            </div>
-          </div>
-        </div>
+       <Header description="Browse Our Food Menu"/>
+       <div>
+        
+       </div>
       </div>
     </div>
   );

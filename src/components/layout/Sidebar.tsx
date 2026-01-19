@@ -4,19 +4,37 @@ import Profile from "/images/profile-img.png";
 import { IoIosLogOut } from "react-icons/io";
 import { PiMedalThin } from "react-icons/pi";
 import { MdChevronRight } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { TfiBook } from "react-icons/tfi";
 import { MdOutlineHistory } from "react-icons/md";
 import { IoLocationOutline } from "react-icons/io5";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import ThemeSwitchButton from "../ThemeSwitchButton";
 import { useTheme } from "../../hooks/useTheme";
+import LogoutModal from "../LogoutModal";
+import { supabase } from "../../config/supabaseClient";
 
 const Sidebar: React.FC = () => {
   const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [selectedItem, setSelectedItem] = useState<number | null>(1);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await supabase.auth.signOut();
+      setShowLogoutModal(false);
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   const effectiveIsOpen = isOpen;
   const activeMenu = openMenuId;
@@ -35,7 +53,7 @@ const Sidebar: React.FC = () => {
 
   useEffect(() => {
     window.dispatchEvent(
-      new CustomEvent("sidebar-state", { detail: { open: isOpen } })
+      new CustomEvent("sidebar-state", { detail: { open: isOpen } }),
     );
   }, [isOpen]);
 
@@ -45,13 +63,13 @@ const Sidebar: React.FC = () => {
         className={`aside h-screen transition-transform duration-300 ease-in-out rounded-r-3xl fixed left-0 top-0 z-50
       w-[260px]
       ${effectiveIsOpen ? "translate-x-0" : "-translate-x-full"}
-      md:translate-x-0
-      ${effectiveIsOpen ? "md:w-[260px]" : "md:w-36"}`}
+      lg:translate-x-0
+      ${effectiveIsOpen ? "lg:w-[260px]" : "lg:w-36"}`}
       >
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.96 }}
-          className="hidden md:flex w-[38px] h-[38px] bg-(--neutral-800) top-28 -right-4 absolute rounded-full items-center justify-center border border-(--neutral-400)"
+          className="hidden lg:flex w-[38px] h-[38px] bg-(--neutral-800) top-28 -right-4 absolute rounded-full items-center justify-center border border-(--neutral-400)"
         >
           <button
             onClick={handleToggle}
@@ -301,6 +319,7 @@ const Sidebar: React.FC = () => {
               <div className="space-y-4">
                 <motion.button
                   whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowLogoutModal(true)}
                   className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                 >
                   <div className="p-3 rounded-2xl bg-white/15">
@@ -327,6 +346,12 @@ const Sidebar: React.FC = () => {
           className="fixed inset-0 z-40 bg-black/30 md:hidden"
         />
       )}
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        isLoading={isLoggingOut}
+      />
     </>
   );
 };
