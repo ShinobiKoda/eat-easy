@@ -37,7 +37,7 @@ function Login() {
         password: data.password,
       });
       if (error) throw error;
-      navigate("/welcome");
+      navigate("/set-location");
     } catch (err: any) {
       setSubmitError(err?.message || "Failed to sign in. Please try again.");
     } finally {

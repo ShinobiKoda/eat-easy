@@ -183,7 +183,7 @@ function App() {
             path="*"
             element={
               <ProtectedRoute>
-                <Welcome />
+                <SetLocation />
               </ProtectedRoute>
             }
           />

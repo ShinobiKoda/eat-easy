@@ -41,7 +41,7 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/welcome" replace />;
+    return <Navigate to="/set-location" replace />;
   }
 
   return <>{children}</>;
