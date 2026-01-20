@@ -49,15 +49,15 @@ function SetCustomLocation() {
               </span>{" "}
             </h1>
 
-            <div className="px-4 py-3 rounded-2xl border border-(--purple-2) flex items-center justify-between">
+            <div className="px-4 py-3 rounded-2xl border border-(--purple-5) flex items-center justify-between focus-within:border-2 focus-within:border-(--purple-2)">
               <input
                 type="text"
                 placeholder="Search for streets, cities, disticts...."
-                className="bg-none border-none outline-none w-full mr-4"
+                className="bg-none border-none outline-none w-full mr-4 placeholder:text-(--neutral-200)"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
-              <CiSearch size={24} />
+              <CiSearch size={24} className="text-(--neutral-300)" />
             </div>
 
             <div className="mt-3 relative">
