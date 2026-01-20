@@ -8,6 +8,7 @@ type NavbarProps = {
   title?: string;
   description?: string
   className?: string;
+  title?: string;
 };
 
 const Navbar: React.FC<NavbarProps> = ({ title = "", description = "", className = "" }) => {
@@ -30,7 +31,11 @@ const Navbar: React.FC<NavbarProps> = ({ title = "", description = "", className
         onClick={() => window.dispatchEvent(new Event("toggle-sidebar"))}
         aria-label="Toggle sidebar"
       >
-        <RiMenu2Fill size={24} className="ml-auto text-(--neutral-700) dark:text-(--purple-5)" />
+        <RiMenu2Fill
+          size={24}
+          className="ml-auto text-(--neutral-700) dark:text-(--purple-5)"
+        />
+        {title && <p>{title}</p>}
       </motion.button>
     </nav>
   );
