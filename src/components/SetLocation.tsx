@@ -3,9 +3,9 @@ import { MotionContainer, SlideIn, PopIn, FadeIn } from "./animations/motion";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { useTheme } from "../hooks/useTheme";
 import { useLocation } from "../hooks/useLocation";
-import Navbar from "./layout/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import Navbar from "./layout/Navbar";
 
 const SetLocation = () => {
   const { theme } = useTheme();

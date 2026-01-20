@@ -5,7 +5,6 @@ import { MotionItem } from "../animations/motion";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 
 type NavbarProps = {
-  title?: string;
   description?: string
   className?: string;
   title?: string;
@@ -13,7 +12,7 @@ type NavbarProps = {
 
 const Navbar: React.FC<NavbarProps> = ({ title = "", description = "", className = "" }) => {
   return (
-    <nav className={`w-full flex justify-between items-center px-6 py-4 ${className}`}>
+    <nav className={`w-full flex justify-between items-center px-6 py-4 md:hidden ${className}`}>
       <MotionItem className="w-full">
         <p className="flex flex-col">
           <span className="flex gap-2 items-center font-semibold text-sm text-(--neutral-500)">
