@@ -10,16 +10,7 @@ import Tired from "/images/tired-img.png"
 
 
 const Step1: React.FC = () => {
- 
 
-  // allow multiple feelings to be selected; store selected indices
-  const [selectedFeelings, setSelectedFeelings] = useState<number[]>([])
-
-  const toggleFeeling = (index: number) => {
-    setSelectedFeelings(prev =>
-      prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
-    )
-  }
 
   
 
