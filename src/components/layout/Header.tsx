@@ -43,14 +43,14 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <div
       className={`fixed top-0 right-0 z-40 bg-(--light-mode-bg) dark:bg-(--dark-mode-bg) transition-all duration-300 left-0 ${
-        sidebarOpen ? "lg:left-[260px]" : "lg:left-36"
+        sidebarOpen ? "md:left-[260px]" : "md:left-36"
       }`}
     >
       <SlideIn direction="down" className="w-full lg:hidden">
         <Navbar />
       </SlideIn>
 
-      <MotionContainer className="w-full hidden lg:flex px-[30px] py-5 border-b-[1.5px] border-b-(--neutral-150) dark:border-b-(--neutral-700) items-center justify-between bg-(--light-mode-bg) dark:bg-(--dark-mode-bg)">
+      <MotionContainer className="w-full hidden md:flex px-[30px] py-5 border-b-[1.5px] border-b-(--neutral-150) dark:border-b-(--neutral-700) items-center justify-between bg-(--light-mode-bg) dark:bg-(--dark-mode-bg)">
         <div className="flex items-center gap-3">
           {previous && (
             <PopIn>

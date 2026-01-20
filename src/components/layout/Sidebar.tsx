@@ -63,13 +63,13 @@ const Sidebar: React.FC = () => {
         className={`aside h-screen transition-all duration-300 ease-in-out rounded-r-3xl fixed left-0 top-0 z-50
       w-[260px]
       ${effectiveIsOpen ? "translate-x-0" : "-translate-x-full"}
-      lg:translate-x-0
-      ${effectiveIsOpen ? "lg:w-[260px]" : "lg:w-36"}`}
+      md:translate-x-0
+      ${effectiveIsOpen ? "md:w-[260px]" : "md:w-36"}`}
       >
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.96 }}
-          className="hidden lg:flex w-[38px] h-[38px] bg-(--neutral-800) top-28 -right-4 absolute rounded-full items-center justify-center border border-(--neutral-400)"
+          className="hidden md:flex w-[38px] h-[38px] bg-(--neutral-800) top-28 -right-4 absolute rounded-full items-center justify-center border border-(--neutral-400)"
         >
           <button
             onClick={handleToggle}

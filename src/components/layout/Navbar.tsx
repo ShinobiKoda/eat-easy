@@ -10,7 +10,7 @@ type NavbarProps = {
 const Navbar: React.FC<NavbarProps> = ({ className = "", title = " " }) => {
   
   return (
-    <nav className={`w-full ${className} lg:hidden`}>
+    <nav className={`w-full ${className} md:hidden`}>
       <motion.button
         whileTap={{ scale: 0.95 }}
         className="w-full px-6 py-4 outline-none border-none cursor-pointer"
