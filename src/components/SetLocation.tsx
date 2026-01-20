@@ -2,11 +2,20 @@ import { motion } from "motion/react";
 import { MotionContainer, SlideIn, PopIn, FadeIn } from "./animations/motion";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { useTheme } from "../hooks/useTheme";
+import { useLocation } from "../hooks/useLocation";
 import Navbar from "./layout/Navbar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const SetLocation = () => {
   const { theme } = useTheme();
+  const { getCurrentLocation, isLoading, error } = useLocation();
+  const navigate = useNavigate();
+
+  const handleUseCurrentLocation = async () => {
+    await getCurrentLocation();
+    navigate("/set-restaurant");
+  };
 
   const cards = [
     {
@@ -81,28 +90,44 @@ const SetLocation = () => {
             ></div>
           </FadeIn>
 
-          <div className=" w-full flex items-center gap-4 justify-center">
-            <motion.button
-              whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-px text-(--purple-3) cursor-pointer dark:text-(--purple-5)"
-            >
-              <HiOutlineLocationMarker size={20} />
-              <span className="font-semibold text-base">
-                Use my current location
-              </span>
-            </motion.button>
-            <div className="border border-(--neutral-200) h-full w-4 dark:border-(--neutral-400) rotate-90"></div>
-            <Link to="/set-custom-location ">
+          <div className="w-full flex flex-col items-center gap-4 justify-center">
+            {error && (
+              <p className="text-red-500 text-sm text-center">{error}</p>
+            )}
+            <div className="flex items-center gap-4">
               <motion.button
                 whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-px text-(--purple-3) cursor-pointer dark:text-(--purple-5)"
+                onClick={handleUseCurrentLocation}
+                disabled={isLoading}
+                className="flex items-center gap-1 text-(--purple-3) cursor-pointer dark:text-(--purple-5) disabled:opacity-50"
               >
-                <HiOutlineLocationMarker size={20} />
+                {isLoading ? (
+                  <AiOutlineLoading3Quarters
+                    size={20}
+                    className="animate-spin"
+                  />
+                ) : (
+                  <HiOutlineLocationMarker size={20} />
+                )}
                 <span className="font-semibold text-base">
-                  Set my location on the map
+                  {isLoading
+                    ? "Getting location..."
+                    : "Use my current location"}
                 </span>
               </motion.button>
-            </Link>
+              <div className="border border-(--neutral-200) h-full w-4 dark:border-(--neutral-400) rotate-90"></div>
+              <Link to="/set-custom-location">
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  className="flex items-center gap-1 text-(--purple-3) cursor-pointer dark:text-(--purple-5)"
+                >
+                  <HiOutlineLocationMarker size={20} />
+                  <span className="font-semibold text-base">
+                    Set my location on the map
+                  </span>
+                </motion.button>
+              </Link>
+            </div>
           </div>
         </PopIn>
       </MotionContainer>

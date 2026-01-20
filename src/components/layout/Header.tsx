@@ -11,6 +11,7 @@ import {
   SlideIn,
 } from "../animations/motion";
 import { motion } from "motion/react";
+import { useLocation } from "../../hooks/useLocation";
 
 interface HeaderProps {
   title?: string;
@@ -23,6 +24,8 @@ const Header: React.FC<HeaderProps> = ({
   description = "",
   previous,
 }) => {
+  const { location } = useLocation();
+
   return (
     <div className="w-full">
       <SlideIn direction="down" className="w-full lg:hidden">
@@ -66,7 +69,7 @@ const Header: React.FC<HeaderProps> = ({
             >
               <CiLocationOn size={20} className="text-(--purple-3)" />
               <span className="font-semibold text-sm text-(--purple-3)">
-                8th Ave, New York
+                {location?.address || "Set location"}
               </span>
               <FiChevronDown size={20} className="text-(--purple-3)" />
             </motion.button>
