@@ -7,8 +7,11 @@ import { FadeIn, SlideIn, PopIn } from "./animations/motion";
 import { TbLocation } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
+import { useTheme } from "../hooks/useTheme";
+
 function SetCustomLocation() {
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   const [query, setQuery] = useState("");
   const allLocations = [
@@ -35,25 +38,28 @@ function SetCustomLocation() {
       <div
         className="w-full min-h-screen bg-cover bg-no-repeat bg-center"
         style={{
-          backgroundImage: "url('/images/set-custom-location-map.svg')",
+          backgroundImage:
+            theme === "dark"
+              ? "url('/images/set-custom-location-map-dark.svg')"
+              : "url('/images/set-custom-location-map.svg')",
         }}
       >
         <Navbar />
 
         <div className="w-full px-4 min-h-screen pt-10 lg:pt-[70px] max-w-[700px] mx-auto">
-          <div className="bg-white rounded-[20px] shadow-md p-6 space-y-5 w-full">
-            <h1 className="text-center heading-font font-medium text-[22px] text-(--neutral-800) flex items-center justify-center gap-2">
+          <div className="bg-white rounded-[20px] shadow-md p-6 space-y-5 w-full dark:bg-(--neutral-700)">
+            <h1 className="text-center heading-font font-medium text-[22px] text-(--neutral-800) dark:text-white flex items-center justify-center gap-2">
               Set Your Location{" "}
               <span>
                 <LiaSearchLocationSolid />
               </span>{" "}
             </h1>
 
-            <div className="px-4 py-3 rounded-2xl border border-(--purple-5) flex items-center justify-between focus-within:border-2 focus-within:border-(--purple-2)">
+            <div className="px-4 py-3 rounded-2xl border border-(--purple-5) dark:border-(--purple-2) dark:focus-within:border-white flex items-center justify-between focus-within:border-2 focus-within:border-(--purple-2)">
               <input
                 type="text"
                 placeholder="Search for streets, cities, disticts...."
-                className="bg-none border-none outline-none w-full mr-4 placeholder:text-(--neutral-200)"
+                className="bg-none border-none outline-none w-full mr-4 placeholder:text-(--neutral-200) dark:placeholder:text-(--neutral-400) dark:text-white"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
@@ -65,7 +71,7 @@ function SetCustomLocation() {
                 <PopIn className="w-full px-4 py-5 rounded-[20px] bg-white dark:bg-(--neutral-700) shadow-md flex flex-col gap-[18px] absolute left-0 max-h-64 overflow-y-auto z-10 suggestions-scroll">
                   {locationList.length === 0 ? (
                     <FadeIn>
-                      <p className="text-(--neutral-600) text-sm">
+                      <p className="text-(--neutral-600) text-sm dark:text-(--neutral-400)">
                         No locations match "{query}"
                       </p>
                     </FadeIn>
