@@ -42,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <div
-      className={`w-full fixed top-0 right-0 z-40 bg-(--light-mode-bg) dark:bg-(--dark-mode-bg) transition-all duration-300 left-0 ${
+      className={`fixed top-0 right-0 z-40 bg-(--light-mode-bg) dark:bg-(--dark-mode-bg) transition-all duration-300 left-0 ${
         sidebarOpen ? "lg:left-[260px]" : "lg:left-36"
       }`}
     >
@@ -56,22 +56,25 @@ const Header: React.FC<HeaderProps> = ({
             <PopIn>
               <motion.button
                 onClick={previous}
-                className="w-12 h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer"
+                className="w-12 h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer dark:bg-(--neutral-700)"
                 aria-label="Go back"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
                 transition={{ type: "spring", stiffness: 400, damping: 24 }}
               >
-                <IoArrowBack size={20} />
+                <IoArrowBack
+                  size={20}
+                  className="dark:text-white text-(--neutral-600)"
+                />
               </motion.button>
             </PopIn>
           )}
           <MotionItem>
             <p className="flex flex-col">
-              <span className="font-semibold text-sm text-(--neutral-500)">
+              <span className="font-semibold text-sm text-(--neutral-500) dark:text-(--neutral-200)">
                 {title}
               </span>
-              <span className="heading-font font-medium text-[22px] text-(--neutral-800)">
+              <span className="heading-font font-medium text-[22px] text-(--neutral-800) heading-font dark:text-white">
                 {description}
               </span>
             </p>
