@@ -4,6 +4,7 @@ import Header from "./layout/Header";
 import { FaFilter } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
 import { motion } from 'framer-motion'
+import Choice from '/images/choiceimg.svg'
 
 import Loader from "./Loader";
 
@@ -29,7 +30,7 @@ const FullMenu: React.FC = () => {
 
        <div className="px-6 py-4 md:py-8 md:px-10.5">
 
-        <div className='md:p-4 gap-4 md:rounded-2xl md:shadow-[0_4px_12px_rgba(0,0,0,0.10)] md:bg-white md:dark:bg-[#4A4A6A] flex justify-between items-center mb-10'>
+        <div className='md:p-4 gap-4 md:rounded-2xl md:shadow-[0_4px_12px_rgba(0,0,0,0.10)] md:bg-white md:dark:bg-[#4A4A6A] flex justify-between items-center'>
             <div className="w-full flex items-center justify-center px-4 py-3 rounded-2xl border border-(--neutral-150) bg-transparent dark:border-(--neutral-600)">
                 <input
                     type="text"
@@ -53,6 +54,20 @@ const FullMenu: React.FC = () => {
             </motion.div>
         </div>
        </div>
+
+       <div className="px-6 py-4 md:py-8 md:px-10.5">
+        <div className='gap-4 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)] dark:bg-white bg-[#4A4A6A] flex justify-between items-center'>
+            <div className='max-w-[148px] sm:max-w-[180px] flex flex-col left-[22px]'>
+                <p>Product of the day</p>
+                <h2>Avocado Chicken Salad</h2>
+                <p>$10.40</p>
+            </div>
+            <div>
+                <img src={Choice} alt="" />
+            </div>
+        </div>
+       </div>
+
       </div>
     </div>
   );

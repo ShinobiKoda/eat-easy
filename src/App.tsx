@@ -72,7 +72,7 @@ function App() {
       {showSidebar && <Sidebar />}
       <div
         className={`transition-all duration-300 ${
-          showSidebar ? (sidebarOpen ? "lg:ml-[260px]" : "lg:ml-36") : ""
+          showSidebar ? (sidebarOpen ? "md:ml-[260px]" : "md:ml-36") : ""
         }`}
       >
         <Routes>

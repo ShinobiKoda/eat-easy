@@ -29,11 +29,11 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <div className="w-full">
-      <SlideIn direction="down" className="w-full lg:hidden">
+      <SlideIn direction="down" className="w-full md:hidden">
         <Navbar title={navbarTitle} description={navbarDescription} />
       </SlideIn>
 
-      <MotionContainer className="w-full hidden lg:flex px-[30px] py-5 border-b-[1.5px] border-b-(--neutral-150) items-center justify-between">
+      <MotionContainer className="w-full hidden md:flex px-[30px] py-5 border-b-[1.5px] border-b-(--neutral-150) items-center justify-between">
         <div className="flex items-center gap-3">
           {previous && (
             <PopIn>
