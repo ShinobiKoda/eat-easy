@@ -12,6 +12,7 @@ import {
 } from "../animations/motion";
 import { motion } from "motion/react";
 import { useLocation } from "../../hooks/useLocation";
+import { useState, useEffect } from "react";
 
 interface HeaderProps {
   title?: string;
@@ -25,14 +26,31 @@ const Header: React.FC<HeaderProps> = ({
   previous,
 }) => {
   const { location } = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ open: boolean }>).detail;
+      if (detail && typeof detail.open === "boolean") {
+        setSidebarOpen(detail.open);
+      }
+    };
+    window.addEventListener("sidebar-state", handler as EventListener);
+    return () =>
+      window.removeEventListener("sidebar-state", handler as EventListener);
+  }, []);
 
   return (
-    <div className="w-full">
+    <div
+      className={`w-full fixed top-0 right-0 z-40 bg-(--light-mode-bg) dark:bg-(--dark-mode-bg) transition-all duration-300 left-0 ${
+        sidebarOpen ? "lg:left-[260px]" : "lg:left-36"
+      }`}
+    >
       <SlideIn direction="down" className="w-full lg:hidden">
         <Navbar />
       </SlideIn>
 
-      <MotionContainer className="w-full hidden lg:flex px-[30px] py-5 border-b-[1.5px] border-b-(--neutral-150) items-center justify-between">
+      <MotionContainer className="w-full hidden lg:flex px-[30px] py-5 border-b-[1.5px] border-b-(--neutral-150) dark:border-b-(--neutral-700) items-center justify-between bg-(--light-mode-bg) dark:bg-(--dark-mode-bg)">
         <div className="flex items-center gap-3">
           {previous && (
             <PopIn>
