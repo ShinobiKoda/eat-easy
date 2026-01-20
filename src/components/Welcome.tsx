@@ -1,3 +1,14 @@
+import React, { useState } from 'react'
+import { motion } from 'framer-motion'
+import Navbar from "./layout/Navbar"
+import PopSign from "/images/popsign.png"
+import Location from "/images/Map-pin.png"
+import Time from "/images/time-img.png"
+import Gram from "/images/Gram.png"
+import Bulb from "/images/bulb-img.png"
+import Book from "/images/menubook.png"
+import { HiArrowSmRight } from "react-icons/hi";
+import { NavLink } from 'react-router-dom'
 import React, { useEffect, useState } from "react";
 import Header from "./layout/Header";
 

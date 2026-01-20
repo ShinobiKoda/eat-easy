@@ -6,6 +6,7 @@ import SearchIcon from "/images/search-icon.png";
 import PopSign from "/images/popsign.png";
 import ArrowRight from "/images/arrow-right.png";
 
+
 const Locations: React.FC = () => {
   const Available = [
     { address: "790 8th Ave New York", distance: "0.6 km away" },

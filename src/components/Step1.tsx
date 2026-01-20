@@ -23,6 +23,15 @@ const Step1: React.FC = () => {
 
   
 
+  // allow multiple feelings to be selected; store selected indices
+  const [selectedFeelings, setSelectedFeelings] = useState<number[]>([])
+
+  const toggleFeeling = (index: number) => {
+    setSelectedFeelings(prev =>
+      prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
+    )
+  }
+
   const Feelings = [
     { name: 'Thirsty', image: Thirsty },
     { name: 'Hungry', image: Hungry },
@@ -36,25 +45,23 @@ const Step1: React.FC = () => {
   ]
 
   return (
-    <div className="bg-[#F7F7F7] w-full min-h-screen">
-
-      
+    <div className="w-full min-h-screen">      
 
       <div className={`transition-all duration-300`}>
         <div className='max-w-6xl mx-auto flex flex-col items-center py-6 px-6 sm:px-20 lg:px-6 space-y-10 my-5'>
 
             <div className='flex flex-col items-center text-center max-w-xl'>
-              <h1 className='text-[22px] lg:text-[32px] text-[#32324D] font-bold mb-2'>How are you feeling right now?</h1>
-              <p className='text-[16px] lg:text-[20px] font-600 text-[#8E8EA9]'>Select all that applies</p>
+              <h1 className='text-[22px] lg:text-[32px] text-[#32324D] dark:text-[#FFFFFF] font-bold mb-2'>How are you feeling right now?</h1>
+              <p className='text-[16px] lg:text-[20px] font-600 text-[#8E8EA9] dark:text-[#EAEAEF]'>Select all that applies</p>
             </div>
 
-            <div className='text-[16px] font-600 text-[#8E8EA9] gap-4 w-full lg:w-xl flex flex-wrap justify-center items-center mb-50 md:mb-20'>
+            <div className='text-[16px] font-700 text-[#8E8EA9] dark:text-[#EAEAEF] gap-4 w-full lg:w-xl flex flex-wrap justify-center items-center mb-50 md:mb-20'>
                 {Feelings.map((feeling, idx) => (
                 <motion.button
                     key={idx}
                     onClick={() => toggleFeeling(idx)}
                     whileTap={{ scale: 0.95 }}
-                    className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 border-2 border-gray-500 ${selectedFeelings.includes(idx) ? 'bg-amber-500 text-white' : ''}`}>
+                    className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 border-2 border-gray-500 ${selectedFeelings.includes(idx) ? 'bg-amber-500 text-white dark:text-[#32324D]' : ''}`}>
                     <img src={feeling.image} className='w-5 h-5 md:w-7 md:h-7' alt="" />
                     <p>{feeling.name}</p>
                 </motion.button>
@@ -64,14 +71,14 @@ const Step1: React.FC = () => {
             <div className='text-[16px] lg:text-[20px] font-600 text-[#8E8EA9] space-y-4 w-full lg:w-xl flex flex-col items-center'>
                 <NavLink to="/welcome" className="w-full">
                     <motion.button 
-                        whileTap={{ scale: 0.95 }}  
-                        className='p-4 cursor-pointer w-full hover:bg-gray-600 rounded-2xl'>Take me to the menu
+                        whileTap={{ scale: 0.98 }}  
+                        className='p-4 cursor-pointer w-full dark:text-[#EBEAF2] rounded-2xl'>Take me to the menu
                     </motion.button>
                 </NavLink>
-                <NavLink to="/recommended " className="w-full">
+                <NavLink to="/recommended" className="w-full">
                     <motion.button 
-                        whileTap={{ scale: 0.95 }}  
-                        className='rounded-2xl bg-[#32324D] p-4 cursor-pointer w-full'>Continue
+                        whileTap={{ scale: 0.98 }}  
+                        className='rounded-2xl bg-[#32324D] dark:bg-[#615793] dark:text-[#FFFFFF] p-4 cursor-pointer w-full'>Continue
                     </motion.button>
                 </NavLink>
             </div>
