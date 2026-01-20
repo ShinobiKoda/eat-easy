@@ -6,7 +6,6 @@ import SignUpMethod from "./components/auth/SignUpMethod";
 import Signup from "./components/auth/SignUp";
 import Login from "./components/auth/Login";
 import ForgotPassword from "./components/auth/ForgotPassword";
-import Locations from "./components/Locations";
 import Welcome from "./components/Welcome";
 import Virtual from "./components/Virtual";
 import Recommend from "./components/Recommend";
@@ -20,6 +19,7 @@ import Sidebar from "./components/layout/Sidebar";
 import SelectRestaurant from "./components/SelectRestaurant";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import PublicRoute from "./components/auth/PublicRoute";
+import SetCustomLocation from "./components/SetCustomLocation";
 
 function App() {
   const location = useLocation();
@@ -147,10 +147,10 @@ function App() {
             }
           />
           <Route
-            path="/locations"
+            path="/set-custom-location"
             element={
               <ProtectedRoute>
-                <Locations />
+                <SetCustomLocation />
               </ProtectedRoute>
             }
           />

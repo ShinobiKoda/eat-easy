@@ -4,9 +4,11 @@ import { RiMenu2Fill } from "react-icons/ri";
 
 type NavbarProps = {
   className?: string;
+  title?: string;
 };
 
-const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
+const Navbar: React.FC<NavbarProps> = ({ className = "", title = " " }) => {
+  
   return (
     <nav className={`w-full ${className} lg:hidden`}>
       <motion.button
@@ -15,7 +17,11 @@ const Navbar: React.FC<NavbarProps> = ({ className = "" }) => {
         onClick={() => window.dispatchEvent(new Event("toggle-sidebar"))}
         aria-label="Toggle sidebar"
       >
-        <RiMenu2Fill size={24} className="ml-auto text-(--neutral-700) dark:text-(--purple-5)" />
+        <RiMenu2Fill
+          size={24}
+          className="ml-auto text-(--neutral-700) dark:text-(--purple-5)"
+        />
+        {title && <p>{title}</p>}
       </motion.button>
     </nav>
   );

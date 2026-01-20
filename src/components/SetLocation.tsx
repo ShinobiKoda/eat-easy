@@ -92,7 +92,7 @@ const SetLocation = () => {
               </span>
             </motion.button>
             <div className="border border-(--neutral-200) h-full w-4 dark:border-(--neutral-400) rotate-90"></div>
-            <Link to="/locations">
+            <Link to="/set-custom-location ">
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 className="flex items-center gap-px text-(--purple-3) cursor-pointer dark:text-(--purple-5)"
