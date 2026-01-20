@@ -18,12 +18,16 @@ interface HeaderProps {
   title?: string;
   description?: string;
   previous?: () => void;
+  navbarTitle?: string;
+  navbarDescription?: string;
 }
 
 const Header: React.FC<HeaderProps> = ({
   title = "Food Menu",
   description = "",
   previous,
+  navbarTitle = "",
+  navbarDescription = "",
 }) => {
   const { location } = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -47,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({
       }`}
     >
       <SlideIn direction="down" className="w-full lg:hidden">
-        <Navbar />
+        <Navbar title={navbarTitle} description={navbarDescription} />
       </SlideIn>
 
       <MotionContainer className="w-full hidden md:flex px-[30px] py-5 border-b-[1.5px] border-b-(--neutral-150) dark:border-b-(--neutral-700) items-center justify-between bg-(--light-mode-bg) dark:bg-(--dark-mode-bg)">

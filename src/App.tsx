@@ -9,6 +9,7 @@ import ForgotPassword from "./components/auth/ForgotPassword";
 import Welcome from "./components/Welcome";
 import Virtual from "./components/Virtual";
 import Recommend from "./components/Recommend";
+import FullMenu from "./components/Full-menu";
 import Step1 from "./components/Step1";
 import { useTheme } from "./hooks/useTheme";
 import ConfirmLink from "./components/auth/ConfirmLink";
@@ -184,6 +185,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <SetLocation />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="FullMenu"
+            element={
+              <ProtectedRoute>
+                <FullMenu />
               </ProtectedRoute>
             }
           />

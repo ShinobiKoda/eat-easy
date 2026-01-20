@@ -64,7 +64,7 @@ const OrderStatus: React.FC = () => {
               </div>
             </div>
 
-            <div className='bg-[#FFFFFF] dark:bg-[#4A4A6A] text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-[16px] p-[20px] lg:p-[30px] space-y-[16px] max-w-[340px] sm:max-w-full sm:w-[40%] h-fit'>
+            <div className='bg-[#FFFFFF] dark:bg-[#4A4A6A] text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-[16px] p-[20px] lg:p-[30px] space-y-[16px] w-[340px] sm:max-w-full sm:w-[40%] h-fit'>
               <div className='w-full flex justify-between items-center'>
                 <p className='text-[#DCDCE4] font-semibold dark:text-[#DCDCE4]'>Order list and prices</p>
                 <FaChevronDown 
@@ -72,7 +72,7 @@ const OrderStatus: React.FC = () => {
                   className={`w-5 h-5 cursor-pointer fill-[#DCDCE4] dark:fill-[#FFB01D] ${ toggleList ? 'rotate-180' : '' }`} 
                 />
               </div>
-
+              
               <div className={`space-y-[12px] ${!toggleList ? 'flex flex-col' : 'hidden'}`}>
                 {order?.items ? (
                   order.items.map((sent: any) => (
