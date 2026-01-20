@@ -60,7 +60,7 @@ const Sidebar: React.FC = () => {
   return (
     <>
       <aside
-        className={`aside h-screen transition-transform duration-300 ease-in-out rounded-r-3xl fixed left-0 top-0 z-50
+        className={`aside h-screen transition-all duration-300 ease-in-out rounded-r-3xl fixed left-0 top-0 z-50
       w-[260px]
       ${effectiveIsOpen ? "translate-x-0" : "-translate-x-full"}
       lg:translate-x-0
