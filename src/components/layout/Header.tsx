@@ -11,6 +11,8 @@ import {
   SlideIn,
 } from "../animations/motion";
 import { motion } from "motion/react";
+import { useLocation } from "../../hooks/useLocation";
+import { useState, useEffect } from "react";
 
 interface HeaderProps {
   title?: string;
@@ -27,34 +29,56 @@ const Header: React.FC<HeaderProps> = ({
   navbarTitle = "",
   navbarDescription = "",
 }) => {
+  const { location } = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ open: boolean }>).detail;
+      if (detail && typeof detail.open === "boolean") {
+        setSidebarOpen(detail.open);
+      }
+    };
+    window.addEventListener("sidebar-state", handler as EventListener);
+    return () =>
+      window.removeEventListener("sidebar-state", handler as EventListener);
+  }, []);
+
   return (
-    <div className="w-full">
+    <div
+      className={`fixed top-0 right-0 z-40 bg-(--light-mode-bg) dark:bg-(--dark-mode-bg) transition-all duration-300 left-0 ${
+        sidebarOpen ? "md:left-[260px]" : "md:left-36"
+      }`}
+    >
       <SlideIn direction="down" className="w-full lg:hidden">
         <Navbar title={navbarTitle} description={navbarDescription} />
       </SlideIn>
 
-      <MotionContainer className="w-full hidden lg:flex px-[30px] py-5 border-b-[1.5px] border-b-(--neutral-150) items-center justify-between">
+      <MotionContainer className="w-full hidden md:flex px-[30px] py-5 border-b-[1.5px] border-b-(--neutral-150) dark:border-b-(--neutral-700) items-center justify-between bg-(--light-mode-bg) dark:bg-(--dark-mode-bg)">
         <div className="flex items-center gap-3">
           {previous && (
             <PopIn>
               <motion.button
                 onClick={previous}
-                className="w-12 h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer"
+                className="w-12 h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer dark:bg-(--neutral-700)"
                 aria-label="Go back"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
                 transition={{ type: "spring", stiffness: 400, damping: 24 }}
               >
-                <IoArrowBack size={20} />
+                <IoArrowBack
+                  size={20}
+                  className="dark:text-white text-(--neutral-600)"
+                />
               </motion.button>
             </PopIn>
           )}
           <MotionItem>
             <p className="flex flex-col">
-              <span className="font-semibold text-sm text-(--neutral-500)">
+              <span className="font-semibold text-sm text-(--neutral-500) dark:text-(--neutral-200)">
                 {title}
               </span>
-              <span className="heading-font font-medium text-[22px] text-(--neutral-800)">
+              <span className="heading-font font-medium text-[22px] text-(--neutral-800) heading-font dark:text-white">
                 {description}
               </span>
             </p>
@@ -70,7 +94,7 @@ const Header: React.FC<HeaderProps> = ({
             >
               <CiLocationOn size={20} className="text-(--purple-3)" />
               <span className="font-semibold text-sm text-(--purple-3)">
-                8th Ave, New York
+                {location?.address || "Set location"}
               </span>
               <FiChevronDown size={20} className="text-(--purple-3)" />
             </motion.button>
