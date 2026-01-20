@@ -16,17 +16,21 @@ interface HeaderProps {
   title?: string;
   description?: string;
   previous?: () => void;
+  navbarTitle?: string;
+  navbarDescription?: string;
 }
 
 const Header: React.FC<HeaderProps> = ({
   title = "Food Menu",
   description = "",
   previous,
+  navbarTitle = "",
+  navbarDescription = "",
 }) => {
   return (
     <div className="w-full">
       <SlideIn direction="down" className="w-full lg:hidden">
-        <Navbar />
+        <Navbar title={navbarTitle} description={navbarDescription} />
       </SlideIn>
 
       <MotionContainer className="w-full hidden lg:flex px-[30px] py-5 border-b-[1.5px] border-b-(--neutral-150) items-center justify-between">
