@@ -58,7 +58,7 @@ function GetStarted() {
           <div className="mt-8 flex flex-col gap-2.5 w-full px-6">
             <FadeIn>
               <motion.button
-                onClick={() => navigate("/welcome")}
+                onClick={() => navigate("/login")}
                 className="px-6 py-4 text-(--purple-3) font-semibold text-base dark:text-(--purple-5) w-full"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}

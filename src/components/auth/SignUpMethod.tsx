@@ -86,7 +86,7 @@ function SignUpMethod() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/welcome")}
+              onClick={() => navigate("/login")}
               className="px-6 py-4 text-(--purple-3) font-semibold w-full left-0 text-base absolute bottom-[70px] mx-auto dark:text-(--purple-5) cursor-pointer"
             >
               Sign up later
