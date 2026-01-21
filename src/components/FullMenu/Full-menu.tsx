@@ -7,6 +7,14 @@ import ProductCarousel from './productCarousel'
 
 import Loader from "../Loader";
 
+const Categories = [
+    { id: 1, name: "All Dishes"},
+    { id: 2, name: "Most Popular"},
+    { id: 3, name: "Salad"},
+    { id: 4, name: "Pizza"},
+    { id: 5, name: "Pasta"}
+]
+
 const FullMenu: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
 
@@ -15,6 +23,7 @@ const FullMenu: React.FC = () => {
     return () => clearTimeout(t);
   }, []);
 
+  const [filterDish, setFilterDish] = useState(Categories[0].id)
 
   return (
     <div className="w-full min-h-screen">
@@ -55,9 +64,25 @@ const FullMenu: React.FC = () => {
             </div>
         </div>
 
-        {/* food of the day section */}
+        {/* carousel section */}
         <ProductCarousel />
 
+        {/* filterDish buttons */}
+        <div className='w-full p-6 lg:p-7 xl:p-10 flex items-center whitespace-nowrap overflow-auto scrollbar-hidden space-x-5 lg:space-y-5 h-fit'>
+                         
+            <ul className='transition-all duration-900 transform flex items-center gap-2'>
+                {Categories.map(({ id, name }) => (
+                    <motion.li 
+                        whileTap={{ scale: 0.98 }}
+                        key={id} 
+                        onClick={() => setFilterDish(id)}
+                        className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-bold px-6 py-3 transition-colors duration-900 ${filterDish === id ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-300)'}`}
+                    >
+                        <p>{name}</p>
+                    </motion.li>
+                ))}
+            </ul>       
+        </div>
        </div>
 
       </div>
