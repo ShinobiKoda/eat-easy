@@ -1,8 +1,14 @@
 import { MotionContainer, SlideIn, PopIn } from "../animations/motion";
 import { motion } from "motion/react";
 import Header from "../layout/Header";
+import { useNavigate } from "react-router-dom";
+
 
 const SelectRestaurant = () => {
+
+  const navigate = useNavigate();
+
+
   const restuarants = [
     //add images to restuarnts for desktop
     {
@@ -131,7 +137,8 @@ const SelectRestaurant = () => {
           <div className="mt-[60px] w-full">
             <motion.button
               whileTap={{ scale: 0.98 }}
-              className="w-full px-6 py-4 rounded-2xl bg-(--purple-2) text-white text-semibold text-base"
+              onClick={()=> navigate("/welcome")}
+              className="w-full px-6 py-4 rounded-2xl bg-(--purple-2) text-white text-semibold text-base cursor-pointer"
             >
               Continue
             </motion.button>
