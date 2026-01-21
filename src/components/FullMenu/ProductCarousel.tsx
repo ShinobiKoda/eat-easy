@@ -66,43 +66,41 @@ const ProductCarousel = () => {
 
   return (
     <div className="py-4 flex items-center justify-center overflow-hidden w-full relative h-[145px] md:h-[250px] ">
-            {/* products */}
-            {Product.map(({ id, name, price, image, description }, i) =>{
-                const pos = getPosition(i);
-                let zIndex = 0;
-                if (pos === "center") zIndex = 10;
-                else if (pos === "left" || pos === "right") zIndex = 5;
-                else zIndex = 0;
-                return (
-                    <motion.div 
-                        initial="hidden"
-                        animate={pos}
-                        variants={variants}
-                        key={id} 
-                        style={{ zIndex }}
-                        className="overflow-clip rounded-2xl dark:bg-white bg-[#4A4A6A] flex items-center justify-between gap-2 h-full absolute w-[85%] sm:w-[78%]"
-                    >
+      {/* products */}
+      {Product.map(({ id, name, price, image, description }, i) =>{
+          const pos = getPosition(i);
+          let zIndex = 0;
+          if (pos === "center") zIndex = 10;
+          else if (pos === "left" || pos === "right") zIndex = 5;
+          else zIndex = 0;
+          return (
+            <motion.div 
+                initial="hidden"
+                animate={pos}
+                variants={variants}
+                key={id} 
+                style={{ zIndex }}
+                className="overflow-clip rounded-2xl dark:bg-white bg-(--neutral-900) flex items-center justify-between gap-2 h-full absolute w-[85%] sm:w-[78%]"
+            >
+              <div className="flex-1 space-y-2 sm:space-y-3 relative left-4 w-full py-3">
+                  <p className="text-sm text-(--neutral-400) tracking-wide">{description}</p>
 
-                        <div className="flex-1 space-y-2 sm:space-y-3 relative left-4 w-full py-3">
-                            <p className="text-sm text-gray-400 tracking-wide">{description}</p>
+                  <h2 className=" text-white dark:text-(--neutral-900) font-semibold leading-tight text-[clamp(1rem,3vw,2rem)]">{name}</h2>
 
-                            <h2 className=" text-white dark:text-[#4A4A6A] font-semibold leading-tight text-[clamp(1rem,3vw,2rem)]">{name}</h2>
+                  <p className=" text-(--yellow-1) font-bold text-[clamp(1.25rem,3vw,2.25rem)]">{price}</p>
+              </div>
 
-                            <p className=" text-(--yellow-1) font-bold text-[clamp(1.25rem,3vw,2.25rem)]">{price}</p>
-                        </div>
-
-                        <div className="h-full w-full max-w-[190px] sm:max-w-[285px] lg:max-w-[416px] flex items-center justify-center relative -right-10 sm:right-0">
-                            <img
-                                src={image}
-                                alt="Avocado Chicken Salad"
-                                className="h-full w-full object-contain"
-                            />
-                        </div>
-                    </motion.div>
-                )
-            })}
-
-        </div>
+              <div className="h-full w-full max-w-[190px] sm:max-w-[285px] lg:max-w-[416px] flex items-center justify-center relative -right-10 sm:right-0">
+                  <img
+                      src={image}
+                      alt="Avocado Chicken Salad"
+                      className="h-full w-full object-contain"
+                  />
+              </div>
+            </motion.div>
+          )
+      })}
+    </div>
   )
 }
 

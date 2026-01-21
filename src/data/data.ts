@@ -49,7 +49,8 @@ export const Eat: PropType[] = [
       { id: 6, name: "Extra cucumber", price: 1.60 },
       { id: 7, name: "Extra pepper", price: 1.50 },
     ],
-    text: "You won't skip the most important meal of the day with this avocado toast recipe. Crispy, lacy eggs and creamy avocado top hot buttered toast. "
+    text: "You won't skip the most important meal of the day with this avocado toast recipe. Crispy, lacy eggs and creamy avocado top hot buttered toast. ",
+    tag: ["most popular", "breakfast", "vegan"]
   },
   {
     id: 2,
@@ -80,7 +81,8 @@ export const Eat: PropType[] = [
       { id: 5, name: "Extra tomato", price: 2.10 },
       { id: 6, name: "Extra cucumber", price: 1.60 },
       { id: 7, name: "Extra pepper", price: 1.50 },
-    ]
+    ],
+    tag: ["salad", "chicken", "most popular"]
   },
   {
     id: 3,
@@ -111,7 +113,8 @@ export const Eat: PropType[] = [
       { id: 5, name: "Extra tomato", price: 2.10 },
       { id: 6, name: "Extra cucumber", price: 1.60 },
       { id: 7, name: "Extra pepper", price: 1.50 },
-    ]
+    ],
+    tag: ["grill", "chicken", "most popular"]
   },
   {
     id: 4,
@@ -142,7 +145,8 @@ export const Eat: PropType[] = [
       { id: 5, name: "Extra tomato", price: 2.10 },
       { id: 6, name: "Extra cucumber", price: 1.60 },
       { id: 7, name: "Extra pepper", price: 1.50 },
-    ]
+    ],
+    tag: ["grill", "most popular"]
   },
   {
     id: 5,
@@ -173,7 +177,8 @@ export const Eat: PropType[] = [
       { id: 5, name: "Extra tomato", price: 2.10 },
       { id: 6, name: "Extra cucumber", price: 1.60 },
       { id: 7, name: "Extra pepper", price: 1.50 },
-    ]
+    ],
+    tag: ["pasta", "most popular"]
   },
   {
     id: 6,
@@ -204,7 +209,8 @@ export const Eat: PropType[] = [
       { id: 5, name: "Extra tomato", price: 2.10 },
       { id: 6, name: "Extra cucumber", price: 1.60 },
       { id: 7, name: "Extra pepper", price: 1.50 },
-    ]
+    ],
+    tag: ["vegan", "salad"]
   },
   {
     id: 7,
@@ -235,8 +241,30 @@ export const Eat: PropType[] = [
       { id: 5, name: "Extra tomato", price: 2.10 },
       { id: 6, name: "Extra cucumber", price: 1.60 },
       { id: 7, name: "Extra pepper", price: 1.50 },
-    ]
-  }
+    ],
+    tag: ["salad", "vegan"]
+  },
+  // Dessert items merged in, continuing IDs
+  { id: 8, image: Baklava, name: "Pistachio Baklava", rating: 4.9, star: StarHalf, reviews: 322, price: 3.20, nutrients: [], ingredients: [], toppings: [], tag: ["dessert", "most popular", "vegan"] },
+  { id: 9, image: Brownie, name: "Salted Caramel Brownie", rating: 4.6, star: StarHalf, reviews: 88, price: 4.40, nutrients: [], ingredients: [], toppings: [], tag: ["dessert", "pasta"] },
+  { id: 10, image: Cake, name: "Red Velvet Cake", rating: 4.7, star: StarHalf, reviews: 74, price: 4.80, nutrients: [], ingredients: [], toppings: [], tag: ["dessert", "breakfast"] },
+  { id: 11, image: Creme, name: "Vanilla Bean Crème Brûlée", rating: 4.8, star: StarHalf, reviews: 119, price: 5.50, nutrients: [], ingredients: [], toppings: [], tag: ["dessert", "vegan"] },
+  { id: 12, image: Macaron, name: "Macaron Mix of Five", rating: 4.5, star: StarHalf, reviews: 45, price: 4.20, nutrients: [], ingredients: [], toppings: [], tag: ["dessert", "breakfast"] },
+  { id: 13, image: Panna, name: "Vanilla Panna Cotta", rating: 4.7, star: StarHalf, reviews: 95, price: 3.90, nutrients: [], ingredients: [], toppings: [], tag: ["dessert", "most popular"] },
+  { id: 14, image: Meringue, name: "Lemon Meringue Pie", rating: 4.8, star: StarHalf, reviews: 145, price: 3.60, nutrients: [], ingredients: [], toppings: [], tag: ["dessert", "vegan"] },
+  { id: 15, image: Tiramisu, name: "Classic Tiramisu", rating: 4.8, star: StarHalf, reviews: 141, price: 3.60, nutrients: [], ingredients: [], toppings: [], tag: ["dessert", "breakfast"] },
+  { id: 16, image: Waffle, name: "Waffle with Berries", rating: 4.8, star: StarHalf, reviews: 146, price: 3.60, nutrients: [], ingredients: [], toppings: [], tag: ["dessert", "breakfast", "most popular"] },
+  // Additional food objects for more categories
+  { id: 17, image: MacImage, name: "Classic Margherita Pizza", rating: 4.7, star: StarHalf, reviews: 210, price: 8.50, nutrients: [], ingredients: [], toppings: [], tag: ["pizza", "most popular"] },
+  { id: 18, image: ChickenBreast, name: "Chicken Burger", rating: 4.6, star: StarHalf, reviews: 180, price: 7.20, nutrients: [], ingredients: [], toppings: [], tag: ["burger", "chicken"] },
+  { id: 19, image: CurryImage, name: "Tomato Basil Soup", rating: 4.5, star: StarHalf, reviews: 95, price: 5.00, nutrients: [], ingredients: [], toppings: [], tag: ["soup", "vegan"] },
+  { id: 20, image: PowerImage, name: "Vegan Grill Platter", rating: 4.8, star: StarHalf, reviews: 110, price: 12.00, nutrients: [], ingredients: [], toppings: [], tag: ["grill", "vegan"] },
+  { id: 21, image: VegImage, name: "Vegan Breakfast Bowl", rating: 4.9, star: StarHalf, reviews: 130, price: 9.50, nutrients: [], ingredients: [], toppings: [], tag: ["breakfast", "vegan"] },
+  { id: 22, image: ChickenSalad, name: "Chicken Noodle Soup", rating: 4.7, star: StarHalf, reviews: 100, price: 6.50, nutrients: [], ingredients: [], toppings: [], tag: ["soup", "chicken"] },
+  { id: 23, image: MacImage, name: "Spaghetti Carbonara", rating: 4.8, star: StarHalf, reviews: 160, price: 9.80, nutrients: [], ingredients: [], toppings: [], tag: ["pasta", "most popular"] },
+  { id: 24, image: ChickenBreast, name: "Grilled Chicken Sandwich", rating: 4.7, star: StarHalf, reviews: 140, price: 8.20, nutrients: [], ingredients: [], toppings: [], tag: ["grill", "chicken", "most popular"] },
+  { id: 25, image: VegImage, name: "Vegan Caesar Salad", rating: 4.6, star: StarHalf, reviews: 90, price: 7.00, nutrients: [], ingredients: [], toppings: [], tag: ["salad", "vegan"] },
+  { id: 26, image: CurryImage, name: "Breakfast Omelette", rating: 4.8, star: StarHalf, reviews: 115, price: 7.80, nutrients: [], ingredients: [], toppings: [], tag: ["breakfast", "most popular"] },
 ]
 
 export const Drink: PropType[] = [
@@ -248,14 +276,3 @@ export const Drink: PropType[] = [
   { id: 6, image: VegImage, name: "Berry Blast", rating: 4.9, star: StarHalf, reviews: 150, price: 5.90, nutrients: [], ingredients: [], toppings: [] }
 ]
 
-export const Dessert: PropType[] = [
-  { id: 1, image: Baklava, name: "Pistachio Baklava", rating: 4.9, star: StarHalf, reviews: 322, price: 3.20, nutrients: [], ingredients: [], toppings: [] },
-  { id: 2, image: Brownie, name: "Salted Caramel Brownie", rating: 4.6, star: StarHalf, reviews: 88, price: 4.40, nutrients: [], ingredients: [], toppings: [] },
-  { id: 3, image: Cake, name: "Red Velvet Cake", rating: 4.7, star: StarHalf, reviews: 74, price: 4.80, nutrients: [], ingredients: [], toppings: [] },
-  { id: 4, image: Creme, name: "Vanilla Bean Crème Brûlée", rating: 4.8, star: StarHalf, reviews: 119, price: 5.50, nutrients: [], ingredients: [], toppings: [] },
-  { id: 5, image: Macaron, name: "Macaron Mix of Five", rating: 4.5, star: StarHalf, reviews: 45, price: 4.20, nutrients: [], ingredients: [], toppings: [] },
-  { id: 6, image: Panna, name: "Vanilla Panna Cotta", rating: 4.7, star: StarHalf, reviews: 95, price: 3.90, nutrients: [], ingredients: [], toppings: [] },
-  { id: 7, image: Meringue, name: "Lemon Meringue Pie", rating: 4.8, star: StarHalf, reviews: 145, price: 3.60, nutrients: [], ingredients: [], toppings: [] },
-  { id: 8, image: Tiramisu, name: "Classic Tiramisu", rating: 4.8, star: StarHalf, reviews: 141, price: 3.60, nutrients: [], ingredients: [], toppings: [] },
-  { id: 9, image: Waffle, name: "Waffle with Berries", rating: 4.8, star: StarHalf, reviews: 146, price: 3.60, nutrients: [], ingredients: [], toppings: [] }
-]
