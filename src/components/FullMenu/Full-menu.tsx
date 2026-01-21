@@ -41,7 +41,7 @@ const FullMenu: React.FC = () => {
           navbarTitle="Gram Bistro"
         />
 
-       <div className='pt-18 md:pt-24 max-w-[1440px] max-auto'>
+       <div className='pt-18 md:pt-24 max-w-[1440px] mx-auto'>
         <div className="px-6 py-4 md:py-8 md:px-10.5">
 
             <div className='md:p-4 gap-4 md:rounded-2xl md:shadow-[0_4px_12px_rgba(0,0,0,0.10)] md:bg-white md:dark:bg-[#4A4A6A] flex justify-between items-center'>
@@ -90,16 +90,23 @@ const FullMenu: React.FC = () => {
         </div>
         
         {/* product/dishes listing section */}
-        <div className='pl-6 py-4 md:py-8 md:pl-10.5 flex flex-col gap-6'>
+        <div className='px-6 py-4 md:py-8 md:px-10.5 flex flex-col gap-6'>
 
             <h1 className="text-[18px] text-(--neutral-600) font-semibold">Most Popular</h1>
             
-            <div className='flex items-center gap-4 flex-nowrap'>
-                {Eat.map(({ id, star, price, rating }) => (
+            <div className='items-center gap-[30px] grid grid-cols-5 gri '>
+                {Eat.map(({ id, image, star, price, rating }) => (
                     <div key={id} className='bg-white rounded-2xl py-3 px-4'>
+                        <div className="rounded-full">
+                            <img
+                                src={image}
+                                className="max-w-[100px] max-h-[100px] rounded-full"
+                                alt=""
+                            />
+                        </div>
                         <div className='space-x-1 flex items-center'>
-                        <img src={star} className='w-4 h-4' alt="" />
-                        <p>{rating}</p> 
+                            <img src={star} className='w-4 h-4' alt="" />
+                            <p>{rating}</p> 
                         </div>
                         <p className='text-[#FF7B2C] text-[15px] lg:text-[18px] font-extrabold'>${(price).toFixed(2)}</p>
                     </div>
