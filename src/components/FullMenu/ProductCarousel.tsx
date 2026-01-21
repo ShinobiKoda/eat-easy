@@ -45,20 +45,20 @@ const productCarousel = () => {
       transition: { duration: 0.8, ease: easeInOut }
     },
     left: {
-      x: "-110%",
+      x: "-97%",
       scale: 0.85,
       opacity: 0.4,
       transition: { duration: 0.8, ease: easeInOut }
     },
     right: {
-      x: "110%",
+      x: "97%",
       scale: 0.85,
       opacity: 0.4,
       transition: { duration: 0.8, ease: easeInOut }
     },
     hidden: {
       x: "0%",
-      scale: 0.5,
+      scale: 0,
       opacity: 0,
       transition: { duration: 0.4, ease: easeInOut }
     }
@@ -79,7 +79,8 @@ const productCarousel = () => {
                         animate={pos}
                         variants={variants}
                         key={id} 
-                        className="overflow-clip rounded-2xl dark:bg-white bg-[#4A4A6A] flex items-center justify-between gap-2 h-full absolute w-[85%] sm:w-[70%] max-w-[800px]"
+                        style={{ zIndex }}
+                        className="overflow-clip rounded-2xl dark:bg-white bg-[#4A4A6A] flex items-center justify-between gap-2 h-full absolute w-[85%] sm:w-[78%]"
                     >
 
                         <div className="flex-1 space-y-2 sm:space-y-3 relative left-4 w-full py-3">
