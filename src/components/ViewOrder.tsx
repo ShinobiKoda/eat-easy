@@ -8,7 +8,6 @@ import Delete from "/images/delete.svg"
 import Add from "/images/add.svg"
 import Cancel from "/images/Cancel.png"
 import Location from "/images/Map-pin.png"
-import { NavLink } from 'react-router-dom'
 
 export type ViewOrderProps = {
   items: PropType[];

@@ -9,7 +9,7 @@ const Product = [
   { id: 4, name: "Quinoa Power Salad", price: "$11.20", image: Choice, description: "Energizer" },
 ];
 
-const productCarousel = () => {
+const ProductCarousel = () => {
 
     const [index, setIndex] = useState(0);
 
@@ -106,4 +106,4 @@ const productCarousel = () => {
   )
 }
 
-export default productCarousel
+export default ProductCarousel

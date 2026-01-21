@@ -3,10 +3,10 @@ import Header from "../layout/Header";
 import { FaFilter } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
 import { motion } from 'framer-motion'
-import ProductCarousel from './productCarousel'
 
 import Loader from "../Loader";
 import { Eat } from '../../data/data';
+import ProductCarousel from './productCarousel';
 
 const Categories = [
     { id: 1, name: "All Dishes"},
