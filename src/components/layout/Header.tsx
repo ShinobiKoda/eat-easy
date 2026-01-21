@@ -88,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <div
-      className={`fixed top-0 right-0 z-40 bg-(--light-mode-bg) dark:bg-(--dark-mode-bg) transition-all duration-300 left-0 ${
+      className={`fixed top-0 right-0 z-40 bg-(--light-mode-bg)/80 dark:bg-(--dark-mode-bg)/80 backdrop-blur-md transition-all duration-300 left-0 ${
         sidebarOpen ? "md:left-[260px]" : "md:left-36"
       }`}
     >
