@@ -80,7 +80,7 @@ const ViewOrder: React.FC<ViewOrderProps> = ({ items, onClose, removeOrder, onSe
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-hidden">
-        <div className="p-[24px] space-y-[27px]">
+        <div className="p-6 space-y-[27px]">
 
           <div className='flex flex-col space-y-5'>
             {items.map((order) => (
