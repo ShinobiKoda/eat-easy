@@ -35,7 +35,7 @@ const SetLocation = () => {
   return (
     <div className="w-full h-full">
       <Navbar />
-      <MotionContainer className="w-full lg:hidden">
+      <MotionContainer className="w-full md:hidden">
         <SlideIn direction="down" className="px-6">
           <h1 className="font-medium text-[22px] text-(--neutral-800) text-center heading-font dark:text-white">
             Set your locations

@@ -50,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({
         sidebarOpen ? "md:left-[260px]" : "md:left-36"
       }`}
     >
-      <SlideIn direction="down" className="w-full lg:hidden">
+      <SlideIn direction="down" className="w-full md:hidden">
         <Navbar title={navbarTitle} description={navbarDescription} />
       </SlideIn>
 
