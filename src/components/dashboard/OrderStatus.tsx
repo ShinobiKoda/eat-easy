@@ -17,7 +17,6 @@ const OrderStatus: React.FC = () => {
 
   const [order, setOrder] = useState<any>(null);
 
-  // locally storage for sentorders persistency
   useEffect(() => {
     try {
       const raw = localStorage.getItem("eat-easy-last-order");

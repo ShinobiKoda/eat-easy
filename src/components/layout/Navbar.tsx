@@ -5,24 +5,32 @@ import { MotionItem } from "../animations/motion";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 
 type NavbarProps = {
-  description?: string
+  description?: string;
   className?: string;
   title?: string;
 };
 
-const Navbar: React.FC<NavbarProps> = ({ title = "", description = "", className = "" }) => {
+const Navbar: React.FC<NavbarProps> = ({
+  title = "",
+  description = "",
+  className = "",
+}) => {
   return (
-    <nav className={`w-full flex justify-between items-center px-6 py-4 md:hidden ${className}`}>
+    <nav
+      className={`w-full flex justify-between items-center px-6 py-4 md:hidden ${className}`}
+    >
       <MotionItem className="w-full">
-        <p className="flex flex-col">
-          <span className="flex gap-2 items-center font-semibold text-[16px] text-(--neutral-500)">
-            <HiOutlineLocationMarker size={20} />
-            {title}
-          </span>
-          <span className="heading-font font-medium text-[22px] text-(--neutral-800)">
-            {description}
-          </span>
-        </p>
+        {title && (
+          <p className="flex flex-col">
+            <span className="flex gap-2 items-center font-semibold text-[16px] text-(--neutral-500)">
+              <HiOutlineLocationMarker size={20} />
+              {title}
+            </span>
+            <span className="heading-font font-medium text-[22px] text-(--neutral-800)">
+              {description}
+            </span>
+          </p>
+        )}
       </MotionItem>
 
       <motion.button

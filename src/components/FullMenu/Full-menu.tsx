@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import Header from "../layout/Header";
 import { FaFilter } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
 
 import Loader from "../Loader";
-import { Eat } from '../../data/data';
-import ProductCarousel from './ProductCarousel';
+import { Eat } from "../../data/data";
+import ProductCarousel from "./ProductCarousel";
 
 const Categories = [
-    { id: 1, name: "All Dishes"},
-    { id: 2, name: "Most Popular"},
-    { id: 3, name: "Salad"},
-    { id: 4, name: "Pizza"},
-    { id: 5, name: "Pasta"}
-]
+  { id: 1, name: "All Dishes" },
+  { id: 2, name: "Most Popular" },
+  { id: 3, name: "Salad" },
+  { id: 4, name: "Pizza" },
+  { id: 5, name: "Pasta" },
+];
 
 const FullMenu: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
@@ -24,7 +24,7 @@ const FullMenu: React.FC = () => {
     return () => clearTimeout(t);
   }, []);
 
-  const [filterDish, setFilterDish] = useState(Categories[0].id)
+  const [filterDish, setFilterDish] = useState(Categories[0].id);
 
   return (
     <div className="w-full min-h-screen">
@@ -35,7 +35,11 @@ const FullMenu: React.FC = () => {
           showLoader ? "pointer-events-none overflow-hidden" : ""
         }`}
       >
-       <Header title='Full Menu' description="See All Our Dishes" navbarTitle='Gram Bistro'/>
+        <Header
+          title="Full Menu"
+          description="See All Our Dishes"
+          navbarTitle="Gram Bistro"
+        />
 
        <div className='pt-18 md:pt-24 max-w-[1440px] max-auto'>
         <div className="px-6 py-4 md:py-8 md:px-10.5">
@@ -63,10 +67,10 @@ const FullMenu: React.FC = () => {
                         <p className='hidden md:block'>Filters</p>
                 </motion.div>
             </div>
-        </div>
+          </div>
 
-        {/* carousel section */}
-        <ProductCarousel />
+          {/* carousel section */}
+          <ProductCarousel />
 
         {/* filterDish buttons */}
         <div className='w-full p-6 lg:p-7 xl:p-10 flex items-center whitespace-nowrap overflow-auto scrollbar-hidden space-x-5 lg:space-y-5 h-fit'>
@@ -101,9 +105,8 @@ const FullMenu: React.FC = () => {
                     </div>
                 ))}
             </div>
+          </div>
         </div>
-       </div>
-
       </div>
     </div>
   );

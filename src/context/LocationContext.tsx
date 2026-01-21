@@ -36,14 +36,15 @@ export const LocationProvider = ({ children }: Props) => {
     }
   }, [location]);
 
+  // Replace with your LocationIQ API key
+  const LOCATIONIQ_API_KEY = "pk.3cb6ad9b4da0277492c6ef9230814689";
   const reverseGeocode = async (lat: number, lon: number): Promise<string> => {
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`,
+        `https://us1.locationiq.com/v1/reverse?key=${LOCATIONIQ_API_KEY}&lat=${lat}&lon=${lon}&format=json`,
       );
       const data = await response.json();
-
-      if (data.address) {
+      if (data && data.address) {
         const { road, house_number, city, town, village, suburb, state } =
           data.address;
         const streetPart = house_number
@@ -51,13 +52,11 @@ export const LocationProvider = ({ children }: Props) => {
           : road || "";
         const cityPart = city || town || village || suburb || "";
         const statePart = state || "";
-
         if (streetPart && cityPart) {
           return `${streetPart}, ${cityPart}`;
         } else if (cityPart && statePart) {
           return `${cityPart}, ${statePart}`;
         } else if (data.display_name) {
-          // Take first two parts of the display name
           const parts = data.display_name.split(", ").slice(0, 2);
           return parts.join(", ");
         }

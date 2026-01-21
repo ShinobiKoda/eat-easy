@@ -21,7 +21,24 @@ const Sidebar: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<number | null>(1);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [username, setUsername] = useState<string>("");
   const navigate = useNavigate();
+  // Fetch username from Supabase session
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error("Error fetching user:", error);
+      }
+      if (data?.user) {
+        // Try user_metadata.username, fallback to email prefix
+        const meta = data.user.user_metadata as any;
+        let uname = meta?.username || data.user.email?.split("@")[0] || "User";
+        setUsername(uname);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -101,19 +118,33 @@ const Sidebar: React.FC = () => {
           >
             <div
               className={`flex items-center gap-[22px] ${
-                !effectiveIsOpen ? "flex-row md:flex-col" : ""
+                !effectiveIsOpen ? "flex-row md:flex-col items-center" : ""
               }`}
             >
-              <div className="w-[68px] h-[68px] rounded-full">
+              <div className="shrink-0 flex items-center justify-center">
                 <img
                   src={Profile}
-                  className="w-full"
+                  className="w-[68px] h-[68px] rounded-full object-cover"
                   alt="Profile Picture Image"
                 />
               </div>
 
-              <div className="text-white space-y-1.5">
-                <p className="font-semibold text-base">Robert Fox</p>
+              <div className="text-white space-y-1.5 w-full">
+                <p
+                  className={`font-semibold text-base max-w-[120px] md:max-w-full transition-all duration-300 ${
+                    effectiveIsOpen
+                      ? "truncate md:whitespace-normal md:overflow-visible"
+                      : "truncate"
+                  }`}
+                  title={username}
+                  style={{ direction: "ltr" }}
+                >
+                  {effectiveIsOpen
+                    ? username
+                    : username.length > 12
+                      ? username.slice(0, 12) + "..."
+                      : username}
+                </p>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   className="cursor-pointer font-medium text-sm underline outline-none border-none"

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { supabase } from "../../config/supabaseClient";
 import { ClipLoader } from "react-spinners";
@@ -11,24 +11,28 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
+  const isMounted = useRef(true);
 
   useEffect(() => {
+    isMounted.current = true;
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
-      setIsAuthenticated(!!data.session);
-      setIsLoading(false);
+      if (isMounted.current) {
+        setIsAuthenticated(!!data.session);
+        setIsLoading(false);
+      }
     };
-
     checkAuth();
-
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setIsAuthenticated(!!session);
-        setIsLoading(false);
+        if (isMounted.current) {
+          setIsAuthenticated(!!session);
+          setIsLoading(false);
+        }
       },
     );
-
     return () => {
+      isMounted.current = false;
       authListener.subscription.unsubscribe();
     };
   }, []);
@@ -41,7 +45,8 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  if (!isAuthenticated) {
+  // Only redirect if loading is false and not authenticated
+  if (!isLoading && !isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

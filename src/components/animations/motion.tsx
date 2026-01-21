@@ -1,7 +1,6 @@
 import React, { type ReactNode } from "react";
 import { motion, type Variants } from "motion/react";
-import {useState, useEffect} from "react"
-
+import { useState, useEffect } from "react";
 
 export const staggerContainer: Variants = {
   hidden: { opacity: 0 },
@@ -41,17 +40,17 @@ export const floaty: Variants = {
 };
 
 export const slideIn = (
-  direction: "left" | "right" | "up" | "down" = "up"
+  direction: "left" | "right" | "up" | "down" = "up",
 ): Variants => {
   const distance = 24;
   const from =
     direction === "left"
       ? { x: -distance }
       : direction === "right"
-      ? { x: distance }
-      : direction === "up"
-      ? { y: distance }
-      : { y: -distance };
+        ? { x: distance }
+        : direction === "up"
+          ? { y: distance }
+          : { y: -distance };
 
   return {
     hidden: { opacity: 0, ...from },
@@ -100,7 +99,6 @@ export const MotionContainer = ({
     </motion.div>
   );
 };
-
 
 /* Base motion wrapper for all other components */
 export const MotionItem = ({
@@ -164,11 +162,7 @@ export const SlideIn = ({
   className?: string;
   style?: React.CSSProperties;
 }) => (
-  <MotionItem
-    className={className}
-    style={style}
-    variants={slideIn(direction)}
-  >
+  <MotionItem className={className} style={style} variants={slideIn(direction)}>
     {children}
   </MotionItem>
 );
@@ -207,5 +201,63 @@ export const textReveal: Variants = {
       delay: 0.5,
       ease: [0.22, 1, 0.36, 1],
     },
+  },
+};
+
+/* Dropdown animations */
+export const dropdownContainer: Variants = {
+  hidden: {
+    opacity: 0,
+    y: -10,
+    scale: 0.95,
+    transformOrigin: "top",
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.25,
+      ease: [0.22, 1, 0.36, 1],
+      staggerChildren: 0.05,
+      when: "beforeChildren",
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -8,
+    scale: 0.96,
+    transition: {
+      duration: 0.2,
+      ease: "easeIn",
+    },
+  },
+};
+
+export const dropdownItem: Variants = {
+  hidden: { opacity: 0, x: -10 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] },
+  },
+  exit: {
+    opacity: 0,
+    x: -5,
+    transition: { duration: 0.15 },
+  },
+};
+
+export const scaleIn: Variants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.2, ease: "easeOut" },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    transition: { duration: 0.15 },
   },
 };
