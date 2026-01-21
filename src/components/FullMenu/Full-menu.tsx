@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import ProductCarousel from './productCarousel'
 
 import Loader from "../Loader";
+import { Eat } from '../../data/data';
 
 const Categories = [
     { id: 1, name: "All Dishes"},
@@ -76,12 +77,28 @@ const FullMenu: React.FC = () => {
                         whileTap={{ scale: 0.98 }}
                         key={id} 
                         onClick={() => setFilterDish(id)}
-                        className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-bold px-6 py-3 transition-colors duration-900 ${filterDish === id ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-300)'}`}
+                        className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-bold px-3.5 md:px-6 py-3 transition-colors duration-900 ${filterDish === id ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-300)'}`}
                     >
                         <p>{name}</p>
                     </motion.li>
                 ))}
             </ul>       
+        </div>
+
+        <div className='pl-6 py-4 md:py-8 md:pl-10.5'>
+            <h1 className="text-[#666687] text-[18px] dark:text-[#DCDCE4] font-semibold">Most Popular</h1>
+            
+            <div className='flex items-center gap-4 flex-nowrap'>
+                {Eat.map(({ id, star, price, rating }) => (
+                    <div key={id} className='bg-white rounded-2xl py-3 px-4'>
+                        <div className='space-x-1 flex items-center'>
+                        <img src={star} className='w-4 h-4' alt="" />
+                        <p>{rating}</p> 
+                        </div>
+                        <p className='text-[#FF7B2C] text-[15px] lg:text-[18px] font-extrabold'>${(price).toFixed(2)}</p>
+                    </div>
+                ))}
+            </div>
         </div>
        </div>
 
