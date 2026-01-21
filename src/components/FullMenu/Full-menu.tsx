@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 
 import Loader from "../Loader";
 import { Eat } from '../../data/data';
-import ProductCarousel from './productCarousel';
+import ProductCarousel from './ProductCarousel';
 
 const Categories = [
     { id: 1, name: "All Dishes"},

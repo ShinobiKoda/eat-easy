@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { RxLightningBolt } from "react-icons/rx";
 import { PopIn, MotionContainer } from "../animations/motion";
 import ThemeSwitchButton from "../ThemeSwitchButton";
-import AsideCard from "../AsideCard";
+import AsideCard from "../onboarding/AsideCard";
 
 const ResetEmailSent = () => {
   const { state } = useLocation();

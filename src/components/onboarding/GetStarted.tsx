@@ -1,8 +1,8 @@
-import { MotionContainer, PopIn, FadeIn, SlideIn } from "./animations/motion";
+import { MotionContainer, PopIn, FadeIn, SlideIn } from "../animations/motion";
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
-import ThemeSwitchButton from "./ThemeSwitchButton";
+import ThemeSwitchButton from "../ThemeSwitchButton";
 import AsideCard from "./AsideCard";
 
 function GetStarted() {

@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import ThemeSwitchButton from "../ThemeSwitchButton";
-import AsideCard from "../AsideCard";
+import AsideCard from "../onboarding/AsideCard";
 import { MotionContainer, fadeIn, popIn } from "../animations/motion";
 import { supabase } from "../../config/supabaseClient";
 
@@ -40,7 +40,7 @@ function ForgotPassword() {
       navigate("/reset-email-sent", { state: { email: data.email } });
     } catch (err: any) {
       setSubmitError(
-        err?.message || "Failed to send reset email. Please try again."
+        err?.message || "Failed to send reset email. Please try again.",
       );
     } finally {
       setIsSubmitting(false);

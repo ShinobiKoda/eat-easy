@@ -1,6 +1,6 @@
-import { MotionContainer, SlideIn, PopIn } from "./animations/motion";
+import { MotionContainer, SlideIn, PopIn } from "../animations/motion";
 import { motion } from "motion/react";
-import Header from "../components/layout/Header";
+import Header from "../layout/Header";
 
 const SelectRestaurant = () => {
   const restuarants = [

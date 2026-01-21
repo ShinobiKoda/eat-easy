@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { MotionContainer, PopIn, SlideIn, FadeIn } from "./animations/motion";
+import { MotionContainer, PopIn, SlideIn, FadeIn } from "../animations/motion";
 import { useState, useEffect } from "react";
 
 const AsideCard = () => {

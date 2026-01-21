@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "../../hooks/useTheme";
 
 function Splash() {
   const { theme } = useTheme();
@@ -126,7 +126,10 @@ function Splash() {
         transition={{ delay: 1, duration: 0.8 }}
       >
         <h1 className="text-[67px] leading-tight">
-          <span className="font-medium text-(--neutral-700) dark:text-(--neutral-150)">Eat</span> <br />
+          <span className="font-medium text-(--neutral-700) dark:text-(--neutral-150)">
+            Eat
+          </span>{" "}
+          <br />
           <motion.span
             className="font-bold text-(--orange-text) inline-block"
             initial={{ scale: 0.8 }}

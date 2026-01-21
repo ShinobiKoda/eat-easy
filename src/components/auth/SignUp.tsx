@@ -11,7 +11,7 @@ import { Controller } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import AsideCard from "../AsideCard";
+import AsideCard from "../onboarding/AsideCard";
 import ThemeSwitchButton from "../ThemeSwitchButton";
 import { supabase } from "../../config/supabaseClient";
 import { Link } from "react-router-dom";
@@ -91,7 +91,7 @@ function SignUp() {
       });
     } catch (err: any) {
       setSubmitError(
-        err?.message || "Failed to send verification code. Please try again."
+        err?.message || "Failed to send verification code. Please try again.",
       );
     } finally {
       setIsSubmitting(false);

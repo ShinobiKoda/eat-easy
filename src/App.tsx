@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import Splash from "./components/Splash";
-import GetStarted from "./components/GetStarted";
+import Splash from "./components/onboarding/Splash";
+import GetStarted from "./components/onboarding/GetStarted";
 import SignUpMethod from "./components/auth/SignUpMethod";
 import Signup from "./components/auth/SignUp";
 import Login from "./components/auth/Login";
 import ForgotPassword from "./components/auth/ForgotPassword";
-import Welcome from "./components/Welcome";
-import Virtual from "./components/Virtual";
-import Recommend from "./components/Recommend";
+import Welcome from "./components/dashboard/Welcome";
+import Virtual from "./components/onboarding/Virtual";
+import Recommend from "./components/dashboard/Recommend";
 import FullMenu from "./components/FullMenu/Full-menu";
-import Step1 from "./components/Step1";
+import Step1 from "./components/onboarding/Step1";
 import { useTheme } from "./hooks/useTheme";
 import ConfirmLink from "./components/auth/ConfirmLink";
 import ResetEmailSent from "./components/auth/ResetEmailSent";
 import ResetPassword from "./components/auth/ResetPassword";
-import SetLocation from "./components/SetLocation";
+import SetLocation from "./components/onboarding/SetLocation";
 import Sidebar from "./components/layout/Sidebar";
-import SelectRestaurant from "./components/SelectRestaurant";
+import SelectRestaurant from "./components/onboarding/SelectRestaurant";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import PublicRoute from "./components/auth/PublicRoute";
-import SetCustomLocation from "./components/SetCustomLocation";
+import SetCustomLocation from "./components/onboarding/SetCustomLocation";
 
 function App() {
   const location = useLocation();

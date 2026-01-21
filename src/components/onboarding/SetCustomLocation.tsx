@@ -1,13 +1,13 @@
-import Navbar from "./layout/Navbar";
+import Navbar from "../layout/Navbar";
 import { LiaSearchLocationSolid } from "react-icons/lia";
 import { CiSearch } from "react-icons/ci";
 import { useState, useMemo } from "react";
 import { motion } from "motion/react";
-import { FadeIn, SlideIn, PopIn } from "./animations/motion";
+import { FadeIn, SlideIn, PopIn } from "../animations/motion";
 import { TbLocation } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "../../hooks/useTheme";
 
 function SetCustomLocation() {
   const navigate = useNavigate();

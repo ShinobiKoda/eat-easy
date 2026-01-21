@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 import { MotionContainer, PopIn } from "../animations/motion";
 import ThemeSwitchButton from "../ThemeSwitchButton";
 import { ClipLoader } from "react-spinners";
-import AsideCard from "../AsideCard";
+import AsideCard from "../onboarding/AsideCard";
 import { supabase } from "../../config/supabaseClient";
 import { createProfile } from "../../services/userProfile";
 import { useEffect } from "react";
@@ -73,7 +73,7 @@ const ConfirmLink = () => {
               email: gmail,
               phone_number: phoneNumber ?? "",
             },
-            userId
+            userId,
           );
         }
         navigate("/set-location");

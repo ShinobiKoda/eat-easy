@@ -9,7 +9,7 @@ import { FaRegEyeSlash } from "react-icons/fa6";
 import { ClipLoader } from "react-spinners";
 import { useNavigate, Link } from "react-router-dom";
 import ThemeSwitchButton from "../ThemeSwitchButton";
-import AsideCard from "../AsideCard";
+import AsideCard from "../onboarding/AsideCard";
 import { MotionContainer, fadeIn, popIn } from "../animations/motion";
 import { supabase } from "../../config/supabaseClient";
 

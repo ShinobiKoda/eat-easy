@@ -2,7 +2,7 @@ import { MotionContainer, PopIn, FadeIn, SlideIn } from "../animations/motion";
 import { motion } from "motion/react";
 import ThemeSwitchButton from "../ThemeSwitchButton";
 import { useNavigate } from "react-router-dom";
-import AsideCard from "../AsideCard";
+import AsideCard from "../onboarding/AsideCard";
 
 function SignUpMethod() {
   const navigate = useNavigate();
