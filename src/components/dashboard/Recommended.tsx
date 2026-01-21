@@ -6,7 +6,7 @@ import ListIcon from "/images/list-icon.png";
 import { AiOutlinePlus } from "react-icons/ai";
 // import { NavLink } from 'react-router-dom'
 import type { PropType } from "../../types";
-import { Eat, Drink, Dessert } from "../../data/data";
+import { Eat, Drink } from "../../data/data";
 import ViewDish from "./ViewDish";
 import ViewOrder from "./ViewOrder";
 import Filters from "../Filters";
@@ -61,8 +61,22 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
 
   // usestate for the categories
   const [menu, setMenu] = useState(0);
-  const categories = [Eat, Drink, Dessert];
-  const datum = categories[menu];
+
+  // Helper to get 9 random items from an array
+  function getRandomItems<T>(arr: T[], n: number): T[] {
+    const shuffled = arr.slice().sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, n);
+  }
+
+  // For Eat: show 9 random, for Drink: show all, for Dessert: filter Eat for dessert tag
+  let datum: typeof Eat | typeof Drink = Eat;
+  if (menu === 0) {
+    datum = getRandomItems(Eat, 9);
+  } else if (menu === 1) {
+    datum = Drink;
+  } else if (menu === 2) {
+    datum = Eat.filter((item) => Array.isArray(item.tag) && item.tag.includes("dessert"));
+  }
 
   // stop background scroll effect when any of this is open
   const isModalOpen = Boolean(selectedItem || showOrder || filter);
