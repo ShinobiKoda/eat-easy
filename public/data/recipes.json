@@ -1,0 +1,21 @@
+{
+  "recipes": [
+    {
+      "name": "Fried Liver",
+      "price": 1000,
+      "image": "url",
+      "tags":[
+        "Popular"
+      ]
+    },
+    {
+      "name": "Fried Liver",
+      "price": 1000,
+      "image": "url",
+      "tags":[
+        "Popular",
+        "Salad"
+      ]
+    }
+  ]
+}
