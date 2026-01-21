@@ -14,6 +14,19 @@ export type Topping = {
   price: number;
 }
 
+export type FoodTag =
+  | "most popular"
+  | "salad"
+  | "pizza"
+  | "pasta"
+  | "dessert"
+  | "burger"
+  | "soup"
+  | "grill"
+  | "vegan"
+  | "chicken"
+  | "breakfast";
+
 export type PropType = {
   id: number;
   image: string;
@@ -26,4 +39,5 @@ export type PropType = {
   nutrients: Nutrient[];
   ingredients: Ingredient[];
   toppings: Topping[];
+  tag?: FoodTag[];
 };
