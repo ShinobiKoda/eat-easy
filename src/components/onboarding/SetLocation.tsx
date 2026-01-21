@@ -17,56 +17,59 @@ const SetLocation = () => {
     navigate("/set-restaurant");
   };
 
-  const cards = [
-    {
-      image: "/images/qr-code.svg",
-      heading: "Automatically use your current location",
-      description:
-        "Choose the simple way and automatically detect your current location",
-    },
-    {
-      image: "/images/location.svg",
-      heading: "Select location manually",
-      description:
-        "If you prefer to add your location manually, here is your option",
-    },
-  ];
-
   return (
     <div className="w-full h-full">
       <Navbar />
-      <MotionContainer className="w-full md:hidden">
+      <MotionContainer className="w-full mt-20 md:hidden">
         <SlideIn direction="down" className="px-6">
           <h1 className="font-medium text-[22px] text-(--neutral-800) text-center heading-font dark:text-white">
-            Set your locations
+            Set your location
           </h1>
         </SlideIn>
 
         <div className="grid grid-cols-1 gap-6 mt-6 px-6">
-          {cards.map((card, index) => (
-            <motion.div whileTap={{ scale: 0.99 }} key={index}>
-              <PopIn className="flex flex-col p-5 gap-5 items-center justify-center text-center rounded-2xl shadow-md">
-                <motion.div
-                  initial={{ y: 6, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.4 }}
-                  className="w-[70px] h-[70px]"
-                >
-                  <img src={card.image} alt="Card Image" className="w-full" />
-                </motion.div>
-                <p className="font-semibold text-base text-(--neutral-900) dark:text-white">
-                  {card.heading}
-                </p>
-                <p className="font-medium text-sm text-(--neutral-600) dark:text-(--neutral-300)">
-                  {card.description}
-                </p>
-              </PopIn>
-            </motion.div>
-          ))}
+          <motion.div
+            whileTap={{ scale: 0.99 }}
+            onClick={handleUseCurrentLocation}
+            className="cursor-pointer"
+          >
+            <PopIn className="flex flex-col p-5 gap-5 items-center justify-center text-center rounded-2xl shadow-md bg-white dark:bg-(--neutral-700)">
+              <motion.div
+                initial={{ y: 6, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.4 }}
+                className="w-[70px] h-[70px]"
+              >
+                <img
+                  src="/images/qr-code.svg"
+                  alt="Location Icon"
+                  className="w-full"
+                />
+              </motion.div>
+              <p className="font-semibold text-base text-(--neutral-900) dark:text-white">
+                {isLoading
+                  ? "Getting your location..."
+                  : "Automatically use your current location"}
+              </p>
+              <p className="font-medium text-sm text-(--neutral-600) dark:text-(--neutral-300)">
+                Choose the simple way and automatically detect your current
+                location
+              </p>
+              {isLoading && (
+                <AiOutlineLoading3Quarters
+                  size={24}
+                  className="animate-spin text-(--purple-3)"
+                />
+              )}
+              {error && (
+                <p className="text-red-500 text-sm text-center">{error}</p>
+              )}
+            </PopIn>
+          </motion.div>
         </div>
       </MotionContainer>
 
-      <MotionContainer className="w-full h-screen flex-col items-center justify-center max-w-[700px] mx-auto hidden lg:flex px-6">
+      <MotionContainer className="w-full h-screen flex-col items-center justify-center max-w-[700px] mx-auto hidden md:flex px-6">
         <SlideIn direction="down" className="w-full text-center space-y-4">
           <h1 className="heading-font text-(--neutral-800) font-medium text-[40px] dark:text-white">
             Start the Smart Menu Experience

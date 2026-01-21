@@ -8,14 +8,17 @@ const SelectRestaurant = () => {
     {
       name: "Gram Bistro",
       location: "790 8th Ave, New York",
+      image: "/images/restaurant-location-img.svg",
     },
     {
       name: "Bin 71",
       location: "790 8th Ave, New York",
+      image: "/images/restaurant-location-img.svg",
     },
     {
       name: "Sushi Bar",
       location: "790 8th Ave, New York",
+      image: "/images/restaurant-location-img.svg",
     },
   ];
 
@@ -23,13 +26,13 @@ const SelectRestaurant = () => {
     <div className="w-full">
       <Header title="Food Menu" description="Set Restaurant" />
       <div className="w-full px-6">
-        <MotionContainer className="lg:hidden pt-24">
+        <MotionContainer className="lg:hidden pt-28">
           <SlideIn
             direction="down"
-            className="w-full text-center max-w-[327px] mx-auto space-y-3.5"
+            className="w-full text-center max-w-[387px] mx-auto space-y-3.5"
           >
-            <h1 className="heading-font font-medium text-[22px] text-(--neutral-800) dark:text-white heading-font">
-              Share your location with us to order
+            <h1 className="heading-font font-medium text-[22px] text-(--neutral-800) dark:text-white">
+              Select a restaurant based on your location to order
             </h1>
             <p className="font-medium text-base text-(--neutral-600) dark:text-(--neutral-150)">
               Please enter your location or allow access to your location to
@@ -78,7 +81,7 @@ const SelectRestaurant = () => {
         </MotionContainer>
       </div>
 
-      <div className="hidden lg:flex flex-col items-center justify-center h-screen w-full max-w-[900px] mx-auto pt-[100px]">
+      <div className="hidden lg:flex flex-col items-center justify-center h-screen w-full max-w-[900px] mx-auto pt-[100px] pb-10">
         <div className="space-y-4 text-center px-8">
           <h1 className="font-medium text-[40px] text-(--neutral-800) heading-font dark:text-white">
             Restaurants based on your selected location.
@@ -93,16 +96,25 @@ const SelectRestaurant = () => {
             <PopIn key={index} className="">
               <motion.div
                 whileTap={{ scale: 0.98 }}
-                className="flex items-center justify-between bg-white rounded-2xl p-5 shadow-md dark:bg-(--neutral-700)"
+                className="flex items-center justify-between bg-white rounded-2xl pr-5 shadow-md dark:bg-(--neutral-700) h-[100px] overflow-hidden relative"
               >
-                <p className="flex flex-col gap-3">
-                  <span className="font-semibold text-base text-(--neutral-900) dark:text-white">
-                    {restaurant.name}
-                  </span>
-                  <span className="font-medium text-sm text-(--neutral-500) dark:text-(--neutral-300)">
-                    {restaurant.location}
-                  </span>
-                </p>
+                <div className="flex items-center h-full">
+                  <div className="h-full w-[180px] overflow-hidden rounded-l-2xl absolute -left-16 bottom-0">
+                    <img
+                      src={restaurant.image}
+                      alt="Resturant image"
+                      className="h-full w-full object-cover "
+                    />
+                  </div>
+                  <p className="flex flex-col gap-3 ml-[130px]">
+                    <span className="font-semibold text-base text-(--neutral-900) dark:text-white">
+                      {restaurant.name}
+                    </span>
+                    <span className="font-medium text-sm text-(--neutral-500) dark:text-(--neutral-300)">
+                      {restaurant.location}
+                    </span>
+                  </p>
+                </div>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
