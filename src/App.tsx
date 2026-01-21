@@ -9,7 +9,7 @@ import ForgotPassword from "./components/auth/ForgotPassword";
 import Welcome from "./components/Welcome";
 import Virtual from "./components/Virtual";
 import Recommend from "./components/Recommend";
-import FullMenu from "./components/Full-menu";
+import FullMenu from "./components/FullMenu/Full-menu";
 import Step1 from "./components/Step1";
 import { useTheme } from "./hooks/useTheme";
 import ConfirmLink from "./components/auth/ConfirmLink";

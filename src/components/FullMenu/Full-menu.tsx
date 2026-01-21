@@ -1,19 +1,20 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react';
-import Header from "./layout/Header";
+import React, { useState, useEffect } from 'react';
+import Header from "../layout/Header";
 import { FaFilter } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
 import { motion } from 'framer-motion'
-import Choice from 'public/images/choiceimg.svg'
 
-import Loader from "./Loader";
+import Loader from "../Loader";
+import { Eat } from '../../data/data';
+import ProductCarousel from './productCarousel';
 
-const Product = [
-  { id: 1, name: "Avocado Chicken Salad", price: "$10.00", image: Choice, description: "Product of the day" },
-  { id: 2, name: "Grilled Salmon Bowl", price: "$12.50", image: Choice, description: "Chef's special" },
-  { id: 3, name: "Vegan Buddha Bowl", price: "$9.80", image: Choice, description: "Healthy pick" },
-  { id: 4, name: "Quinoa Power Salad", price: "$11.20", image: Choice, description: "Energizer" },
-];
+const Categories = [
+    { id: 1, name: "All Dishes"},
+    { id: 2, name: "Most Popular"},
+    { id: 3, name: "Salad"},
+    { id: 4, name: "Pizza"},
+    { id: 5, name: "Pasta"}
+]
 
 const FullMenu: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
@@ -23,6 +24,7 @@ const FullMenu: React.FC = () => {
     return () => clearTimeout(t);
   }, []);
 
+  const [filterDish, setFilterDish] = useState(Categories[0].id)
 
   return (
     <div className="w-full min-h-screen">
@@ -63,36 +65,41 @@ const FullMenu: React.FC = () => {
             </div>
         </div>
 
-        {/* food of the day section */}
-        <div className="py-4 flex items-center justify-center overflow-hidden w-full relative h-[145px] md:h-[250px] ">
-            {/* products */}
-            {Product.map(({ id, name, price, image, description }) => (
-                <motion.div 
+        {/* carousel section */}
+        <ProductCarousel />
 
-                    key={id} 
-                    className="overflow-clip rounded-2xl dark:bg-white bg-[#4A4A6A] flex items-center justify-between gap-2 h-full absolute w-[85%] sm:w-[70%] max-w-[800px]"
-                >
-
-                    <div className="flex-1 space-y-2 sm:space-y-3 relative left-4 w-full py-3">
-                        <p className="text-sm text-gray-400 tracking-wide">{description}</p>
-
-                        <h2 className=" text-white dark:text-[#4A4A6A] font-semibold leading-tight text-[clamp(1rem,3vw,2rem)]">{name}</h2>
-
-                        <p className=" text-(--yellow-1) font-bold text-[clamp(1.25rem,3vw,2.25rem)]">{price}</p>
-                    </div>
-
-                    <div className="h-full w-full max-w-[190px] sm:max-w-[285px] lg:max-w-[416px] flex items-center justify-center relative -right-10 sm:right-0">
-                        <img
-                            src={image}
-                            alt="Avocado Chicken Salad"
-                            className="h-full w-full object-contain"
-                        />
-                    </div>
-                </motion.div>
-            ))}
-
+        {/* filterDish buttons */}
+        <div className='w-full p-6 lg:p-7 xl:p-10 flex items-center whitespace-nowrap overflow-auto scrollbar-hidden space-x-5 lg:space-y-5 h-fit'>
+                         
+            <ul className='transition-all duration-900 transform flex items-center gap-2'>
+                {Categories.map(({ id, name }) => (
+                    <motion.li 
+                        whileTap={{ scale: 0.98 }}
+                        key={id} 
+                        onClick={() => setFilterDish(id)}
+                        className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-bold px-3.5 md:px-6 py-3 transition-colors duration-900 ${filterDish === id ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-300)'}`}
+                    >
+                        <p>{name}</p>
+                    </motion.li>
+                ))}
+            </ul>       
         </div>
 
+        <div className='pl-6 py-4 md:py-8 md:pl-10.5'>
+            <h1 className="text-[#666687] text-[18px] dark:text-[#DCDCE4] font-semibold">Most Popular</h1>
+            
+            <div className='flex items-center gap-4 flex-nowrap'>
+                {Eat.map(({ id, star, price, rating }) => (
+                    <div key={id} className='bg-white rounded-2xl py-3 px-4'>
+                        <div className='space-x-1 flex items-center'>
+                        <img src={star} className='w-4 h-4' alt="" />
+                        <p>{rating}</p> 
+                        </div>
+                        <p className='text-[#FF7B2C] text-[15px] lg:text-[18px] font-extrabold'>${(price).toFixed(2)}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
        </div>
 
       </div>

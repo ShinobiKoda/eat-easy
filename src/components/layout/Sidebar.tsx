@@ -343,7 +343,7 @@ const Sidebar: React.FC = () => {
         <button
           aria-label="Close sidebar"
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 z-40 bg-black/30 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/30 md:hidden"
         />
       )}
       <LogoutModal

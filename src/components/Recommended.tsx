@@ -21,8 +21,6 @@ type RecommendedProps = {
 
 const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
 
-
-
   // usestate for the selected item
   const [selectedItem, setSelectedItem] = useState<PropType | null>(null);
   // order items collected from ViewDish
@@ -169,6 +167,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
 
                     <p className='text-[#FF7B2C] text-[15px] lg:text-[18px] font-extrabold'>${(eat.price).toFixed(2)}</p>
                   </div>
+
                   <motion.div 
                     whileTap={{ scale: 0.9 }}
                     onClick={() => { setSelectedItem(eat), showSelected?.(eat) }}

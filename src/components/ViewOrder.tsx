@@ -8,7 +8,6 @@ import Delete from "/images/delete.svg"
 import Add from "/images/add.svg"
 import Cancel from "/images/Cancel.png"
 import Location from "/images/Map-pin.png"
-import { NavLink } from 'react-router-dom'
 
 export type ViewOrderProps = {
   items: PropType[];
@@ -81,7 +80,7 @@ const ViewOrder: React.FC<ViewOrderProps> = ({ items, onClose, removeOrder, onSe
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-hidden">
-        <div className="p-[24px] space-y-[27px]">
+        <div className="p-6 space-y-[27px]">
 
           <div className='flex flex-col space-y-5'>
             {items.map((order) => (
