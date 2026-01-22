@@ -21,6 +21,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useLocation } from "../../hooks/useLocation";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../hooks/useTheme";
 
 interface HeaderProps {
   title?: string;
@@ -46,6 +47,7 @@ const Header: React.FC<HeaderProps> = ({
   const locationRef = useRef<HTMLDivElement>(null);
   const orderRef = useRef<HTMLDivElement>(null);
   const tabletMenuRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
   const navigate = useNavigate();
 
   // Close dropdowns when clicking outside
@@ -86,9 +88,14 @@ const Header: React.FC<HeaderProps> = ({
       window.removeEventListener("sidebar-state", handler as EventListener);
   }, []);
 
+  const backgroundImage = `var(--${
+    theme === "dark" ? "dark" : "light"
+  }-mode-bg)`;
+
   return (
     <div
-      className={`fixed top-0 right-0 z-40 bg-(--light-mode-bg)/80 dark:bg-(--dark-mode-bg)/80 backdrop-blur-md transition-all duration-300 left-0 ${
+      style={{backgroundImage}}
+      className={`fixed top-0 right-0 z-40 transition-all duration-300 left-0 ${
         sidebarOpen ? "md:left-[260px]" : "md:left-36"
       }`}
     >
