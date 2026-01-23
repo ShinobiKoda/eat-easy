@@ -3,12 +3,12 @@ import Header from "../layout/Header";
 import { FaFilter } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
 import { motion } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 
 import Loader from "../Loader";
 import { Eat } from "../../data/data";
 import ProductCarousel from "./ProductCarousel";
-
-
+import Filters from "../Filters";
 
 const FullMenu: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
@@ -17,6 +17,8 @@ const FullMenu: React.FC = () => {
     const t = setTimeout(() => setShowLoader(false), 3000);
     return () => clearTimeout(t);
   }, []);
+
+  const [filterButton, setFilterButton] = useState(false);
 
   // Dynamically get all unique tags from Eat data
   const allTags = useMemo(() => {
@@ -68,7 +70,7 @@ const FullMenu: React.FC = () => {
 
                 <motion.div
                     whileTap={{ scale: 0.96 }} 
-                    // onClick={() => setFilter(!filter)}
+                    onClick={() => setFilterButton(!filterButton)}
                     className='flex justify-between gap-2 py-4 px-4 md:py-4 md:px-6 rounded-2xl bg-[#32324D] dark:bg-(--purple-2) text-[12px] lg:text-[16px] text-white cursor-pointer'>
                         <FaFilter size={20} />
                         <p className='hidden md:block'>Filters</p>
@@ -131,6 +133,20 @@ const FullMenu: React.FC = () => {
             </div>
           </div>
         </div>
+
+    {/* filter component */}
+      <AnimatePresence>
+        {filterButton && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
+          >
+            <Filters onClose={() => setFilterButton(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
       </div>
     </div>
   );
