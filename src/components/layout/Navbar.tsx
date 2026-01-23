@@ -43,7 +43,6 @@ const Navbar: React.FC<NavbarProps> = ({
           size={24}
           className="ml-auto text-(--neutral-700) dark:text-(--purple-5)"
         />
-        {/* {title && <p>{title}</p>} */}
       </motion.button>
     </nav>
   );
