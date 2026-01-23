@@ -33,7 +33,7 @@ const Welcome: React.FC = () => {
           </PopIn>
 
           <div className="w-full hidden lg:flex lg:items-center lg:justify-between bg-(--neutral-900) rounded-[28.67px] px-[50px]">
-            <div className="space-y-6">
+            <FadeIn className="space-y-6">
               <h1 className="text-[32px]">
                 <span className="heading-font text-white font-normal">
                   Welcome to{" "}
@@ -57,19 +57,21 @@ const Welcome: React.FC = () => {
                   </span>
                 </p>
               </div>
-            </div>
-            <div className="max-w-[443px] overflow-hidden bg-cover h-full">
+            </FadeIn>
+            <PopIn className="max-w-[443px] overflow-hidden bg-cover h-full">
               <img
                 src="/images/welcome-page-illustration.svg"
                 alt="Welcome Page Illustration Image"
                 className="w-full h-full object-cover"
               />
-            </div>
+            </PopIn>
           </div>
 
           <div className="w-full lg:grid lg:grid-cols-2 lg:items-center lg:justify-between lg:mt-8">
             <div className="space-y-2 hidden lg:block max-w-[370px] xl:max-w-[514px]">
-              <h2 className="font-bold text-3xl text-(--neutral-800) heading-font">Find Your Flavor: <br /> Two Options to Browse Our Menu</h2>
+              <h2 className="font-bold text-3xl text-(--neutral-800) heading-font">
+                Find Your Flavor: <br /> Two Options to Browse Our Menu
+              </h2>
               <p className="text-(--neutral-600) font-bold text-base">
                 We've got you covered! Whether you're feeling adventurous or
                 know exactly what you want, we offer two ways to browse our menu
