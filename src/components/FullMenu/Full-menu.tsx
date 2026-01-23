@@ -26,6 +26,20 @@ const FullMenu: React.FC = () => {
 
   const [filterDish, setFilterDish] = useState(Categories[0].id);
 
+  // Map category id to tag string for filtering
+  const categoryTagMap = {
+    1: null, // All Dishes
+    2: "most popular",
+    3: "salad",
+    4: "pizza",
+    5: "pasta"
+  };
+
+  // Filter Eat array based on selected category/tag
+  const filteredDishes = categoryTagMap[filterDish]
+    ? Eat.filter(dish => dish.tag && dish.tag.includes(categoryTagMap[filterDish]))
+    : Eat;
+
   return (
     <div className="w-full min-h-screen">
       {showLoader && <Loader />}
@@ -95,21 +109,24 @@ const FullMenu: React.FC = () => {
             <h1 className="text-[18px] text-(--neutral-600) font-semibold">Most Popular</h1>
             
             <div className='items-center gap-[30px] grid grid-cols-5 gri '>
-                {Eat.map(({ id, image, star, price, rating }) => (
-                    <div key={id} className='bg-white rounded-2xl py-3 px-4'>
-                        <div className="rounded-full">
-                            <img
-                                src={image}
-                                className="max-w-[100px] max-h-[100px] rounded-full"
-                                alt=""
-                            />
-                        </div>
-                        <div className='space-x-1 flex items-center'>
-                            <img src={star} className='w-4 h-4' alt="" />
-                            <p>{rating}</p> 
-                        </div>
-                        <p className='text-[#FF7B2C] text-[15px] lg:text-[18px] font-extrabold'>${(price).toFixed(2)}</p>
+                {filteredDishes.map(({ id, name, image, star, price, rating }) => (
+                  <div key={id} className='bg-white rounded-2xl py-3 px-4'>
+                    <div className="rounded-full">
+                      <img
+                        src={image}
+                        className="max-w-[100px] max-h-[100px] rounded-full"
+                        alt=""
+                      />
                     </div>
+                    <p className="text-[15px] lg:text-[18px] dark:text-[#FFFFFF] font-semibold">
+                      {name}
+                    </p>
+                    <div className='space-x-1 flex items-center'>
+                      <img src={star} className='w-4 h-4' alt="" />
+                      <p>{rating}</p> 
+                    </div>
+                    <p className='text-[#FF7B2C] text-[15px] lg:text-[18px] font-extrabold'>${(price).toFixed(2)}</p>
+                  </div>
                 ))}
             </div>
           </div>
