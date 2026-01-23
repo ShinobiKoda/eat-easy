@@ -37,7 +37,7 @@ const Welcome: React.FC = () => {
       >
         <Header description="Browse Our Food Menu" navbarTitle="Gbam Gbistro" />
         <div className="w-full pt-[60px] px-6">
-          <h1 className="heading-font text-(--neutral-800) font-medium text-[22px] text-center">
+          <h1 className="heading-font text-(--neutral-800) font-medium text-[22px] text-center dark:text-white">
             Let's find the perfect dish for you
           </h1>
 
@@ -45,20 +45,20 @@ const Welcome: React.FC = () => {
             {options.map((option, index) => (
               <div
                 key={index}
-                className="p-5 rounded-2xl bg-white shadow-md space-y-5"
+                className="p-5 rounded-2xl bg-white shadow-md space-y-5 dark:bg-(--neutral-700)"
               >
                 <img src={option.icon} alt="Option Icon" />
                 <div className="flex justify-between">
                   <div className="space-y-[23px] max-w-[225px]">
-                    <h3 className="font-semibold text-base text-(--neutral-900)">
+                    <h3 className="font-semibold text-base text-(--neutral-900) dark:text-white">
                       {option.title}
                     </h3>
-                    <p className="text-(--neutral-500) font-medium text-sm">
+                    <p className="text-(--neutral-500) font-medium text-sm dark:text-(--neutral-300)">
                       {option.description}
                     </p>
                   </div>
-                  <div className="w-[46px] h-[46px] rounded-xl bg-(--orange-5) flex items-center justify-center mt-auto">
-                    <FaArrowRight className="text-(--orange-1)" />
+                  <div className="w-[46px] h-[46px] rounded-xl bg-(--orange-5) dark:bg-(--orange-1) flex items-center justify-center mt-auto">
+                    <FaArrowRight className="text-(--orange-1) dark:text-white" />
                   </div>
                 </div>
               </div>
