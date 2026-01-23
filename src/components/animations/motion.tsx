@@ -1,3 +1,30 @@
+export const scaleButton: Variants = {
+  rest: { scale: 1 },
+  hover: { scale: 1.1, transition: { duration: 0.18, ease: "easeOut" } },
+  tap: { scale: 0.95, transition: { duration: 0.12, ease: "easeIn" } },
+};
+
+export const ScaleButton = ({
+  children,
+  className,
+  style,
+}: {
+  children: ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}) => (
+  <motion.button
+    className={className}
+    style={style}
+    variants={scaleButton}
+    initial="rest"
+    whileHover="hover"
+    whileTap="tap"
+    type="button"
+  >
+    {children}
+  </motion.button>
+);
 import React, { type ReactNode } from "react";
 import { motion, type Variants } from "motion/react";
 import { useState, useEffect } from "react";
