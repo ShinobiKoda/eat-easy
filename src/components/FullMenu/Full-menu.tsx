@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Header from "../layout/Header";
 import { FaFilter } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
@@ -8,13 +8,7 @@ import Loader from "../Loader";
 import { Eat } from "../../data/data";
 import ProductCarousel from "./ProductCarousel";
 
-const Categories = [
-  { id: 1, name: "All Dishes" },
-  { id: 2, name: "Most Popular" },
-  { id: 3, name: "Salad" },
-  { id: 4, name: "Pizza" },
-  { id: 5, name: "Pasta" },
-];
+
 
 const FullMenu: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
@@ -24,21 +18,19 @@ const FullMenu: React.FC = () => {
     return () => clearTimeout(t);
   }, []);
 
-  const [filterDish, setFilterDish] = useState(Categories[0].id);
+  // Dynamically get all unique tags from Eat data
+  const allTags = useMemo(() => {
+    const tags = Eat.flatMap(dish => dish.tag?.map((t: string) => t.toLowerCase()) || []);
+    return Array.from(new Set(tags));
+  }, []);
 
-  // Map category id to tag string for filtering
-  const categoryTagMap = {
-    1: null, // All Dishes
-    2: "most popular",
-    3: "salad",
-    4: "pizza",
-    5: "pasta"
-  };
+  // Add 'all' as the default filter
+  const [filterTag, setFilterTag] = useState<string>('all');
 
-  // Filter Eat array based on selected category/tag
-  const filteredDishes = categoryTagMap[filterDish]
-    ? Eat.filter(dish => dish.tag && dish.tag.includes(categoryTagMap[filterDish]))
-    : Eat;
+  // Filter dishes based on selected tag
+  const filteredDishes = filterTag === 'all'
+    ? Eat
+    : Eat.filter(dish => dish.tag && dish.tag.some((t: string) => t.toLowerCase() === filterTag));
 
   return (
     <div className="w-full min-h-screen">
@@ -83,24 +75,31 @@ const FullMenu: React.FC = () => {
             </div>
           </div>
 
-          {/* carousel section */}
-          <ProductCarousel />
+        {/* carousel section */}
+        <ProductCarousel />
 
-        {/* filterDish buttons */}
+        {/* Dynamic filter buttons */}
         <div className='w-full p-6 lg:p-7 xl:p-10 flex items-center whitespace-nowrap overflow-auto scrollbar-hidden space-x-5 lg:space-y-5 h-fit'>
-                         
-            <ul className='transition-all duration-900 transform flex items-center gap-2'>
-                {Categories.map(({ id, name }) => (
-                    <motion.li 
-                        whileTap={{ scale: 0.98 }}
-                        key={id} 
-                        onClick={() => setFilterDish(id)}
-                        className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-900 ${filterDish === id ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-600)'}`}
-                    >
-                        <p>{name}</p>
-                    </motion.li>
-                ))}
-            </ul>        
+          <ul className='transition-all duration-900 transform flex items-center gap-2'>
+            <motion.li
+              whileTap={{ scale: 0.98 }}
+              key="all"
+              onClick={() => setFilterTag('all')}
+              className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-900 ${filterTag === 'all' ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-600)'}`}
+            >
+              <p>All Dishes</p>
+            </motion.li>
+            {allTags.map(tag => (
+              <motion.li
+                whileTap={{ scale: 0.98 }}
+                key={tag}
+                onClick={() => setFilterTag(tag)}
+                className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-900 ${filterTag === tag ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-600)'}`}
+              >
+                <p>{tag.charAt(0).toUpperCase() + tag.slice(1)}</p>
+              </motion.li>
+            ))}
+          </ul>
         </div>
         
         {/* product/dishes listing section */}
@@ -110,18 +109,18 @@ const FullMenu: React.FC = () => {
             
             <div className='items-center gap-[30px] grid grid-cols-5 gri '>
                 {filteredDishes.map(({ id, name, image, star, price, rating }) => (
-                  <div key={id} className='bg-white rounded-2xl py-3 px-4'>
-                    <div className="rounded-full">
+                  <div key={id} className='bg-white py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative'>
+                    <div className="rounded-full mb-2">
                       <img
                         src={image}
                         className="max-w-[100px] max-h-[100px] rounded-full"
                         alt=""
                       />
                     </div>
-                    <p className="text-[15px] lg:text-[18px] dark:text-[#FFFFFF] font-semibold">
+                    <p className="text-[15px] lg:text-[18px] text-center font-semibold text-[--neutral-800]">
                       {name}
                     </p>
-                    <div className='space-x-1 flex items-center'>
+                    <div className='space-x-1 py-1 px-1.5 flex items-center absolute top-2 right-2 bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]'>
                       <img src={star} className='w-4 h-4' alt="" />
                       <p>{rating}</p> 
                     </div>
