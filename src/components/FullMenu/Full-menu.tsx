@@ -74,7 +74,7 @@ const FullMenu: React.FC = () => {
                         <p className='hidden md:block'>Filters</p>
                 </motion.div>
             </div>
-          </div>
+        </div>
 
         {/* carousel section */}
         <ProductCarousel />
@@ -110,7 +110,7 @@ const FullMenu: React.FC = () => {
             
             <div className='items-center gap-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                 {filteredDishes.map(({ id, name, image, star, price, rating }) => (
-                  <div key={id} className='bg-white py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative'>
+                  <div key={id} className='bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative'>
                     <div className="rounded-full mb-2">
                       <img
                         src={image}
@@ -118,14 +118,14 @@ const FullMenu: React.FC = () => {
                         alt=""
                       />
                     </div>
-                    <p className="text-[14px] lg:text-[18px] text-center font-semibold text-[--neutral-800]">
+                    <p className="text-[14px] lg:text-[18px] text-center font-semibold text-(--neutral-800)">
                       {name}
                     </p>
                     <div className='space-x-1 py-1 px-1.5 flex items-center absolute top-2 right-2 bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]'>
                       <img src={star} className='w-4 h-4' alt="" />
                       <p className="text-[11px] md:text-[14px]">{rating}</p> 
                     </div>
-                    <p className='text-[#FF7B2C] text-[14px] lg:text-[18px] font-extrabold'>${(price).toFixed(2)}</p>
+                    <p className='text-(--orange-1) text-[14px] lg:text-[18px] font-extrabold'>${(price).toFixed(2)}</p>
                   </div>
                 ))}
             </div>
