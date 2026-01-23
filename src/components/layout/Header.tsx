@@ -29,6 +29,7 @@ interface HeaderProps {
   previous?: () => void;
   navbarTitle?: string;
   navbarDescription?: string;
+  showBack?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -37,6 +38,7 @@ const Header: React.FC<HeaderProps> = ({
   previous,
   navbarTitle = "",
   navbarDescription = "",
+  showBack,
 }) => {
   const locationCtx = useLocation();
   const location = locationCtx.location;
@@ -100,7 +102,7 @@ const Header: React.FC<HeaderProps> = ({
       }`}
     >
       <SlideIn direction="down" className="w-full md:hidden">
-        <Navbar title={navbarTitle} description={navbarDescription} />
+        <Navbar title={navbarTitle} description={navbarDescription} showBack={showBack} />
       </SlideIn>
 
       {/* Tablet Header - Combined dropdown for location & order */}

@@ -1,19 +1,24 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { RiMenu2Fill } from "react-icons/ri";
-import { MotionItem } from "../animations/motion";
+import { IoArrowBack } from "react-icons/io5";
 import { HiOutlineLocationMarker } from "react-icons/hi";
+import { MotionItem, PopIn } from "../animations/motion";
 
 type NavbarProps = {
   description?: string;
   className?: string;
   title?: string;
+  previous?: () => void;
+  showBack?: boolean;
 };
 
 const Navbar: React.FC<NavbarProps> = ({
   title = "",
   description = "",
   className = "",
+  previous,
+  showBack
 }) => {
   return (
     <nav
@@ -21,15 +26,35 @@ const Navbar: React.FC<NavbarProps> = ({
     >
       <MotionItem className="w-full">
         {title && (
-          <p className="flex flex-col">
-            <span className="flex gap-2 items-center font-semibold text-[16px] text-(--neutral-500)">
+          <div className="flex flex-center gap-3">
+            {showBack ? (
+              <PopIn>
+                <motion.button
+                  onClick={previous}
+                  className="w-12 h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer dark:bg-(--neutral-700)"
+                  aria-label="Go back"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 24 }}
+                >
+                  <IoArrowBack
+                    size={20}
+                    className="dark:text-white text-(--neutral-600)"
+                  />
+                </motion.button>
+              </PopIn>
+            ) : (
               <HiOutlineLocationMarker size={20} />
-              {title}
-            </span>
-            <span className="heading-font font-medium text-[22px] text-(--neutral-800)">
-              {description}
-            </span>
-          </p>
+            )}
+            <p className="flex flex-col">
+              <span className="flex gap-2 items-center font-semibold text-[16px] text-(--neutral-500)">
+                {title}
+              </span>
+              <span className="heading-font font-medium text-[22px] text-(--neutral-800)">
+                {description}
+              </span>
+            </p>
+          </div>
         )}
       </MotionItem>
 

@@ -45,6 +45,7 @@ const FullMenu: React.FC = () => {
           title="Full Menu"
           description="See All Our Dishes"
           navbarTitle="Gram Bistro"
+          showBack={false}
         />
 
        <div className='pt-18 md:pt-24 max-w-[1440px] mx-auto'>

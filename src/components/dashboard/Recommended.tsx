@@ -4,7 +4,6 @@ import Burger from "/images/burger-icon.png";
 import GridIcon from "/images/grid-icon.png";
 import ListIcon from "/images/list-icon.png";
 import { AiOutlinePlus } from "react-icons/ai";
-// import { NavLink } from 'react-router-dom'
 import type { PropType } from "../../types";
 import { Eat, Drink } from "../../data/data";
 import ViewDish from "./ViewDish";
