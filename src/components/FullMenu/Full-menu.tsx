@@ -80,12 +80,12 @@ const FullMenu: React.FC = () => {
 
         {/* Dynamic filter buttons */}
         <div className='w-full p-6 lg:p-7 xl:p-10 flex items-center whitespace-nowrap overflow-auto scrollbar-hidden space-x-5 lg:space-y-5 h-fit'>
-          <ul className='transition-all duration-900 transform flex items-center gap-2'>
+          <ul className='transition-all duration-700 transform flex items-center gap-2'>
             <motion.li
               whileTap={{ scale: 0.98 }}
               key="all"
               onClick={() => setFilterTag('all')}
-              className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-900 ${filterTag === 'all' ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-600)'}`}
+              className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-700 ${filterTag === 'all' ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-600)'}`}
             >
               <p>All Dishes</p>
             </motion.li>
@@ -94,7 +94,7 @@ const FullMenu: React.FC = () => {
                 whileTap={{ scale: 0.98 }}
                 key={tag}
                 onClick={() => setFilterTag(tag)}
-                className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-900 ${filterTag === tag ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-600)'}`}
+                className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-700 ${filterTag === tag ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-600)'}`}
               >
                 <p>{tag.charAt(0).toUpperCase() + tag.slice(1)}</p>
               </motion.li>
@@ -107,7 +107,7 @@ const FullMenu: React.FC = () => {
 
             <h1 className="text-[18px] text-(--neutral-600) font-semibold">Most Popular</h1>
             
-            <div className='items-center gap-[30px] grid grid-cols-5 gri '>
+            <div className='items-center gap-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                 {filteredDishes.map(({ id, name, image, star, price, rating }) => (
                   <div key={id} className='bg-white py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative'>
                     <div className="rounded-full mb-2">
@@ -117,14 +117,14 @@ const FullMenu: React.FC = () => {
                         alt=""
                       />
                     </div>
-                    <p className="text-[15px] lg:text-[18px] text-center font-semibold text-[--neutral-800]">
+                    <p className="text-[14px] lg:text-[18px] text-center font-semibold text-[--neutral-800]">
                       {name}
                     </p>
                     <div className='space-x-1 py-1 px-1.5 flex items-center absolute top-2 right-2 bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]'>
                       <img src={star} className='w-4 h-4' alt="" />
-                      <p>{rating}</p> 
+                      <p className="text-[11px] md:text-[14px]">{rating}</p> 
                     </div>
-                    <p className='text-[#FF7B2C] text-[15px] lg:text-[18px] font-extrabold'>${(price).toFixed(2)}</p>
+                    <p className='text-[#FF7B2C] text-[14px] lg:text-[18px] font-extrabold'>${(price).toFixed(2)}</p>
                   </div>
                 ))}
             </div>
