@@ -11,6 +11,7 @@ import ProductCarousel from "./ProductCarousel";
 import Filters from "../Filters";
 import ViewDish from "../dashboard/ViewDish";
 import type { PropType } from "../../types";
+import { productGridStagger, productCardFade } from "../animations/motion";
 
 const FullMenu: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
@@ -48,7 +49,7 @@ const FullMenu: React.FC = () => {
       {showLoader && <Loader />}
 
       <div
-        className={`transition-all duration-300 ${
+        className={` ${
           showLoader ? "pointer-events-none overflow-hidden" : ""
         }`}
       >
@@ -116,13 +117,27 @@ const FullMenu: React.FC = () => {
         
         {/* product/dishes listing section */}
         <div className='px-6 py-4 md:py-8 md:px-10.5 flex flex-col gap-6'>
-
-            <h1 className="text-[18px] text-(--neutral-600) font-semibold">Most Popular</h1>
+            <h1 className="text-[18px] text-(--neutral-600) dark:text-(--neutral-200) font-semibold">
+              {filterTag === 'all'
+                ? 'All Dishes'
+                : filterTag.charAt(0).toUpperCase() + filterTag.slice(1)}
+            </h1>
             
-            <div className='items-center gap-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+            {/* Staggered motion grid */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={filterTag}
+                className='items-center gap-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
+                variants={productGridStagger}
+                initial="hidden"
+                animate="show"
+                exit="exit"
+              >
                 {filteredDishes.map((dish) => (
-                  <div
+                  <motion.div
                     key={dish.id}
+                    whileTap={{ scale: 0.98 }}
+                    variants={productCardFade}
                     className='bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative cursor-pointer'
                     onClick={() => setSelectedItem(dish)}
                   >
@@ -133,17 +148,21 @@ const FullMenu: React.FC = () => {
                         alt=""
                       />
                     </div>
-                    <p className="text-[14px] lg:text-[18px] text-center font-semibold text-(--neutral-800)">
+
+                    <p className="text-[14px] lg:text-[18px] text-center font-semibold text-(--neutral-800) dark:text-white">
                       {dish.name}
                     </p>
+
                     <div className='space-x-1 py-1 px-1.5 flex items-center absolute top-2 right-2 bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]'>
                       <img src={dish.star} className='w-4 h-4' alt="" />
                       <p className="text-[11px] md:text-[14px]">{dish.rating}</p> 
                     </div>
+
                     <p className='text-(--orange-1) text-[14px] lg:text-[18px] font-extrabold'>${(dish.price).toFixed(2)}</p>
-                  </div>
+                  </motion.div>
                 ))}
-            </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 

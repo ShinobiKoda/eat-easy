@@ -1,3 +1,26 @@
+const easeInOut: [number, number, number, number] = [0.22, 1, 0.36, 1]
+
+// Product grid and card animation variants
+export const productGridStagger = {
+  hidden: { opacity: 0, scale: 0.96 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.3,
+      ease: easeInOut,
+      staggerChildren: 0.15,
+      delayChildren: 0.6,
+    },
+  },
+  exit: { opacity: 0, scale: 0.96, transition: { duration: 0.3 } },
+};
+
+export const productCardFade = {
+  hidden: { opacity: 0, y: 32 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: easeInOut } },
+  exit: { opacity: 0, y: 32, transition: { duration: 0.4 } },
+};
 export const scaleButton: Variants = {
   rest: { scale: 1 },
   hover: { scale: 1.1, transition: { duration: 0.18, ease: "easeOut" } },
@@ -45,7 +68,7 @@ export const fadeIn: Variants = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.6, ease: easeInOut },
   },
 };
 
@@ -85,7 +108,7 @@ export const slideIn = (
       opacity: 1,
       x: 0,
       y: 0,
-      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: 0.6, ease: easeInOut },
     },
   };
 };
@@ -201,7 +224,7 @@ export const spinIn: Variants = {
     opacity: 1,
     scale: 1,
     rotate: 0,
-    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 1, ease: easeInOut },
   },
 };
 
@@ -226,7 +249,7 @@ export const textReveal: Variants = {
     transition: {
       duration: 1,
       delay: 0.5,
-      ease: [0.22, 1, 0.36, 1],
+      ease: easeInOut,
     },
   },
 };
@@ -245,7 +268,7 @@ export const dropdownContainer: Variants = {
     scale: 1,
     transition: {
       duration: 0.25,
-      ease: [0.22, 1, 0.36, 1],
+      ease: easeInOut,
       staggerChildren: 0.05,
       when: "beforeChildren",
     },
@@ -266,7 +289,7 @@ export const dropdownItem: Variants = {
   show: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.25, ease: easeInOut },
   },
   exit: {
     opacity: 0,
