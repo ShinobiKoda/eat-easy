@@ -9,6 +9,8 @@ import Loader from "../Loader";
 import { Eat } from "../../data/data";
 import ProductCarousel from "./ProductCarousel";
 import Filters from "../Filters";
+import ViewDish from "../dashboard/ViewDish";
+import type { PropType } from "../../types";
 
 const FullMenu: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
@@ -18,6 +20,7 @@ const FullMenu: React.FC = () => {
     return () => clearTimeout(t);
   }, []);
 
+  // for the filter component
   const [filterButton, setFilterButton] = useState(false);
 
   // Dynamically get all unique tags from Eat data
@@ -33,6 +36,12 @@ const FullMenu: React.FC = () => {
   const filteredDishes = filterTag === 'all'
     ? Eat
     : Eat.filter(dish => dish.tag && dish.tag.some((t: string) => t.toLowerCase() === filterTag));
+
+  // State for selected item and addToOrder (optional, for future cart integration)
+  
+  const [selectedItem, setSelectedItem] = useState<PropType | null>(null);
+  // Dummy addToOrder function for ViewDish compatibility (can be implemented as needed)
+  const addToOrder = () => {};
 
   return (
     <div className="w-full min-h-screen">
@@ -111,42 +120,64 @@ const FullMenu: React.FC = () => {
             <h1 className="text-[18px] text-(--neutral-600) font-semibold">Most Popular</h1>
             
             <div className='items-center gap-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-                {filteredDishes.map(({ id, name, image, star, price, rating }) => (
-                  <div key={id} className='bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative'>
+                {filteredDishes.map((dish) => (
+                  <div
+                    key={dish.id}
+                    className='bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative cursor-pointer'
+                    onClick={() => setSelectedItem(dish)}
+                  >
                     <div className="rounded-full mb-2">
                       <img
-                        src={image}
+                        src={dish.image}
                         className="max-w-[100px] max-h-[100px] rounded-full"
                         alt=""
                       />
                     </div>
                     <p className="text-[14px] lg:text-[18px] text-center font-semibold text-(--neutral-800)">
-                      {name}
+                      {dish.name}
                     </p>
                     <div className='space-x-1 py-1 px-1.5 flex items-center absolute top-2 right-2 bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]'>
-                      <img src={star} className='w-4 h-4' alt="" />
-                      <p className="text-[11px] md:text-[14px]">{rating}</p> 
+                      <img src={dish.star} className='w-4 h-4' alt="" />
+                      <p className="text-[11px] md:text-[14px]">{dish.rating}</p> 
                     </div>
-                    <p className='text-(--orange-1) text-[14px] lg:text-[18px] font-extrabold'>${(price).toFixed(2)}</p>
+                    <p className='text-(--orange-1) text-[14px] lg:text-[18px] font-extrabold'>${(dish.price).toFixed(2)}</p>
                   </div>
                 ))}
             </div>
           </div>
         </div>
 
-    {/* filter component */}
-      <AnimatePresence>
-        {filterButton && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
-          >
-            <Filters onClose={() => setFilterButton(false)} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* viewdish component */}
+        <AnimatePresence>
+          {selectedItem && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
+            >
+              <ViewDish
+                item={selectedItem}
+                onClose={() => setSelectedItem(null)}
+                onAddToOrder={addToOrder}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        {/* filter component */}
+        <AnimatePresence>
+          {filterButton && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
+            >
+              <Filters onClose={() => setFilterButton(false)} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

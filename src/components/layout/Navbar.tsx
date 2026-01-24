@@ -44,13 +44,16 @@ const Navbar: React.FC<NavbarProps> = ({
                 </motion.button>
               </PopIn>
             ) : (
-              <HiOutlineLocationMarker size={20} />
+              <HiOutlineLocationMarker
+               size={20}
+               className="dark:text-(--neutral-200)"
+              />
             )}
             <p className="flex flex-col">
-              <span className="flex gap-2 items-center font-semibold text-[16px] text-(--neutral-500)">
+              <span className="flex gap-2 items-center font-semibold text-[16px] text-(--neutral-500) dark:text-(--neutral-200) ">
                 {title}
               </span>
-              <span className="heading-font font-medium text-[22px] text-(--neutral-800)">
+              <span className="heading-font font-medium text-[22px] text-(--neutral-800) dark:not-only-of-type:text-white">
                 {description}
               </span>
             </p>

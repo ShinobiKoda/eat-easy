@@ -109,7 +109,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
           title="Full Menu"
           description="See All Our Dishes"
           navbarTitle="Gram Bistro"
-          showBack={false}
+          showBack={true}
         />
 
         <div className={`pt-15 md:pt-20 transition-all duration-300`}>
@@ -120,15 +120,15 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
               </h1>
             </div>
 
-            <div className="md:p-4 md:rounded-2xl md:shadow-[0_4px_12px_rgba(0,0,0,0.10)] md:bg-white md:dark:bg-[#4A4A6A] flex justify-between items-center mb-10">
+            <div className="md:p-4 md:rounded-2xl md:shadow-[0_4px_12px_rgba(0,0,0,0.10)] md:bg-white md:dark:bg-(--neutral-700) flex justify-between items-center mb-10">
               <div
-                className={`flex md:w-fit h-fit md:mx-0 md:justify-items-normal mx-auto w-full justify-between space-x-4 md:space-x-0 lg:space-x-2 text-[15px] text-black dark:text-[#F6F6F9]`}
+                className={`flex md:w-fit h-fit md:mx-0 md:justify-items-normal mx-auto w-full justify-between space-x-4 md:space-x-0 lg:space-x-2 text-[15px]`}
               >
                 {['Eat', 'Drink', 'Dessert'].map((cat, idx) => (
                   <div
                     key={cat}
                     onClick={() => setMenu(idx)}
-                    className={`relative h-fit text-center py-2 px-4 w-20 rounded-2xl cursor-pointer transition-colors duration-300 ${menu === idx ? "bg-amber-500 text-white dark:text-black" : "bg-none"}`}
+                    className={`relative h-fit text-center py-2 px-4 w-20 text-[16px] font-medium text-(--neutral-600) dark:text-(--neutral-100) rounded-2xl cursor-pointer transition-colors duration-300 ${menu === idx ? "bg-(--yellow-1) text-white dark:text-(--neutral-800)" : "bg-none"}`}
                   >
                     {cat}
                   </div>
@@ -181,7 +181,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
               {datum.map((eat) => (
                 <div
                   key={`${menu}-${eat.id}`}
-                  className="rounded-2xl items-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] bg-white dark:bg-[#4A4A6A] p-3 group"
+                  className="rounded-2xl items-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] bg-white dark:bg-(--neutral-700) p-3 group"
                 >
                   <div className="flex space-x-3 items-center relative">
                     <div className="rounded-full">
@@ -196,15 +196,15 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
                         {eat.name}
                       </p>
 
-                      <div className=" text-[14px] text-[#C0C0CF] font-semibold mb-2">
+                      <div className=" text-[14px] font-semibold mb-2">
                         <div className="space-x-1 flex items-center">
                           <img src={eat.star} className="w-4 h-4" alt="" />
-                          <p>{eat.rating}</p>
+                          <p className="text-(--neutral-500) dark:text-(--neutral-200)">{eat.rating}</p>
                         </div>
-                        <span>({eat.reviews} reviews)</span>
+                        <span className="text-(--neutral-300) dark:text-(--neutral-500)">({eat.reviews} reviews)</span>
                       </div>
 
-                      <p className="text-[#FF7B2C] text-[15px] lg:text-[18px] font-extrabold">
+                      <p className="text-(--orange-1) text-[15px] lg:text-[18px] font-extrabold">
                         ${eat.price.toFixed(2)}
                       </p>
                     </div>
@@ -214,9 +214,9 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
                       onClick={() => {
                         (setSelectedItem(eat), showSelected?.(eat));
                       }}
-                      className="flex justify-self-end absolute right-0 bottom-0 cursor-pointer rounded-xl p-2 bg-[#FFF2EA] dark:bg-[#FF7B2C]"
+                      className="flex justify-self-end absolute right-0 bottom-0 cursor-pointer rounded-xl p-2 bg-[#FFF2EA] dark:bg-(--orange-1)"
                     >
-                      <AiOutlinePlus className="w-fit h-fit fill-[#FF7B2C] dark:fill-[#FFF2EA]" />
+                      <AiOutlinePlus className="w-fit h-fit text-(--orange-1) dark:text-[#FFF2EA]" />
                     </motion.div>
                   </div>
                 </div>
@@ -224,6 +224,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
             </div>
           </div>
         </div>
+        
         {/* floating cart button */}
         <motion.div drag className="fixed right-6 bottom-6 z-50">
           <button
