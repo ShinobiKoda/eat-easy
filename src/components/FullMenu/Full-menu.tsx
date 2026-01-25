@@ -10,6 +10,7 @@ import { Eat } from "../../data/data";
 import ProductCarousel from "./ProductCarousel";
 import Filters from "../Filters";
 import ViewDish from "../dashboard/ViewDish";
+import ViewOrder from "../dashboard/ViewOrder";
 import type { PropType } from "../../types";
 import { productGridStagger, productCardFade } from "../animations/motion";
 
@@ -38,11 +39,37 @@ const FullMenu: React.FC = () => {
     ? Eat
     : Eat.filter(dish => dish.tag && dish.tag.some((t: string) => t.toLowerCase() === filterTag));
 
-  // State for selected item and addToOrder (optional, for future cart integration)
-  
+
+  // State for selected item, order items, and order modal
   const [selectedItem, setSelectedItem] = useState<PropType | null>(null);
-  // Dummy addToOrder function for ViewDish compatibility (can be implemented as needed)
-  const addToOrder = () => {};
+  const [orderItems, setOrderItems] = useState<PropType[]>([]);
+  const [showOrder, setShowOrder] = useState(false);
+
+  // Add a dish to order
+  const addToOrder = (order: PropType) => {
+    setOrderItems((prev) => [...prev, order]);
+    setShowOrder(true);
+  };
+
+  // Remove a dish from the order
+  const removeOrder = (order: PropType) => {
+    setOrderItems((prev) => {
+      const next = prev.filter((o) => o !== order);
+      if (next.length === 0) setShowOrder(false);
+      return next;
+    });
+  };
+
+  // Send order handler (can be expanded as needed)
+  const handleSend = (sent: any) => {
+    try {
+      localStorage.setItem("eat-easy-last-order", JSON.stringify(sent));
+    } catch (e) {
+      console.error("Failed to save order to localStorage", e);
+    }
+    setShowOrder(false);
+    // Optionally, navigate to order status or show a confirmation
+  };
 
   return (
     <div className="w-full min-h-screen">
@@ -179,6 +206,35 @@ const FullMenu: React.FC = () => {
                 item={selectedItem}
                 onClose={() => setSelectedItem(null)}
                 onAddToOrder={addToOrder}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* floating cart button */}
+        <motion.div drag className="fixed right-6 bottom-6 z-50">
+          <button
+            onClick={() => setShowOrder((v) => !v)}
+            className="bg-amber-500 text-white rounded-full px-4 py-3 shadow-lg"
+          >
+            Cart ({orderItems.length})
+          </button>
+        </motion.div>
+
+        {/* vieworder component */}
+        <AnimatePresence>
+          {showOrder && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
+            >
+              <ViewOrder
+                items={orderItems}
+                onClose={() => setShowOrder(false)}
+                removeOrder={removeOrder}
+                onSend={handleSend}
               />
             </motion.div>
           )}
