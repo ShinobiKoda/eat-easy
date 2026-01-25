@@ -137,6 +137,7 @@ const Header: React.FC<HeaderProps> = ({
           </MotionItem>
         </div>
 
+        {/* for tablet view */}
         <FadeIn>
           <div className="relative" ref={tabletMenuRef}>
             <motion.button
@@ -437,6 +438,7 @@ const Header: React.FC<HeaderProps> = ({
               </AnimatePresence>
             </div>
           </FadeIn>
+          
           <FadeIn>
             <div className="w-[21px] h-full border-[1.5px] border-(--neutral-200) rotate-90"></div>
           </FadeIn>

@@ -3,11 +3,8 @@ import { motion, type Variants } from "motion/react";
 import type { PropType } from "../../types";
 import { useState, type MouseEvent } from "react";
 import useIsDesktop from "../../hooks/useIsDesktop";
-// import Plus from "/images/plus.png"
-// import minus from "/images/minus.png"
-import Plus from "/images/plus.svg";
-import minus from "/images/minus.svg";
-import Cancel from "/images/Cancel.png";
+import { FaPlus, FaMinus } from "react-icons/fa6";
+import { FaTimes } from "react-icons/fa";
 import Check from "/images/Checkbox.png";
 
 export type ViewDishProps = {
@@ -113,22 +110,23 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
       exit="exit"
       className="z-50 fixed right-0 w-full min-h-screen sm:w-[55%] md:w-[45%] lg:w-[37%] top-[15%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl bg-[#f7f7f7] dark:bg-[#32324D]"
     >
-      <div className="flex flex-col h-full text-neutral-800 dark:text-white">
+      <div className="flex flex-col h-full">
         <div
           onClick={onClose}
-          className="top-0 my-2 mx-auto w-[134px] h-[5px] bg-[#C0C0CF] rounded-sm sm:hidden"
+          className="top-0 my-2 mx-auto w-[134px] h-[5px] bg-(--neutral-300) dark:bg-white rounded-sm sm:hidden"
         />
 
-        <motion.img
+        <motion.div
           whileTap={{ scale: 0.96 }}
           onClick={onClose}
-          src={Cancel}
           className="sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50"
-          alt=""
-        />
+        >
+          <FaTimes size={25} className="text-(--neutral-400) dark:text-(--neutral-200)" />
+        </motion.div>
 
         <div className="flex-1 overflow-y-auto scrollbar-hidden">
           <div className="max-w-[600px] min-h-[204px] flex flex-col items-center overflow-hidden relative">
+
             <div className="w-[454px] h-[444px] absolute -top-[265px] rounded-[50%] shadow-[0_4px_12px_rgba(0,0,0,0.10)]" />
             <div className="w-60 h-[245px] absolute -top-20 rounded-[50%] shadow-[0_4px_12px_rgba(0,0,0,0.10)]" />
 
@@ -146,35 +144,37 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
 
           <div className="p-6 space-y-[25px] mb-18 sm:mb-0">
             <div className="flex justify-between items-center">
-              <p className="text-[20px] dark:text-[#FFFFFF] font-bold">
+              <p className="text-[20px] text-(--neutral-800) dark:text-white font-bold">
                 {item.name}
               </p>
-              <p className="text-[#FF7B2C] text-[20px] font-extrabold">
+              <p className="text-(--orange-1) text-[20px] font-extrabold">
                 ${item.price.toFixed(2)}
               </p>
             </div>
-            <p className="text-[15px] dark:text-[#DCDCE4] font-500">
+            <p className="text-[15px] text-(--neutral-600) dark:text-(--neutral-200) font-500">
               {item.text}
             </p>
 
-            <div className="p-2.5 space-x-2.5 flex justify-between bg-[#FFFFFF] dark:bg-[#4A4A6A] rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
+            {/* nutrients */}
+            <div className="p-2.5 space-x-2.5 flex justify-between bg-[#FFFFFF] dark:bg-(--neutral-700)  rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
               {item.nutrients.map((nut) => (
-                <div className="px-2 text-center dark:text-[#EAEAEF]">
-                  <p className="text-[14px] font-semibold">{nut.amount}</p>
-                  <p className="text-[12px] font-600">{nut.unit}</p>
+                <div className="px-2 text-center">
+                  <p className="text-[14px] font-semibold text-(--purple-1) dark:text-white">{nut.amount}</p>
+                  <p className="text-[12px] font-600 text-(--neutral-800) dark:text-(--neutral-150)">{nut.unit}</p>
                 </div>
               ))}
             </div>
-
+            
+            {/* ingredients */}
             <div>
-              <h1 className="text-[#666687] text-[18px] dark:text-[#DCDCE4] font-semibold">
+              <h1 className="text-(--neutral-600) text-[18px] dark:text-(--neutral-200) font-semibold">
                 Ingredients
               </h1>
               <div className="py-2.5 space-x-2.5 flex flex-nowrap overflow-x-auto scrollbar-hidden">
                 {item.ingredients.map((ingredient) => (
-                  <div className="py-3 min-w-20 space-y-2.5 text-center flex flex-col items-center bg-[#FFFFFF] dark:bg-[#4A4A6A] rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
+                  <div className="py-3 min-w-20 space-y-2.5 text-center flex flex-col items-center bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
                     <img src={ingredient.ingimage} alt="" />
-                    <p className="text-[12px] font-600">{ingredient.ingname}</p>
+                    <p className="text-[12px] text-(--neutral-600) dark:text-(--neutral-150) font-600">{ingredient.ingname}</p>
                   </div>
                 ))}
               </div>
@@ -182,7 +182,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
 
             {/* add toppings */}
             <div>
-              <h1 className="text-[#666687] text-[18px] dark:text-[#DCDCE4] font-semibold">
+              <h1 className="text-(--neutral-600) text-[18px] dark:text-(--neutral-200) font-semibold">
                 Add toppings
               </h1>
               <div className="py-2.5 space-y-2.5 flex flex-col">
@@ -191,7 +191,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
                   return (
                     <div
                       key={`${top.id}`}
-                      className="flex bg-[#FFFFFF] dark:bg-[#4A4A6A] rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]"
+                      className="flex bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]"
                     >
                       <div className="p-3.5 text-center flex w-full items-center justify-between ">
                         <div className="flex space-x-2 items-center">
@@ -206,7 +206,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
                                   [top.id]: prev[top.id] || 0 || 1,
                                 }));
                             }}
-                            className="w-4 h-4 border border-black dark:border-white rounded-sm cursor-pointer flex items-center justify-center"
+                            className="w-4 h-4 border border-(--neutral-300) dark:border-(--neutral-150) rounded-sm cursor-pointer flex items-center justify-center"
                           >
                             <img
                               src={Check}
@@ -215,11 +215,11 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
                             />
                           </motion.div>
 
-                          <p className="text-[12px] md:text-[16px] font-600">
+                          <p className="text-[12px] md:text-[16px] text-(--neutral-600) dark:text-(--neutral-200) font-100">
                             {top.name}
                           </p>
                         </div>
-                        <p className="text-[#FF7B2C] text-[14px] md:text-[16px] font-semibold">
+                        <p className="text-(--orange-1) text-[14px] md:text-[16px] font-semibold">
                           {!selectedToppings.has(top.id)
                             ? formatPrice(top.price)
                             : formatPrice(top.price * topCount)}
@@ -227,20 +227,20 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
                       </div>
 
                       <div
-                        className={`${selectedToppings.has(top.id) ? "w-[98px] rounded-r-xl flex items-center justify-center gap-2 bg-[#EAEAEF] dark:bg-[#212134] p-2" : "hidden"}`}
+                        className={`${selectedToppings.has(top.id) ? "w-[98px] rounded-r-xl flex items-center justify-center gap-2 bg-(--neutral-150) dark:bg-(--neutral-900) p-2" : "hidden"}`}
                       >
                         {/* minus top */}
                         <button
                           onClick={() => decrementTopping(top.id)}
                           type="button"
-                          disabled={topCount === 0}
+                          disabled={topCount === 1}
                           className={
-                            topCount === 0
+                            topCount === 1
                               ? "cursor-not-allowed"
                               : "cursor-pointer"
                           }
                         >
-                          <img src={minus} className="w-8 h-8" alt="-" />
+                          <FaMinus className={`${topCount === 1 ? "text-(--neutral-200)" : "text-(--neutral-500) dark:text-(--neutral-100)"}`} />
                         </button>
 
                         <p className="text-[14px] font-semibold">{topCount}</p>
@@ -249,13 +249,9 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
                         <button
                           onClick={() => incrementTopping(top.id)}
                           type="button"
-                          className=""
+                          className="cursor-pointer"
                         >
-                          <img
-                            src={Plus}
-                            className="w-8 h-8 cursor-pointer"
-                            alt="+"
-                          />
+                          <FaPlus className="text-(--neutral-500) dark:text-(--neutral-100)" />
                         </button>
                       </div>
                     </div>
@@ -266,13 +262,13 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
 
             {/* comment */}
             <div className="space-y-3">
-              <h1 className="text-[#666687] text-[18px] dark:text-[#DCDCE4] font-semibold">
+              <h1 className="text-(--neutral-600) text-[16px] md:text-[18px] dark:text-(--neutral-200) font-semibold">
                 Add a request
               </h1>
               <textarea
                 name=""
                 id=""
-                className="px-4 py-3 rounded-2xl bg-[#FFFFFF] dark:bg-[#4A4A6A4D] border border-[#EAEAEF] dark:border-[#666687] w-full"
+                className="px-4 py-3 rounded-2xl text-(--neutral-300) dark:text-(--neutral-500) text-[14px] md:text-[16px] bg-[#FFFFFF] dark:bg-[#4A4A6A4D] border border-(--neutral-150) dark:border-(--neutral-600) w-full"
                 placeholder="Ex: Don't add onion"
               ></textarea>
             </div>
@@ -280,23 +276,23 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
         </div>
 
         {/* footer section */}
-        <div className="w-full flex justify-center sticky bottom-0 rounded-t-2xl sm:rounded-bl-2xl rounded-b-none p-3 bg-[#FCFCFC] dark:bg-[#212134] z-10 space-x-4">
-          <div className="flex items-center w-[127px] gap-2 rounded-2xl bg-[#EAEAEF] dark:bg-[#4A4A6A] px-2">
+        <div className="w-full flex justify-center sticky bottom-0 rounded-t-2xl sm:rounded-bl-2xl rounded-b-none p-3 bg-white dark:bg-(--neutral-900) z-10 space-x-4">
+          <div className="flex items-center justify-center w-[127px] gap-3.5 rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) px-2">
             {/* decrement button */}
             <button
               onClick={Decrement}
               type="button"
-              disabled={count === 0}
-              className={count === 0 ? "cursor-not-allowed" : "cursor-pointer"}
+              disabled={count === 1}
+              className={count === 1 ? "cursor-not-allowed" : "cursor-pointer"}
             >
-              <img src={minus} className="w-12 h-12" alt="-" />
+              <FaMinus className={`${count === 1 ? "text-(--neutral-200)" : "text-(--neutral-500) dark:text-(--neutral-100)"}`} />
             </button>
 
-            <p className=" text-center">{count}</p>
+            <p className="text-center dark:text-white text-(--neutral-500) text-[14px]">{count}</p>
 
             {/* increment button */}
             <button onClick={Increment} type="button" className="">
-              <img src={Plus} className="w-12 h-12 cursor-pointer" alt="+" />
+              <FaPlus className="text-(--neutral-500) dark:text-(--neutral-100)" />
             </button>
           </div>
 
@@ -331,9 +327,9 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
               onAddToOrder?.(order);
               onClose();
             }}
-            className="w-full text-center p-3 rounded-2xl bg-[#32324D] dark:bg-[#615793] text-white cursor-pointer flex justify-center space-x-2"
+            className="w-full text-center p-3 rounded-2xl bg-(--purple-2) text-white text-[16px] md:text-[18px] cursor-pointer flex justify-center space-x-2"
           >
-            <p>Add to order</p>
+            <p className="font-semibold">Add to order</p>
             <p className="font-bold">
               {formatPrice((item.price + toppingsTotal) * count)}
             </p>
@@ -345,5 +341,3 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
 };
 
 export default ViewDish;
-
-// my mother says you whole life is in the hand of God : John Bellion
