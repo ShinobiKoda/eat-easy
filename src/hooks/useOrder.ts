@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import type { PropType } from "../types";
 import { useNavigate } from "react-router-dom";
@@ -24,9 +25,10 @@ export function useOrder() {
   };
 
   // Send order handler
-  const handleSend = (sent: any) => {
+  const handleSend = (sent: PropType[]) => {
     try {
       localStorage.setItem("eat-easy-last-order", JSON.stringify(sent));
+      setOrderItems([]); // Clear cart after successful order
     } catch (e) {
       console.error("Failed to save order to localStorage", e);
     }

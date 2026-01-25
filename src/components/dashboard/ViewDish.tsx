@@ -5,7 +5,7 @@ import { useState, type MouseEvent } from "react";
 import useIsDesktop from "../../hooks/useIsDesktop";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
-import Check from "/images/Checkbox.png";
+import { FaCheck } from "react-icons/fa6";
 
 export type ViewDishProps = {
   item: PropType | null;
@@ -157,8 +157,8 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
 
             {/* nutrients */}
             <div className="p-2.5 space-x-2.5 flex justify-between bg-[#FFFFFF] dark:bg-(--neutral-700)  rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
-              {item.nutrients.map((nut) => (
-                <div className="px-2 text-center">
+              {item.nutrients.map((nut, idx) => (
+                <div key={idx} className="px-2 text-center">
                   <p className="text-[14px] font-semibold text-(--purple-1) dark:text-white">{nut.amount}</p>
                   <p className="text-[12px] font-600 text-(--neutral-800) dark:text-(--neutral-150)">{nut.unit}</p>
                 </div>
@@ -171,8 +171,10 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
                 Ingredients
               </h1>
               <div className="py-2.5 space-x-2.5 flex flex-nowrap overflow-x-auto scrollbar-hidden">
-                {item.ingredients.map((ingredient) => (
-                  <div className="py-3 min-w-20 space-y-2.5 text-center flex flex-col items-center bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
+                {item.ingredients.map((ingredient, idx) => (
+                  <div
+                    key={idx} 
+                    className="py-3 min-w-20 space-y-2.5 text-center flex flex-col items-center bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
                     <img src={ingredient.ingimage} alt="" />
                     <p className="text-[12px] text-(--neutral-600) dark:text-(--neutral-150) font-600">{ingredient.ingname}</p>
                   </div>
@@ -206,13 +208,9 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
                                   [top.id]: prev[top.id] || 0 || 1,
                                 }));
                             }}
-                            className="w-4 h-4 border border-(--neutral-300) dark:border-(--neutral-150) rounded-sm cursor-pointer flex items-center justify-center"
+                            className={`w-4 h-4 border rounded-sm cursor-pointer flex items-center justify-center ${selectedToppings.has(top.id) ? "bg-(--yellow-1) border-(--yellow-1)" : "border-(--neutral-300) dark:border-(--neutral-150)"}`}
                           >
-                            <img
-                              src={Check}
-                              alt=""
-                              className={`w-full h-full ${selectedToppings.has(top.id) ? "flex" : "hidden"}`}
-                            />
+                            <FaCheck className={`text-white dark:text-(--neutral-700) ${selectedToppings.has(top.id) ? "w-full h-full " : "hidden"}`}/>
                           </motion.div>
 
                           <p className="text-[12px] md:text-[16px] text-(--neutral-600) dark:text-(--neutral-200) font-100">
@@ -243,7 +241,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
                           <FaMinus className={`${topCount === 1 ? "text-(--neutral-200)" : "text-(--neutral-500) dark:text-(--neutral-100)"}`} />
                         </button>
 
-                        <p className="text-[14px] font-semibold">{topCount}</p>
+                        <p className="text-[14px] dark:text-white text-(--neutral-500) font-semibold">{topCount}</p>
 
                         {/* add top */}
                         <button
