@@ -11,8 +11,9 @@ import ProductCarousel from "./ProductCarousel";
 import Filters from "../Filters";
 import ViewDish from "../dashboard/ViewDish";
 import ViewOrder from "../dashboard/ViewOrder";
-import type { PropType } from "../../types";
+// ...existing code...
 import { productGridStagger, productCardFade } from "../animations/motion";
+import { useOrder } from "../../hooks/useOrder";
 
 const FullMenu: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
@@ -40,36 +41,18 @@ const FullMenu: React.FC = () => {
     : Eat.filter(dish => dish.tag && dish.tag.some((t: string) => t.toLowerCase() === filterTag));
 
 
-  // State for selected item, order items, and order modal
-  const [selectedItem, setSelectedItem] = useState<PropType | null>(null);
-  const [orderItems, setOrderItems] = useState<PropType[]>([]);
-  const [showOrder, setShowOrder] = useState(false);
-
-  // Add a dish to order
-  const addToOrder = (order: PropType) => {
-    setOrderItems((prev) => [...prev, order]);
-    setShowOrder(true);
-  };
-
-  // Remove a dish from the order
-  const removeOrder = (order: PropType) => {
-    setOrderItems((prev) => {
-      const next = prev.filter((o) => o !== order);
-      if (next.length === 0) setShowOrder(false);
-      return next;
-    });
-  };
-
-  // Send order handler (can be expanded as needed)
-  const handleSend = (sent: any) => {
-    try {
-      localStorage.setItem("eat-easy-last-order", JSON.stringify(sent));
-    } catch (e) {
-      console.error("Failed to save order to localStorage", e);
-    }
-    setShowOrder(false);
-    // Optionally, navigate to order status or show a confirmation
-  };
+  // Use shared order logic
+  const {
+    selectedItem,
+    setSelectedItem,
+    orderItems,
+    // setOrderItems,
+    showOrder,
+    setShowOrder,
+    addToOrder,
+    removeOrder,
+    handleSend,
+  } = useOrder();
 
   return (
     <div className="w-full min-h-screen">

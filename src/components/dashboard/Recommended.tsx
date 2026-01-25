@@ -12,7 +12,8 @@ import Filters from "../Filters";
 import Header from "../layout/Header";
 import Loader from "../Loader";
 import { AnimatePresence } from "motion/react";
-import { useNavigate } from "react-router-dom";
+// ...existing code...
+import { useOrder } from "../../hooks/useOrder";
 
 type RecommendedProps = {
   items?: PropType[];
@@ -28,39 +29,18 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
     return () => clearTimeout(t);
   }, []);
 
-  // usestate for the selected item
-  const [selectedItem, setSelectedItem] = useState<PropType | null>(null);
-  // order items collected from ViewDish
-  const [orderItems, setOrderItems] = useState<any[]>([]);
-  const [showOrder, setShowOrder] = useState(false);
-
-  // add a dish to vieworder
-  const addToOrder = (order: any) => {
-    setOrderItems((prev) => [...prev, order]);
-    setShowOrder(true);
-  };
-  // remove a dish from the vieworder
-  const removeOrder = (order: any) => {
-    setOrderItems((prev) => {
-      const next = prev.filter((o) => o !== order);
-      // if cart becomes empty, close the order modal
-      if (next.length === 0) setShowOrder(false);
-      return next;
-    });
-  };
-
-  // store ordered dishes and then navigate to the OrderStatus
-  const navigate = useNavigate();
-
-  const handleSend = (sent: any) => {
-    try {
-      localStorage.setItem("eat-easy-last-order", JSON.stringify(sent));
-    } catch (e) {
-      console.error("Failed to save order to localStorage", e);
-    }
-    setShowOrder(false);
-    navigate("/orderStatus");
-  };
+  // Use shared order logic
+  const {
+    selectedItem,
+    setSelectedItem,
+    orderItems,
+    // setOrderItems,
+    showOrder,
+    setShowOrder,
+    addToOrder,
+    removeOrder,
+    handleSend,
+  } = useOrder();
 
   // usestate for the mode
   const [click, setClick] = useState(0);
