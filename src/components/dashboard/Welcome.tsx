@@ -32,17 +32,23 @@ const Welcome: React.FC = () => {
             Let's find the perfect dish for you
           </PopIn>
 
-          <div className="w-full hidden lg:flex lg:items-center lg:justify-between bg-(--neutral-900) rounded-[28.67px] px-[50px]">
-            <FadeIn className="space-y-6">
+          <div
+            className="w-full hidden lg:flex lg:items-stretch lg:justify-between 
+  bg-(--neutral-900) dark:bg-(--neutral-150) 
+  rounded-[28.67px] px-[50px] "
+          >
+            {/* Text */}
+            <FadeIn className="space-y-6 py-[50px]">
               <h1 className="text-[32px]">
                 <span className="heading-font text-white font-normal">
-                  Welcome to{" "}
-                </span>{" "}
+                  Welcome to
+                </span>
                 <br />
-                <span className="font-bold heading-font text-white truncate w-[30px]">
+                <span className="font-bold heading-font text-white">
                   Gram Bistro Restaurant 📍
                 </span>
               </h1>
+
               <div className="flex flex-col xl:flex-row gap-2 xl:gap-6">
                 <p className="flex items-center gap-2">
                   <CiLocationOn size={24} className="text-(--yellow-1)" />
@@ -50,18 +56,21 @@ const Welcome: React.FC = () => {
                     790 8th Ave, New York
                   </span>
                 </p>
-                <p className="flex items-center whitespace-nowrap gap-2">
-                  <IoTimeOutline size={24} className="text-(--yellow-1) " />
+
+                <p className="flex items-center gap-2">
+                  <IoTimeOutline size={24} className="text-(--yellow-1)" />
                   <span className="whitespace-nowrap text-(--neutral-400) font-medium text-base">
                     Mon - Sun: 12AM - 10PM
                   </span>
                 </p>
               </div>
             </FadeIn>
-            <PopIn className="max-w-[443px] overflow-hidden bg-cover h-full">
+
+            {/* Image */}
+            <PopIn className="max-w-[443px]">
               <img
                 src="/images/welcome-page-illustration.svg"
-                alt="Welcome Page Illustration Image"
+                alt="Welcome Page Illustration"
                 className="w-full h-full object-cover"
               />
             </PopIn>
