@@ -200,12 +200,15 @@ const Sidebar: React.FC = () => {
                           Smart Assistant
                         </motion.div>
                       </NavLink>
-                      <motion.div
-                        whileTap={{ scale: 0.95 }}
-                        className="cursor-pointer font-medium text-base text-white"
-                      >
-                        Full Menu
-                      </motion.div>
+
+                      <NavLink to="/FullMenu">
+                        <motion.div
+                          whileTap={{ scale: 0.95 }}
+                          className="cursor-pointer font-medium text-base text-white"
+                        >
+                          Full Menu
+                        </motion.div>
+                      </NavLink>
                     </div>
                   )}
                 </div>

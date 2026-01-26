@@ -1,4 +1,5 @@
 import Header from "../layout/Header";
+import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import {
   PopIn,
@@ -12,11 +13,13 @@ const options = [
     icon: "/images/bulb-icon.svg",
     title: "Choose Virtual Assistant",
     description: "Simplify your decisions through our Smart Menu",
+    link: "/recommended"
   },
   {
     icon: "/images/menu-icon.svg",
     title: "Go to the menu",
     description: "If you already know what to order, this is the best choice",
+    link: "/FullMenu"
   },
 ];
 
@@ -44,9 +47,11 @@ const Welcome: React.FC = () => {
                         {option.description}
                       </p>
                     </div>
-                    <ScaleButton className="w-[46px] h-[46px] rounded-xl bg-(--orange-5) dark:bg-(--orange-1) flex items-center justify-center mt-auto">
-                      <FaArrowRight className="text-(--orange-1) dark:text-white" />
-                    </ScaleButton>
+                    <Link to={option.link}>
+                      <ScaleButton className="w-[46px] h-[46px] rounded-xl bg-(--orange-5) dark:bg-(--orange-1) flex items-center justify-center mt-auto">
+                        <FaArrowRight className="text-(--orange-1) dark:text-white" />
+                      </ScaleButton>
+                    </Link>
                   </div>
                 </div>
               </FadeIn>

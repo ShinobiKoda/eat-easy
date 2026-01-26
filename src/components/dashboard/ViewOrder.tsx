@@ -2,9 +2,8 @@ import { motion } from "motion/react";
 // import { MotionContainer, PopIn, FadeIn, SlideIn } from "../animations/motion";
 import type { PropType } from "../../types";
 import { type MouseEvent } from "react";
-import ArrowRight from "/images/arrow-right.png";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaArrowRight } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import Navbar from "../layout/Navbar";
@@ -50,7 +49,7 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
       {/* header for destop */}
       <div className="hidden sm:flex justify-between p-4">
         <div className="flex items-center">
-          <h1 className="px-3 text-[16px] lg:text-[20px] font-bold dark:text-[#FFFFFF]">
+          <h1 className="px-3 text-[16px] lg:text-[20px] font-bold text-(--neutral-800) dark:text-[#FFFFFF]">
             My Order
           </h1>
 
@@ -60,7 +59,7 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
             <div className="w-5 h-5">
               <HiOutlineLocationMarker
                 size={20}
-                className="dark:text-(--neutral-200)"
+                className="text-(--neutral-500) dark:text-(--purple-5)"
               />
             </div>
             <p className="text-[14px] lg:text-[16px] font-semibold text-(--neutral-500) dark:text-(--purple-5)">
@@ -84,7 +83,7 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
             {items.map((order) => (
               <div
                 key={`${order.id}`}
-                className="rounded-2xl items-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] bg-white dark:bg-[#4A4A6A] p-3 group"
+                className="rounded-2xl items-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] bg-white dark:bg-(--neutral-700) p-3 group"
               >
                 <div className="flex space-x-3 items-center relative">
                   <div className="rounded-full">
@@ -96,9 +95,9 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
                   </div>
 
                   <div className="">
-                    <p className="text-[15px] lg:text-[18px] font-semibold dark:text-[#FFFFFF]">
+                    <p className="text-[15px] lg:text-[18px] font-semibold text-(--neutral-800) dark:text-[#FFFFFF]">
                       {order.name} x{" "}
-                      <b className="text-[#FF7B2C]">
+                      <b className="text-(--orange-1) font-extrabold">
                         {(order as any).qty ?? 1}
                       </b>
                     </p>
@@ -106,12 +105,12 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
                     <div className=" text-[14px] text-[#C0C0CF] font-semibold mb-2 flex space-x-1 flex-wrap items-center">
                       <div className="space-x-1 flex items-center">
                         <img src={order.star} className="w-4 h-4" alt="" />
-                        <p>{order.rating}</p>
+                        <p className="text-(--neutral-500) dark:text-(--neutral-200)">{order.rating}</p>
                       </div>
-                      <span>({order.reviews} reviews)</span>
+                      <span className="text-(--neutral-300) dark:text-(--neutral-500)">({order.reviews} reviews)</span>
                     </div>
 
-                    <p className="text-[#FF7B2C] text-[15px] lg:text-[18px] font-extrabold">
+                    <p className="text-(--orange-1) text-[15px] lg:text-[18px] font-extrabold">
                       ${order.price.toFixed(2)}
                     </p>
                   </div>
@@ -121,9 +120,9 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
                     <motion.div
                       onClick={() => removeOrder?.(order)}
                       whileTap={{ scale: 0.9 }}
-                      className=" cursor-pointer"
+                      className="cursor-pointer"
                     >
-                      <RiDeleteBinLine />
+                      <RiDeleteBinLine size={22} className="text-(--neutral-400)" />
                     </motion.div>
                   </div>
                 </div>
@@ -133,37 +132,38 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
 
           <motion.div
             whileTap={{ scale: 0.96 }}
+            onClick={onClose}
             className="flex mx-auto items-center cursor-pointer space-x-2 w-fit"
           >
-            <FaPlus size={25} className="text-(--yellow-1)" />
+            <FaPlus size={20} className="text-(--yellow-1)" />
 
             <p className="text-(--yellow-1) text-[16px] font-semibold">Add more food to order</p>
           </motion.div>
 
           <div className="border-y border-gray-500 py-5 space-y-5">
             <div className="flex justify-between items-center">
-              <p className="text-[16px] font-semibold dark:text-[#DCDCE4]">
+              <p className="text-[16px] font-semibold text-(--neutral-800) dark:text-(--neutral-200)">
                 Subtotal
               </p>
-              <p className="text-[16px] font-extrabold dark:text-[#F6F6F9]">
+              <p className="text-[16px] font-extrabold text-(--neutral-700) dark:text-(--neutral-100)">
                 ${orderTotal.toFixed(2)}
               </p>
             </div>
             <div className="flex justify-between items-center">
-              <p className="text-[16px] font-semibold dark:text-[#DCDCE4]">
+              <p className="text-[16px] font-semibold text-(--neutral-800) dark:text-(--neutral-200)">
                 Tax
               </p>
-              <p className="text-[16px] font-extrabold dark:text-[#F6F6F9]">
+              <p className="text-[16px] font-extrabold text-(--neutral-700) dark:text-(--neutral-100)">
                 ${tax.toFixed(2)}
               </p>
             </div>
           </div>
 
           <div className="flex justify-between items-center">
-            <p className="text-[18px] font-bold dark:text-[#DCDCE4]">
+            <p className="text-[18px] font-bold text-(--neutral-700) dark:text-(--neutral-200)">
               Total Price
             </p>
-            <p className="text-[18px] font-extrabold text-[#FF7B2C]">
+            <p className="text-[18px] font-extrabold text-(--orange-1)">
               ${(orderTotal + tax).toFixed(2)}
             </p>
           </div>
@@ -199,14 +199,10 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
             onClose();
           }}
           whileTap={{ scale: 0.98 }}
-          className="group rounded-2xl bg-[#615793] p-4 cursor-pointer w-full flex items-center justify-center space-x-2"
+          className="group rounded-2xl bg-(--purple-2) p-4 cursor-pointer w-full flex items-center justify-center space-x-2"
         >
           <p className="text-[16px] text-[#FFFFFF] font-semibold">Send Order</p>
-          <motion.img
-            className="group-hover:translate-x-3 transition-all duration-300"
-            src={ArrowRight}
-            alt=""
-          />
+          <FaArrowRight size={18} className="group-hover:translate-x-3 transition-all duration-300 text-[#FFFFFF]"/>
         </motion.button>
       </div>
     </motion.div>
