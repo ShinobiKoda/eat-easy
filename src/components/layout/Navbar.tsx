@@ -50,10 +50,10 @@ const Navbar: React.FC<NavbarProps> = ({
               />
             )}
             <p className="flex flex-col">
-              <span className="flex gap-2 items-center font-semibold text-[16px] text-(--neutral-500) dark:text-(--neutral-200) ">
+              <span className="flex gap-2 items-center font-semibold text-[14px] text-(--neutral-500) dark:text-(--neutral-200) ">
                 {title}
               </span>
-              <span className="heading-font font-medium text-[22px] text-(--neutral-800) dark:not-only-of-type:text-white">
+              <span className="heading-font font-semibold text-[18px] text-(--neutral-800) dark:text-white">
                 {description}
               </span>
             </p>

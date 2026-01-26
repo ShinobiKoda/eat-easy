@@ -46,6 +46,14 @@
   --neutral-900: #212134;
 }
 
+.vieworder-bg {
+  background: var(--light-mode-bg);
+}
+
+.dark .vieworder-bg {
+  background: var(--dark-mode-bg);
+}
+
 * {
   font-family: "Mulish";
 

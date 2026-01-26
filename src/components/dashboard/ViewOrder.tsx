@@ -2,12 +2,12 @@ import { motion } from "motion/react";
 // import { MotionContainer, PopIn, FadeIn, SlideIn } from "../animations/motion";
 import type { PropType } from "../../types";
 import { type MouseEvent } from "react";
-import ArrowLeft from "/images/arrow-left.png";
 import ArrowRight from "/images/arrow-right.png";
-import Delete from "/images/delete.svg";
-import Add from "/images/add.svg";
-import Cancel from "/images/Cancel.png";
-import Location from "/images/Map-pin.png";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { FaPlus } from "react-icons/fa6";
+import { FaTimes } from "react-icons/fa";
+import { HiOutlineLocationMarker } from "react-icons/hi";
+import Navbar from "../layout/Navbar";
 
 export type ViewOrderProps = {
   items: PropType[];
@@ -40,29 +40,11 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
         transition: { duration: 0.25 },
       }}
       exit={{ x: "100vw", opacity: 0 }}
-      className="z-50 top-0 fixed right-0 w-full h-screen flex flex-col sm:w-[55%] md:w-[45%] lg:w-[37%] sm:rounded-l-2xl bg-[#f7f7f7] dark:bg-[#32324D]"
+      className="z-50 top-0 fixed right-0 w-full h-screen flex flex-col sm:w-[55%] md:w-[45%] lg:w-[37%] sm:rounded-l-2xl vieworder-bg"
     >
       {/* header for mobile */}
-      <div className="flex sm:hidden p-4">
-        <div className="flex space-x-2 items-center">
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={onClose}
-            className="p-2 cursor-pointer bg-[#FFFFFF] rounded-sm"
-            aria-label="Back"
-          >
-            <img src={ArrowLeft} className="w-5 h-5" alt="Back" />
-          </motion.button>
-
-          <div className="">
-            <h1 className="text-[14px] font-600 text-[#8E8EA9] dark:text-[#EBEAF2]">
-              Gram Bistro
-            </h1>
-            <p className="text-[18px] font-bold text-[#32324D] dark:text-[#FFFFFF]">
-              My Order
-            </p>
-          </div>
-        </div>
+      <div className="flex sm:hidden">
+        <Navbar title='Gram Bistro' description='My Order' showBack={true}  />
       </div>
 
       {/* header for destop */}
@@ -76,21 +58,24 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
 
           <div className="px-3 flex items-center">
             <div className="w-5 h-5">
-              <img src={Location} className="w-full h-full" alt="" />
+              <HiOutlineLocationMarker
+                size={20}
+                className="dark:text-(--neutral-200)"
+              />
             </div>
-            <p className="text-[14px] lg:text-[16px] font-semibold text-[#8E8EA9] dark:text-[#EBEAF2]">
+            <p className="text-[14px] lg:text-[16px] font-semibold text-(--neutral-500) dark:text-(--purple-5)">
               Gram Bistro
             </p>
           </div>
         </div>
 
-        <motion.img
+        <motion.div
           whileTap={{ scale: 0.96 }}
           onClick={onClose}
-          src={Cancel}
           className="sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50"
-          alt=""
-        />
+        >
+          <FaTimes size={25} className="text-(--neutral-400) dark:text-(--neutral-200)" />
+        </motion.div>
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-hidden">
@@ -136,13 +121,9 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
                     <motion.div
                       onClick={() => removeOrder?.(order)}
                       whileTap={{ scale: 0.9 }}
-                      className=""
+                      className=" cursor-pointer"
                     >
-                      <img
-                        src={Delete}
-                        className="w-fit h-fit cursor-pointer"
-                        alt=""
-                      />
+                      <RiDeleteBinLine />
                     </motion.div>
                   </div>
                 </div>
@@ -154,8 +135,9 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
             whileTap={{ scale: 0.96 }}
             className="flex mx-auto items-center cursor-pointer space-x-2 w-fit"
           >
-            <img src={Add} alt="" />
-            <p className="text-[#FFB01D]">Add more food to order</p>
+            <FaPlus size={25} className="text-(--yellow-1)" />
+
+            <p className="text-(--yellow-1) text-[16px] font-semibold">Add more food to order</p>
           </motion.div>
 
           <div className="border-y border-gray-500 py-5 space-y-5">
