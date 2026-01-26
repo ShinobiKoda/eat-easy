@@ -232,5 +232,3 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
 };
 
 export default ViewOrder;
-
-// my mother says you whole life is in the hand of God : John Bellion

@@ -100,20 +100,20 @@ const Filters: React.FC<FiltersProps> = ({ onClose }) => {
       exit="exit"
       className="z-50 fixed right-0 w-full sm:min-h-screen sm:w-[55%] md:w-[45%] lg:w-[450px] top-[7%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl bg-[#f7f7f7] dark:bg-[#32324D]"
     >
-      <div className="flex flex-col h-full px-[24px] py-[16px]">
+      <div className="flex flex-col h-full px-6 py-4">
         <div onClick={onClose} className="top-0 my-2 mx-auto w-[134px] h-[5px] bg-[#C0C0CF] rounded-sm sm:hidden" />
 
         <div className='flex justify-between mb-4'>
             <h1 className='mx-auto sm:ml-0 text-[22px] dark:text-[#FFFFFF] font-semibold'>Filters</h1>
 
-            <motion.img whileTap={{ scale: 0.96 }} onClick={onClose} src={Cancel} className="w-[24px] sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50" alt="" />
+            <motion.img whileTap={{ scale: 0.96 }} onClick={onClose} src={Cancel} className="w-6 sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50" alt="" />
         </div>
 
-        <div className="flex-1 overflow-y-auto scrollbar-hidden space-y-[24px]">
+        <div className="flex-1 overflow-y-auto scrollbar-hidden space-y-6">
             <div className='space-y-[15px]'>
-                <h1 className="text-[#666687] dark:text-[#DCDCE4] text-[16px] font-600">Select Categories</h1>
+                <h1 className="text-[#666687] dark:text-[#DCDCE4] text-4 font-600">Select Categories</h1>
 
-                <div className='text-[16px] font-600 text-[#8E8EA9] gap-4 flex flex-wrap items-center'>
+                <div className='text-4 font-600 text-[#8E8EA9] gap-4 flex flex-wrap items-center'>
                     {Categories.map((cat) => (
                         <motion.button
                             key={cat.id}
@@ -127,9 +127,9 @@ const Filters: React.FC<FiltersProps> = ({ onClose }) => {
             </div>
 
             <div className='space-y-[15px]'>
-                <h1 className="text-[#666687] dark:text-[#DCDCE4] text-[16px] font-600">Select Product Type</h1>
+                <h1 className="text-[#666687] dark:text-[#DCDCE4] text-4 font-600">Select Product Type</h1>
 
-                <div className='text-[16px] font-600 text-[#8E8EA9] gap-4 flex flex-wrap items-center'>
+                <div className='text-4 font-600 text-[#8E8EA9] gap-4 flex flex-wrap items-center'>
                     {ProductTypes.map((type) => (
                         <motion.button
                             key={type.id}
@@ -143,9 +143,9 @@ const Filters: React.FC<FiltersProps> = ({ onClose }) => {
             </div>
 
             <div className='space-y-[15px]'>
-                <h1 className="text-[#666687] dark:text-[#DCDCE4] text-[16px] font-600">Rating</h1>
+                <h1 className="text-[#666687] dark:text-[#DCDCE4] text-4 font-600">Rating</h1>
 
-                <div className='text-[16px] font-600 text-[#8E8EA9] gap-4 flex flex-wrap  items-center'>
+                <div className='text-4 font-600 text-[#8E8EA9] gap-4 flex flex-wrap  items-center'>
                     {Ratings.map((rating) => (
                     <motion.button
                         key={rating.id}
@@ -153,14 +153,14 @@ const Filters: React.FC<FiltersProps> = ({ onClose }) => {
                         whileTap={{ scale: 0.95 }}
                         className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 border border-gray-500 ${selectedRatings === rating.id ? 'bg-amber-500 text-white dark:text-black' : 'bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF]'}`}>
                         <img src={Star} className='w-[18px] h-[18px]' alt="" />
-                        <p className='text-[16px]'>{rating.name}</p>
+                        <p className='text-4'>{rating.name}</p>
                     </motion.button>
                     ))}
                 </div>
             </div>
 
             <div className='space-y-[15px]'>
-                <h1 className="text-[#666687] dark:text-[#DCDCE4] text-[16px] font-600">Price Range</h1>
+                <h1 className="text-[#666687] dark:text-[#DCDCE4] text-4 font-600">Price Range</h1>
 
                 <div className='space-y-10'>
                     <div className="App">
@@ -174,11 +174,11 @@ const Filters: React.FC<FiltersProps> = ({ onClose }) => {
                         />
                     </div>
                     <div className="flex gap-4 items-center justify-center">
-                        <div className='text-[14px] text-center font-600 text-[#8E8EA9] rounded-2xl px-[16px] py-[12px] flex items-center bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'>Minimum price: ${minValue.toFixed(2)}</div>
+                        <div className='text-[14px] text-center font-600 text-[#8E8EA9] rounded-2xl px-4 py-3 flex items-center bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'>Minimum price: ${minValue.toFixed(2)}</div>
 
-                        <div className='w-[16px] border border-[#DCDCE4]'></div>
+                        <div className='w-4 border border-[#DCDCE4]'></div>
 
-                        <div className='text-[14px] text-center font-600 text-[#8E8EA9] rounded-2xl px-[16px] py-[12px] flex items-center bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'>Maximum price: ${maxValue.toFixed(2)}</div>
+                        <div className='text-[14px] text-center font-600 text-[#8E8EA9] rounded-2xl px-4 py-3 flex items-center bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'>Maximum price: ${maxValue.toFixed(2)}</div>
                     </div>
                 </div>
             </div>

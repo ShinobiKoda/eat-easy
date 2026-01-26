@@ -29,6 +29,7 @@ interface HeaderProps {
   previous?: () => void;
   navbarTitle?: string;
   navbarDescription?: string;
+  showBack?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -37,6 +38,7 @@ const Header: React.FC<HeaderProps> = ({
   previous,
   navbarTitle = "",
   navbarDescription = "",
+  showBack,
 }) => {
   const locationCtx = useLocation();
   const location = locationCtx.location;
@@ -100,7 +102,7 @@ const Header: React.FC<HeaderProps> = ({
       }`}
     >
       <SlideIn direction="down" className="w-full md:hidden">
-        <Navbar title={navbarTitle} description={navbarDescription} />
+        <Navbar title={navbarTitle} description={navbarDescription} showBack={showBack} />
       </SlideIn>
 
       {/* Tablet Header - Combined dropdown for location & order */}
@@ -135,6 +137,7 @@ const Header: React.FC<HeaderProps> = ({
           </MotionItem>
         </div>
 
+        {/* for tablet view */}
         <FadeIn>
           <div className="relative" ref={tabletMenuRef}>
             <motion.button
@@ -317,7 +320,7 @@ const Header: React.FC<HeaderProps> = ({
           <FadeIn>
             <div className="relative" ref={locationRef}>
               <motion.button
-                className="flex items-center px-6 py-3 gap-px cursor-pointer"
+                className="flex items-center px-6 py-3 gap-px cursor-pointer text-(--purple-3) dark:text-(--purple-5)"
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98, y: 0 }}
                 transition={{ type: "spring", stiffness: 380, damping: 22 }}
@@ -326,15 +329,15 @@ const Header: React.FC<HeaderProps> = ({
                   setOrderDropdownOpen(false);
                 }}
               >
-                <CiLocationOn size={20} className="text-(--purple-3)" />
-                <span className="font-semibold text-sm text-(--purple-3)">
+                <CiLocationOn size={20} />
+                <span className="font-semibold text-sm">
                   {location?.address || "Set location"}
                 </span>
                 <motion.div
                   animate={{ rotate: locationDropdownOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <FiChevronDown size={20} className="text-(--purple-3)" />
+                  <FiChevronDown size={20} />
                 </motion.div>
               </motion.button>
 
@@ -411,18 +414,17 @@ const Header: React.FC<HeaderProps> = ({
                             variants={dropdownItem}
                             className="px-4 py-3 rounded-xl bg-(--purple-6)/50 dark:bg-(--purple-3)/10"
                           >
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-3 text-(--purple-3) dark:text-(--purple-5)">
                               <div className="w-10 h-10 rounded-xl bg-(--purple-2) flex items-center justify-center">
                                 <CiLocationOn
                                   size={20}
-                                  className="text-white"
                                 />
                               </div>
                               <div className="flex-1">
-                                <p className="font-semibold text-sm text-(--neutral-800) dark:text-white">
+                                <p className="font-semibold text-sm">
                                   Current location
                                 </p>
-                                <p className="font-medium text-xs text-(--neutral-500) dark:text-(--neutral-300) truncate max-w-40">
+                                <p className="font-medium text-xs  truncate max-w-40">
                                   {location.address}
                                 </p>
                               </div>
@@ -436,13 +438,15 @@ const Header: React.FC<HeaderProps> = ({
               </AnimatePresence>
             </div>
           </FadeIn>
+          
           <FadeIn>
             <div className="w-[21px] h-full border-[1.5px] border-(--neutral-200) rotate-90"></div>
           </FadeIn>
+
           <SlideIn direction="left">
             <div className="relative" ref={orderRef}>
               <motion.button
-                className="px-6 py-3 text-(--purple-3) flex items-center gap-px cursor-pointer"
+                className="px-6 py-3 text-(--purple-3) dark:text-(--purple-5) flex items-center gap-px cursor-pointer"
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98, y: 0 }}
                 transition={{ type: "spring", stiffness: 380, damping: 22 }}
@@ -457,7 +461,7 @@ const Header: React.FC<HeaderProps> = ({
                   animate={{ rotate: orderDropdownOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <FiChevronDown size={20} className="text-(--purple-3)" />
+                  <FiChevronDown size={20} className="" />
                 </motion.div>
               </motion.button>
 

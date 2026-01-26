@@ -80,7 +80,7 @@ const ProductCarousel = () => {
                 variants={variants}
                 key={id} 
                 style={{ zIndex }}
-                className="overflow-clip rounded-2xl dark:bg-white bg-(--neutral-900) flex items-center justify-between gap-2 h-full absolute w-[85%] sm:w-[78%]"
+                className="overflow-clip rounded-2xl dark:bg-(--neutral-150) bg-(--neutral-900) flex items-center justify-between gap-2 h-full absolute w-[85%] sm:w-[78%]"
             >
               <div className="flex-1 space-y-2 sm:space-y-3 relative left-4 w-full py-3">
                   <p className="text-sm text-(--neutral-400) tracking-wide">{description}</p>
@@ -90,11 +90,11 @@ const ProductCarousel = () => {
                   <p className=" text-(--yellow-1) font-bold text-[clamp(1.25rem,3vw,2.25rem)]">{price}</p>
               </div>
 
-              <div className="h-full w-full max-w-[190px] sm:max-w-[285px] lg:max-w-[416px] flex items-center justify-center relative -right-10 sm:right-0">
+              <div className="h-full -mr-9 sm:mr-0 max-w-[141px] sm:max-w-[200px] md:max-w-[50%]">
                   <img
-                      src={image}
+                      src={image} 
                       alt="Avocado Chicken Salad"
-                      className="h-full w-full object-contain"
+                      className="h-full w-full object-cover"
                   />
               </div>
             </motion.div>

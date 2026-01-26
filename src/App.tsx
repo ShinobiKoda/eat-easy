@@ -9,6 +9,7 @@ import ForgotPassword from "./components/auth/ForgotPassword";
 import Welcome from "./components/dashboard/Welcome";
 import Virtual from "./components/onboarding/Virtual";
 import Recommend from "./components/dashboard/Recommend";
+import Recommended from "./components/dashboard/Recommended";
 import FullMenu from "./components/FullMenu/Full-menu";
 import Step1 from "./components/onboarding/Step1";
 import { useTheme } from "./hooks/useTheme";
@@ -185,6 +186,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <SetLocation />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recommended"
+            element={
+              <ProtectedRoute>
+                <Recommended />
               </ProtectedRoute>
             }
           />
