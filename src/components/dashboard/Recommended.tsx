@@ -63,7 +63,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
   } else if (menu === 1) {
     datum = Drink;
   } else if (menu === 2) {
-    datum = Eat.filter((item) => Array.isArray(item.tag) && item.tag.includes("dessert"));
+    datum = Eat.filter((item) => Array.isArray(item.tag) && item.tag.includes("Dessert"));
   }
 
   // stop background scroll effect when any of this is open
@@ -81,7 +81,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
       {showLoader && <Loader />}
 
       <div
-        className={`transition-all duration-300 ${
+        className={` ${
           showLoader ? "pointer-events-none overflow-hidden" : ""
         }`}
       >
