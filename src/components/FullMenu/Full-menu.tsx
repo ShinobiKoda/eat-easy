@@ -17,6 +17,19 @@ import { useOrder } from "../../hooks/useOrder";
 
 const FullMenu: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  // Debounce search input
+  useEffect(() => {
+    if (search === '') {
+      setDebouncedSearch('');
+    } else {
+      const handler = setTimeout(() => {
+        setDebouncedSearch(search);
+      }, 500); // 500ms debounce
+      return () => clearTimeout(handler);
+    }
+  }, [search]);
 
   useEffect(() => {
     const t = setTimeout(() => setShowLoader(false), 3000);
@@ -35,10 +48,16 @@ const FullMenu: React.FC = () => {
   // Add 'all' as the default filter
   const [filterTag, setFilterTag] = useState<string>('all');
 
-  // Filter dishes based on selected tag
-  const filteredDishes = filterTag === 'all'
-    ? Eat
-    : Eat.filter(dish => dish.tag && dish.tag.some((t: string) => t.toLowerCase() === filterTag));
+  // Filter dishes based on selected tag and search input
+  const filteredDishes = useMemo(() => {
+    let dishes = filterTag === 'all'
+      ? Eat
+      : Eat.filter(dish => dish.tag && dish.tag.some((t: string) => t.toLowerCase() === filterTag));
+    if (debouncedSearch.trim() === '') {
+      return dishes;
+    }
+    return dishes.filter(dish => dish.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
+  }, [filterTag, debouncedSearch]);
 
 
   // Use shared order logic
@@ -75,25 +94,30 @@ const FullMenu: React.FC = () => {
 
             <div className='md:p-4 gap-4 md:rounded-2xl md:shadow-[0_4px_12px_rgba(0,0,0,0.10)] md:bg-white md:dark:bg-[#4A4A6A] flex justify-between items-center'>
                 <div className="w-full flex items-center justify-center px-4 py-3 rounded-2xl border border-(--neutral-150) bg-transparent dark:border-(--neutral-600)">
-                    <input
-                        type="text"
-                        className="outline-none border-none w-full placeholder:text-(--neutral-500) text-(--neutral-500) dark:placeholder:text-(--neutral-200) dark:text-(--neutral-200)"
-                        placeholder="Search"
-                        // value={query}
-                        // onChange={(e) => setQuery(e.target.value)}
-                    />
-                    <CiSearch
-                        size={20}
-                        className="text-(--neutral-300) cursor-pointer"
-                    />
+                  <input
+                    type="text"
+                    className="outline-none border-none w-full placeholder:text-(--neutral-500) text-(--neutral-500) dark:placeholder:text-(--neutral-200) dark:text-(--neutral-200)"
+                    placeholder="Search"
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      if (e.target.value === '') {
+                        setFilterTag('all');
+                      }
+                    }}
+                  />
+                  <CiSearch
+                    size={20}
+                    className="text-(--neutral-300) cursor-pointer"
+                  />
                 </div>
 
                 <motion.div
-                    whileTap={{ scale: 0.96 }} 
-                    onClick={() => setFilterButton(!filterButton)}
-                    className='flex justify-between gap-2 py-4 px-4 md:py-4 md:px-6 rounded-2xl bg-[#32324D] dark:bg-(--purple-2) text-[12px] lg:text-[16px] text-white cursor-pointer'>
-                        <FaFilter size={20} />
-                        <p className='hidden md:block'>Filters</p>
+                  whileTap={{ scale: 0.96 }} 
+                  onClick={() => setFilterButton(!filterButton)}
+                  className='flex justify-between gap-2 py-4 px-4 md:py-4 md:px-6 rounded-2xl bg-[#32324D] dark:bg-(--purple-2) text-[12px] lg:text-[16px] text-white cursor-pointer'>
+                      <FaFilter size={20} />
+                      <p className='hidden md:block'>Filters</p>
                 </motion.div>
             </div>
         </div>
@@ -136,7 +160,7 @@ const FullMenu: React.FC = () => {
             {/* Staggered motion grid */}
             <AnimatePresence mode="wait">
               <motion.div
-                key={filterTag}
+                key={filterTag + '-' + debouncedSearch}
                 className='items-center gap-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
                 variants={productGridStagger}
                 initial="hidden"

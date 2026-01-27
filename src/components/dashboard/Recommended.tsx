@@ -81,7 +81,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
       {showLoader && <Loader />}
 
       <div
-        className={`transition-all duration-300 ${
+        className={` ${
           showLoader ? "pointer-events-none overflow-hidden" : ""
         }`}
       >
