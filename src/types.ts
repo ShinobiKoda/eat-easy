@@ -15,17 +15,17 @@ export type Topping = {
 }
 
 export type FoodTag =
-  | "most popular"
-  | "salad"
-  | "pizza"
-  | "pasta"
-  | "dessert"
-  | "burger"
-  | "soup"
-  | "grill"
-  | "vegan"
-  | "chicken"
-  | "breakfast";
+  | "Most Popular"
+  | "Salad"
+  | "Pizza"
+  | "Pasta"
+  | "Dessert"
+  | "Burger"
+  | "Soup"
+  | "Grill"
+  | "Vegan"
+  | "Chicken"
+  | "Breakfast";
 
 export type PropType = {
   id: number;

@@ -1,3 +1,7 @@
+// Capitalize first letter of every word
+function capitalizeWords(str: string) {
+  return str.replace(/\b\w/g, c => c.toUpperCase());
+}
 import React, { useState, useEffect, useMemo } from "react";
 import Header from "../layout/Header";
 import { FaFilter } from "react-icons/fa6";
@@ -132,7 +136,7 @@ const FullMenu: React.FC = () => {
               whileTap={{ scale: 0.98 }}
               key="all"
               onClick={() => setFilterTag('all')}
-              className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-700 ${filterTag === 'all' ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-600)'}`}
+              className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-700 ${filterTag === 'all' ? 'bg-(--yellow-1) font-bold text-white dark:text-(--neutral-800)' : 'text-(--neutral-600) dark:text-(--neutral-100)'}`}
             >
               <p>All Dishes</p>
             </motion.li>
@@ -141,9 +145,9 @@ const FullMenu: React.FC = () => {
                 whileTap={{ scale: 0.98 }}
                 key={tag}
                 onClick={() => setFilterTag(tag)}
-                className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-700 ${filterTag === tag ? 'bg-(--yellow-1) text-white' : 'text-(--neutral-600)'}`}
+                className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-700 ${filterTag === tag ? 'bg-(--yellow-1) font-bold text-white dark:text-(--neutral-800)' : 'text-(--neutral-600) dark:text-(--neutral-100)'}`}
               >
-                <p>{tag.charAt(0).toUpperCase() + tag.slice(1)}</p>
+                <p>{capitalizeWords(tag)}</p>
               </motion.li>
             ))}
           </ul>
@@ -154,7 +158,7 @@ const FullMenu: React.FC = () => {
             <h1 className="text-[18px] text-(--neutral-600) dark:text-(--neutral-200) font-semibold">
               {filterTag === 'all'
                 ? 'All Dishes'
-                : filterTag.charAt(0).toUpperCase() + filterTag.slice(1)}
+                : capitalizeWords(filterTag)}
             </h1>
             
             {/* Staggered motion grid */}
