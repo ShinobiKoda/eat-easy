@@ -43,10 +43,13 @@ const FullMenu: React.FC = () => {
   // for the filter component
   const [filterButton, setFilterButton] = useState(false);
 
-  // Dynamically get all unique tags from Eat data
+  // Only show specific filter tags
+  const allowedTags = ['most popular', 'salad', 'pizza', 'pasta'];
   const allTags = useMemo(() => {
     const tags = Eat.flatMap(dish => dish.tag?.map((t: string) => t.toLowerCase()) || []);
-    return Array.from(new Set(tags));
+    const uniqueTags = Array.from(new Set(tags));
+    // Only include allowed tags, in the order specified
+    return allowedTags.filter(tag => uniqueTags.includes(tag));
   }, []);
 
   // Add 'all' as the default filter

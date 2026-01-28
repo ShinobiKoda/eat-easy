@@ -79,10 +79,10 @@ const Welcome: React.FC = () => {
 
           <div className="w-full lg:grid lg:grid-cols-2 lg:items-center lg:justify-between lg:mt-8">
             <div className="space-y-2 hidden lg:block max-w-[370px] xl:max-w-[514px]">
-              <h2 className="font-bold text-3xl text-(--neutral-800) heading-font">
+              <h2 className="font-bold text-3xl text-(--neutral-800) dark:text-white heading-font">
                 Find Your Flavor: <br /> Two Options to Browse Our Menu
               </h2>
-              <p className="text-(--neutral-600) font-bold text-base">
+              <p className="text-(--neutral-600) dark:text-(--neutral-150) font-bold text-base">
                 We've got you covered! Whether you're feeling adventurous or
                 know exactly what you want, we offer two ways to browse our menu
                 that cater to your mood.
@@ -102,15 +102,12 @@ const Welcome: React.FC = () => {
                           {option.description}
                         </p>
                       </div>
-                      <ScaleButton className="w-[46px] h-[46px] rounded-xl bg-(--orange-5) dark:bg-(--orange-1) flex items-center justify-center mt-auto">
-                        <FaArrowRight className="text-(--orange-1) dark:text-white" />
-                      </ScaleButton>
+                      <Link to={option.link}>
+                        <ScaleButton className="w-[46px] h-[46px] rounded-xl bg-(--orange-5) dark:bg-(--orange-1) flex items-center justify-center mt-auto cursor-pointer">
+                          <FaArrowRight className="text-(--orange-1) dark:text-white" />
+                        </ScaleButton>
+                      </Link>
                     </div>
-                    <Link to={option.link}>
-                      <ScaleButton className="w-[46px] h-[46px] rounded-xl bg-(--orange-5) dark:bg-(--orange-1) flex items-center justify-center mt-auto">
-                        <FaArrowRight className="text-(--orange-1) dark:text-white" />
-                      </ScaleButton>
-                    </Link>
                   </div>
                 </FadeIn>
               ))}
