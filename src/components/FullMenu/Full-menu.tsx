@@ -15,7 +15,6 @@ import ProductCarousel from "./ProductCarousel";
 import Filters from "../Filters";
 import ViewDish from "../dashboard/ViewDish";
 import ViewOrder from "../dashboard/ViewOrder";
-// ...existing code...
 import { productGridStagger, productCardFade } from "../animations/motion";
 import { useOrder } from "../../hooks/useOrder";
 
@@ -55,16 +54,26 @@ const FullMenu: React.FC = () => {
   // Add 'all' as the default filter
   const [filterTag, setFilterTag] = useState<string>('all');
 
-  // Filter dishes based on selected tag and search input
+  // Applied filters state
+  const [appliedFilters, setAppliedFilters] = useState<{ productTypes: string[], ratings: number[], priceRange: [number, number] }>({ productTypes: [], ratings: [], priceRange: [1, 6] });
+
+  // Filter dishes based on selected tag, search input, and applied filters
   const filteredDishes = useMemo(() => {
     let dishes = filterTag === 'all'
       ? Eat
       : Eat.filter(dish => dish.tag && dish.tag.some((t: string) => t.toLowerCase() === filterTag));
-    if (debouncedSearch.trim() === '') {
-      return dishes;
+    if (debouncedSearch.trim() !== '') {
+      dishes = dishes.filter(dish => dish.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
     }
-    return dishes.filter(dish => dish.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
-  }, [filterTag, debouncedSearch]);
+    if (appliedFilters.productTypes.length > 0) {
+      dishes = dishes.filter(dish => dish.tag && dish.tag.some(tag => appliedFilters.productTypes.some(pt => pt.toLowerCase() === tag.toLowerCase())));
+    }
+    if (appliedFilters.ratings.length > 0) {
+      dishes = dishes.filter(dish => appliedFilters.ratings.includes(Math.floor(dish.rating)));
+    }
+    dishes = dishes.filter(dish => dish.price >= appliedFilters.priceRange[0] && dish.price <= appliedFilters.priceRange[1]);
+    return dishes;
+  }, [filterTag, debouncedSearch, appliedFilters]);
 
 
   // Use shared order logic
@@ -263,7 +272,7 @@ const FullMenu: React.FC = () => {
               exit={{ opacity: 0 }}
               className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
             >
-              <Filters onClose={() => setFilterButton(false)} />
+              <Filters onClose={() => setFilterButton(false)} onApply={setAppliedFilters} initialFilters={appliedFilters} />
             </motion.div>
           )}
         </AnimatePresence>
