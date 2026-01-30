@@ -76,8 +76,8 @@ const Filters: React.FC<FiltersProps> = ({ onClose, onApply, initialFilters }) =
     // Pending states
     const [pendingProductTypes, setPendingProductTypes] = useState<string[]>(initialFilters?.productTypes || [])
     const [pendingRatings, setPendingRatings] = useState<number[]>(initialFilters?.ratings || [])
-    const [pendingMinValue, setPendingMinValue] = useState<number>(initialFilters?.priceRange[0] || 2);
-    const [pendingMaxValue, setPendingMaxValue] = useState<number>(initialFilters?.priceRange[1] || 4);
+    const [pendingMinValue, setPendingMinValue] = useState<number>(initialFilters?.priceRange[0] || 0);
+    const [pendingMaxValue, setPendingMaxValue] = useState<number>(initialFilters?.priceRange[1] || 30);
 
     const toggleProductType = (name: string) => {
         setPendingProductTypes(prev => prev.includes(name) ? prev.filter(t => t !== name) : [...prev, name])
@@ -173,8 +173,8 @@ const Filters: React.FC<FiltersProps> = ({ onClose, onApply, initialFilters }) =
                 <div className='space-y-10'>
                     <div className="App">
                         <MultiRangeSlider
-                            min={1.0}
-                            max={6.0}
+                            min={0}
+                            max={30}
                             step={1}
                             minValue={pendingMinValue}
                             maxValue={pendingMaxValue}

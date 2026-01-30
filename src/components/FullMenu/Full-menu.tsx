@@ -55,7 +55,7 @@ const FullMenu: React.FC = () => {
   const [filterTag, setFilterTag] = useState<string>('all');
 
   // Applied filters state
-  const [appliedFilters, setAppliedFilters] = useState<{ productTypes: string[], ratings: number[], priceRange: [number, number] }>({ productTypes: [], ratings: [], priceRange: [1, 6] });
+  const [appliedFilters, setAppliedFilters] = useState<{ productTypes: string[], ratings: number[], priceRange: [number, number] }>({ productTypes: [], ratings: [], priceRange: [0, 30] });
 
   // Filter dishes based on selected tag, search input, and applied filters
   const filteredDishes = useMemo(() => {
