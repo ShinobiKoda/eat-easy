@@ -41,8 +41,6 @@ const display = (isDesktop: boolean): Variants => {
   };
 }
 
-
-
 const ProductTypes = [
     { id: 1, name: 'Pizza' },
     { id: 2, name: 'Butter' },

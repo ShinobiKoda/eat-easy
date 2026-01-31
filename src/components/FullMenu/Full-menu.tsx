@@ -1,7 +1,3 @@
-// Capitalize first letter of every word
-function capitalizeWords(str: string) {
-  return str.replace(/\b\w/g, c => c.toUpperCase());
-}
 import React, { useState, useEffect, useMemo } from "react";
 import Header from "../layout/Header";
 import { FaFilter } from "react-icons/fa6";
@@ -110,9 +106,6 @@ const FullMenu: React.FC = () => {
                     value={search}
                     onChange={(e) => {
                       setSearch(e.target.value);
-                      if (e.target.value === '') {
-                        setFilterTag('all');
-                      }
                     }}
                   />
                   <CiSearch
@@ -159,7 +152,7 @@ const FullMenu: React.FC = () => {
             {/* Staggered motion grid */}
             <AnimatePresence mode="wait">
               <motion.div
-                key={mainCategory + '-' + debouncedSearch}
+                key={mainCategory + '-' + debouncedSearch + '-' + JSON.stringify(appliedFilters)}
                 className='items-center gap-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
                 variants={productGridStagger}
                 initial="hidden"
