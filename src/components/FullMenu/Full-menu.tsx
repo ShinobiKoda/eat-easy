@@ -52,8 +52,8 @@ const FullMenu: React.FC = () => {
       dishes = dishes.filter(dish => dish.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
     }
     
-    // Apply product type filters only for Eat category
-    if (mainCategory === 'Eat' && appliedFilters.productTypes.length > 0) {
+    // Apply product type filters
+    if (appliedFilters.productTypes.length > 0) {
       dishes = dishes.filter(dish => dish.tag && dish.tag.some(tag => appliedFilters.productTypes.some(pt => pt.toLowerCase() === tag.toLowerCase())));
     }
     

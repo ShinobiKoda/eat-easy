@@ -30,7 +30,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Salad", "Chicken", "Most Popular"] 
+    text: "", tag: ["Salad", "Chicken", "Most Popular", "Lunch"] 
   },
   
   { 
@@ -45,7 +45,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Grill", "Chicken", "Protein"] 
+    text: "", tag: ["Grill", "Chicken", "Protein", "Lunch", "Dinner"] 
   },
   
   { 
@@ -60,7 +60,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Seafood", "Grill", "Premium"] 
+    text: "", tag: ["Seafood", "Grill", "Premium", "Dinner"] 
   },
   
   { 
@@ -75,7 +75,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Pasta", "Comfort Food"] 
+    text: "", tag: ["Pasta", "Comfort Food", "Lunch", "Dinner"] 
   },
   
   { 
@@ -105,7 +105,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Salad", "Vegan", "Light"] 
+    text: "", tag: ["Salad", "Vegan", "Light", "Lunch"] 
   },
   
   { 
@@ -120,7 +120,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Pizza", "Most Popular", "Italian"] 
+    text: "", tag: ["Pizza", "Most Popular", "Italian", "Lunch", "Dinner"] 
   },
   
   { 
@@ -135,7 +135,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Pizza", "Spicy"] 
+    text: "", tag: ["Pizza", "Spicy", "Lunch", "Dinner"] 
   },
   
   { 
@@ -150,7 +150,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Pasta", "Italian", "Creamy"] 
+    text: "", tag: ["Pasta", "Italian", "Creamy", "Dinner", "Lunch"] 
   },
   
   { 
@@ -165,7 +165,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Burger", "Most Popular"] 
+    text: "", tag: ["Burger", "Most Popular", "Lunch", "Dinner"] 
   },
   
   { 
@@ -180,7 +180,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Soup", "Vegan", "Comfort"] 
+    text: "", tag: ["Soup", "Vegan", "Comfort", "Lunch", "Dinner"] 
   },
   
   { 
@@ -195,7 +195,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Grill", "Premium", "Steak"] 
+    text: "", tag: ["Grill", "Premium", "Steak", "Dinner"] 
   },
   
   { 
@@ -210,7 +210,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Sandwich", "Quick"] 
+    text: "", tag: ["Sandwich", "Quick", "Lunch"] 
   },
   
   { 
@@ -240,7 +240,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Mexican", "Spicy"] 
+    text: "", tag: ["Mexican", "Spicy", "Lunch", "Dinner"] 
   },
   
   { 
@@ -255,7 +255,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Asian", "Rice"] 
+    text: "", tag: ["Asian", "Rice", "Lunch", "Dinner"] 
   },
   
   { 
@@ -270,7 +270,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Chicken", "Spicy", "Most Popular"] 
+    text: "", tag: ["Chicken", "Spicy", "Most Popular", "Dinner", "Lunch"] 
   },
   
   { 
@@ -285,7 +285,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Grill", "BBQ", "Premium"] 
+    text: "", tag: ["Grill", "BBQ", "Premium", "Dinner"] 
   },
   
   { 
@@ -300,7 +300,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Salad", "Classic"] 
+    text: "", tag: ["Salad", "Classic", "Lunch"] 
   },
   
   { 
@@ -315,7 +315,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Italian", "Creamy", "Vegan"] 
+    text: "", tag: ["Italian", "Creamy", "Vegan", "Dinner"] 
   },
   
   { 
@@ -330,7 +330,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Seafood", "British"] 
+    text: "", tag: ["Seafood", "British", "Lunch", "Dinner"] 
   },
   
   { 
@@ -375,7 +375,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Pasta", "Spicy", "Italian"] 
+    text: "", tag: ["Pasta", "Spicy", "Italian", "Dinner", "Lunch"] 
   },
   
   { 
@@ -405,7 +405,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Soup", "Italian", "Vegan"] 
+    text: "", tag: ["Soup", "Italian", "Vegan", "Lunch", "Dinner"] 
   },
   
   { 
@@ -420,7 +420,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Mexican", "Chicken"] 
+    text: "", tag: ["Mexican", "Chicken", "Lunch", "Dinner"] 
   },
   
   { 
@@ -435,7 +435,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Salad", "Mediterranean"] 
+    text: "", tag: ["Salad", "Mediterranean", "Lunch"] 
   },
   
   { 
@@ -450,7 +450,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Grill", "Premium"] 
+    text: "", tag: ["Grill", "Premium", "Dinner"] 
   },
   
   { 
@@ -480,7 +480,7 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Seafood", "Pasta", "Italian"] 
+    text: "", tag: ["Seafood", "Pasta", "Italian", "Dinner", "Lunch"] 
   },
   
   { 
@@ -495,8 +495,9 @@ export const Eat: PropType[] = [
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
-    text: "", tag: ["Pizza", "BBQ", "Chicken"] 
+    text: "", tag: ["Pizza", "BBQ", "Chicken", "Dinner", "Lunch"] 
   },
+  
   
 ]
 
@@ -509,25 +510,25 @@ export const Drink: PropType[] = [
   
   { 
     id: 2, 
-    image: "https://images.unsplash.com/photo-1577805947697-89e18249d767?w=400&h=300&fit=crop", name: "Avocado Shake", rating: 4.7, star: StarHalf, reviews: 76, price: 5.2, 
-    nutrients: [], ingredients: [], toppings: [], text: "Creamy avocado blended with milk and sweetener", tag: ["Smoothie", "Healthy"] 
+    image: "https://images.unsplash.com/photo-1577805947697-89e18249d767?w=400&h=300&fit=crop", name: "Avocado Shake", rating: 3.7, star: StarHalf, reviews: 76, price: 5.2, 
+    nutrients: [], ingredients: [], toppings: [], text: "Creamy avocado blended with milk and sweetener", tag: ["Smoothie", "Healthy", "Milk Drinks"] 
   },
   
   { 
     id: 3, 
-    image: "https://images.unsplash.com/photo-1459755486867-b55449bb39ff?w=400&h=300&fit=crop", name: "Iced Latte", rating: 4.6, star: StarHalf, reviews: 210, price: 3.8, 
-    nutrients: [], ingredients: [], toppings: [], text: "Chilled espresso with cold milk", tag: ["Coffee", "Cold"] 
+    image: "https://images.unsplash.com/photo-1459755486867-b55449bb39ff?w=400&h=300&fit=crop", name: "Iced Latte", rating: 3.6, star: StarHalf, reviews: 210, price: 3.8, 
+    nutrients: [], ingredients: [], toppings: [], text: "Chilled espresso with cold milk", tag: ["Coffee", "Cold", "Milk Drinks"] 
   },
   
   { 
     id: 4, 
-    image: "https://images.unsplash.com/photo-1553909489-cd47e9adbef1?w=400&h=300&fit=crop", name: "Ginger Tea", rating: 4.5, star: StarHalf, reviews: 44, price: 2.4, 
+    image: "https://images.unsplash.com/photo-1553909489-cd47e9adbef1?w=400&h=300&fit=crop", name: "Ginger Tea", rating: 2.9, star: StarHalf, reviews: 44, price: 2.4, 
     nutrients: [], ingredients: [], toppings: [], text: "Warm ginger tea with lemon", tag: ["Tea", "Healthy"] 
   },
   
   { 
     id: 5, 
-    image: "https://images.unsplash.com/photo-1615478503562-ec2d8aa0e24e?w=400&h=300&fit=crop", name: "Detox Green Juice", rating: 4.7, star: StarHalf, reviews: 63, price: 6.0, 
+    image: "https://images.unsplash.com/photo-1615478503562-ec2d8aa0e24e?w=400&h=300&fit=crop", name: "Detox Green Juice", rating: 4.2, star: StarHalf, reviews: 63, price: 6.0, 
     nutrients: [], ingredients: [], toppings: [], text: "Green vegetables and fruits juice", tag: ["Juice", "Detox", "Healthy"] 
   },
   
@@ -539,100 +540,117 @@ export const Drink: PropType[] = [
   
   { 
     id: 7, 
-    image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&h=300&fit=crop", name: "Hot Chocolate", rating: 4.8, star: StarHalf, reviews: 89, price: 4.2, 
-    nutrients: [], ingredients: [], toppings: [], text: "Rich hot chocolate with marshmallows", tag: ["Hot", "Sweet"] 
+    image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&h=300&fit=crop", name: "Hot Chocolate", rating: 4.5, star: StarHalf, reviews: 89, price: 4.2, 
+    nutrients: [], ingredients: [], toppings: [], text: "Rich hot chocolate with marshmallows", tag: ["Hot", "Sweet", "Chocolate", "Milk Drinks"] 
   },
   
   { 
     id: 8, 
-    image: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=400&h=300&fit=crop", name: "Cappuccino", rating: 4.7, star: StarHalf, reviews: 145, price: 4.5, 
-    nutrients: [], ingredients: [], toppings: [], text: "Classic cappuccino with foam", tag: ["Coffee", "Hot"] 
+    image: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=400&h=300&fit=crop", name: "Cappuccino", rating: 3.2, star: StarHalf, reviews: 145, price: 4.5, 
+    nutrients: [], ingredients: [], toppings: [], text: "Classic cappuccino with foam", tag: ["Coffee", "Hot", "Milk Drinks"] 
   },
   
   { 
     id: 9, 
-    image: "https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=400&h=300&fit=crop", name: "Mango Smoothie", rating: 4.6, star: StarHalf, reviews: 112, price: 4.8, 
+    image: "https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=400&h=300&fit=crop", name: "Mango Smoothie", rating: 3.8, star: StarHalf, reviews: 112, price: 4.8, 
     nutrients: [], ingredients: [], toppings: [], text: "Sweet mango blended smoothie", tag: ["Smoothie", "Tropical"] 
   },
   
   { 
     id: 10,
-     image: "https://images.unsplash.com/photo-1553909489-cd47e9adbef1?w=400&h=300&fit=crop", name: "Chamomile Tea", rating: 4.4, star: StarHalf, reviews: 67, price: 2.2, 
+     image: "https://images.unsplash.com/photo-1553909489-cd47e9adbef1?w=400&h=300&fit=crop", name: "Chamomile Tea", rating: 2.8, star: StarHalf, reviews: 67, price: 2.2, 
      nutrients: [], ingredients: [], toppings: [], text: "Calming chamomile tea", tag: ["Tea", "Relaxing"] 
   },
   
   { 
     id: 11,
-     image: "https://images.unsplash.com/photo-1577805947697-89e18249d767?w=400&h=300&fit=crop", name: "Banana Shake", rating: 4.5, star: StarHalf, reviews: 98, price: 4.9, 
-     nutrients: [], ingredients: [], toppings: [], text: "Banana blended with milk", tag: ["Smoothie", "Healthy"] 
+     image: "https://images.unsplash.com/photo-1577805947697-89e18249d767?w=400&h=300&fit=crop", name: "Banana Shake", rating: 3.5, star: StarHalf, reviews: 98, price: 4.9, 
+     nutrients: [], ingredients: [], toppings: [], text: "Banana blended with milk", tag: ["Smoothie", "Healthy", "Milk Drinks"] 
   },
   
   { 
     id: 12,
-     image: "https://images.unsplash.com/photo-1459755486867-b55449bb39ff?w=400&h=300&fit=crop", name: "Espresso", rating: 4.8, star: StarHalf, reviews: 178, price: 2.5, 
+     image: "https://images.unsplash.com/photo-1459755486867-b55449bb39ff?w=400&h=300&fit=crop", name: "Espresso", rating: 4.0, star: StarHalf, reviews: 178, price: 2.5, 
      nutrients: [], ingredients: [], toppings: [], text: "Strong espresso shot", tag: ["Coffee", "Strong"] 
   },
   
   { 
     id: 13,
-     image: "https://images.unsplash.com/photo-1615478503562-ec2d8aa0e24e?w=400&h=300&fit=crop", name: "Carrot Juice", rating: 4.6, star: StarHalf, reviews: 134, price: 5.5, 
+     image: "https://images.unsplash.com/photo-1615478503562-ec2d8aa0e24e?w=400&h=300&fit=crop", name: "Carrot Juice", rating: 3.1, star: StarHalf, reviews: 134, price: 5.5, 
      nutrients: [], ingredients: [], toppings: [], text: "Fresh carrot juice", tag: ["Juice", "Healthy"] 
   },
   
   { 
     id: 14,
-     image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=300&fit=crop", name: "Strawberry Smoothie", rating: 4.7, star: StarHalf, reviews: 156, price: 5.2, 
+     image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=300&fit=crop", name: "Strawberry Smoothie", rating: 4.3, star: StarHalf, reviews: 156, price: 5.2, 
      nutrients: [], ingredients: [], toppings: [], text: "Strawberry blended smoothie", tag: ["Smoothie", "Sweet"] 
   },
   
   { 
     id: 15,
      image: "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&h=300&fit=crop", name: "Mocha", rating: 4.9, star: StarHalf, reviews: 203, price: 4.8, 
-     nutrients: [], ingredients: [], toppings: [], text: "Coffee with chocolate", tag: ["Coffee", "Sweet"] 
+     nutrients: [], ingredients: [], toppings: [], text: "Coffee with chocolate", tag: ["Coffee", "Sweet", "Chocolate", "Milk Drinks"] 
   },
   
   { 
     id: 16,
-     image: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=400&h=300&fit=crop", name: "Americano", rating: 4.5, star: StarHalf, reviews: 89, price: 3.2, 
+     image: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=400&h=300&fit=crop", name: "Americano", rating: 2.9, star: StarHalf, reviews: 89, price: 3.2, 
      nutrients: [], ingredients: [], toppings: [], text: "Espresso with hot water", tag: ["Coffee", "Simple"] 
   },
   
   { 
     id: 17,
-     image: "https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=400&h=300&fit=crop", name: "Pineapple Smoothie", rating: 4.8, star: StarHalf, reviews: 145, price: 5.0, 
+     image: "https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=400&h=300&fit=crop", name: "Pineapple Smoothie", rating: 4.1, star: StarHalf, reviews: 145, price: 5.0, 
      nutrients: [], ingredients: [], toppings: [], text: "Pineapple blended smoothie", tag: ["Smoothie", "Tropical"] 
   },
   
   { 
     id: 18,
-     image: "https://images.unsplash.com/photo-1553909489-cd47e9adbef1?w=400&h=300&fit=crop", name: "Peppermint Tea", rating: 4.6, star: StarHalf, reviews: 78, price: 2.3, 
+     image: "https://images.unsplash.com/photo-1553909489-cd47e9adbef1?w=400&h=300&fit=crop", name: "Peppermint Tea", rating: 3.4, star: StarHalf, reviews: 78, price: 2.3, 
      nutrients: [], ingredients: [], toppings: [], text: "Refreshing peppermint tea", tag: ["Tea", "Refreshing"] 
   },
   
   { 
     id: 19,
-     image: "https://images.unsplash.com/photo-1577805947697-89e18249d767?w=400&h=300&fit=crop", name: "Kiwi Shake", rating: 4.7, star: StarHalf, reviews: 112, price: 5.1, 
+     image: "https://images.unsplash.com/photo-1577805947697-89e18249d767?w=400&h=300&fit=crop", name: "Kiwi Shake", rating: 3.9, star: StarHalf, reviews: 112, price: 5.1, 
      nutrients: [], ingredients: [], toppings: [], text: "Kiwi blended shake", tag: ["Smoothie", "Healthy"] 
   },
   
   { 
     id: 20,
-     image: "https://images.unsplash.com/photo-1459755486867-b55449bb39ff?w=400&h=300&fit=crop", name: "Macchiato", rating: 4.8, star: StarHalf, reviews: 167, price: 4.0, 
-     nutrients: [], ingredients: [], toppings: [], text: "Espresso with milk foam", tag: ["Coffee", "Italian"] 
+     image: "https://images.unsplash.com/photo-1459755486867-b55449bb39ff?w=400&h=300&fit=crop", name: "Macchiato", rating: 4.0, star: StarHalf, reviews: 167, price: 4.0, 
+     nutrients: [], ingredients: [], toppings: [], text: "Espresso with milk foam", tag: ["Coffee", "Italian", "Milk Drinks"] 
   },
   
   { 
     id: 21,
-     image: "https://images.unsplash.com/photo-1615478503562-ec2d8aa0e24e?w=400&h=300&fit=crop", name: "Apple Juice", rating: 4.4, star: StarHalf, reviews: 67, price: 4.5, 
+     image: "https://images.unsplash.com/photo-1615478503562-ec2d8aa0e24e?w=400&h=300&fit=crop", name: "Apple Juice", rating: 3.0, star: StarHalf, reviews: 67, price: 4.5, 
      nutrients: [], ingredients: [], toppings: [], text: "Fresh apple juice", tag: ["Juice", "Natural"] 
   },
   
   { 
     id: 22,
-     image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=300&fit=crop", name: "Blueberry Smoothie", rating: 4.9, star: StarHalf, reviews: 189, price: 5.5, 
+     image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=300&fit=crop", name: "Blueberry Smoothie", rating: 4.4, star: StarHalf, reviews: 189, price: 5.5, 
      nutrients: [], ingredients: [], toppings: [], text: "Blueberry blended smoothie", tag: ["Smoothie", "Antioxidant"] 
   },
+
+  {
+    id: 23,
+    image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&h=300&fit=crop", name: "Classic Cola", rating: 3.5, star: StarHalf, reviews: 250, price: 2.0,
+    nutrients: [], ingredients: [], toppings: [], text: "Refreshing classic cola", tag: ["Soda", "Cold"]
+  },
+
+  {
+    id: 24,
+    image: "https://images.unsplash.com/photo-1622483767128-3f66f32aef97?w=400&h=300&fit=crop", name: "Lemon Lime Soda", rating: 3.2, star: StarHalf, reviews: 120, price: 2.0,
+    nutrients: [], ingredients: [], toppings: [], text: "Citrus flavored soda", tag: ["Soda", "Cold"]
+  },
   
+  {
+    id: 25,
+    image: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400&h=300&fit=crop", name: "Energy Boost", rating: 4.1, star: StarHalf, reviews: 180, price: 3.5,
+    nutrients: [], ingredients: [], toppings: [], text: "B-vitamin enriched energy drink", tag: ["Energy", "Cold"]
+  },
 ]
 
 export const Dessert: PropType[] = [

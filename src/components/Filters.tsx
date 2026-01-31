@@ -41,15 +41,29 @@ const display = (isDesktop: boolean): Variants => {
   };
 }
 
-const ProductTypes = [
-    { id: 1, name: 'Pizza' },
-    { id: 2, name: 'Butter' },
-    { id: 3, name: 'Salad' },
-    { id: 4, name: 'Soup' },
-    { id: 5, name: 'Chicken' },
-    { id: 6, name: 'Grill' },
-    { id: 7, name: 'Breakfast' },
-]
+const FilterOptions: Record<string, { id: number, name: string }[]> = {
+    Eat: [
+        { id: 1, name: 'Pizza' },
+        { id: 2, name: 'Burger' },
+        { id: 3, name: 'Salad' },
+        { id: 4, name: 'Soup' },
+        { id: 5, name: 'Chicken' },
+        { id: 6, name: 'Grill' },
+        { id: 7, name: 'Breakfast' },
+        { id: 8, name: 'Lunch' },
+        { id: 9, name: 'Dinner' },
+    ],
+    Drink: [
+        { id: 10, name: 'Coffee' },
+        { id: 11, name: 'Tea' },
+        { id: 12, name: 'Milk Drinks' },
+        { id: 13, name: 'Chocolate' },
+        { id: 14, name: 'Energy' },
+        { id: 15, name: 'Smoothie' },
+        { id: 16, name: 'Juice' },
+    ],
+    Dessert: []
+}
 
 const Ratings = [
     { id: 1, name: '1' },
@@ -112,13 +126,12 @@ const Filters: React.FC<FiltersProps> = ({ onClose, onApply, initialFilters, mai
                 <h1 className="text-[#666687] dark:text-[#DCDCE4] text-4 font-600">Select Product Type</h1>
 
                 <div className='text-4 font-600 text-[#8E8EA9] gap-4 flex flex-wrap items-center'>
-                    {ProductTypes.map((type) => (
+                    {FilterOptions[mainCategory]?.map((type) => (
                         <motion.button
                             key={type.id}
                             onClick={() => toggleProductType(type.name)}
-                            disabled={mainCategory !== 'Eat'}
                             whileTap={{ scale: 0.95 }}
-                            className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 ${pendingProductTypes.includes(type.name) ? 'bg-amber-500 text-white dark:text-black' : 'bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'} ${mainCategory !== 'Eat' ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                            className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 ${pendingProductTypes.includes(type.name) ? 'bg-amber-500 text-white dark:text-black' : 'bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'}`}>
                             <p>{type.name}</p>
                         </motion.button>
                         ))}
