@@ -12,6 +12,7 @@ export type FiltersProps = {
   onClose: () => void;
   onApply?: (filters: { productTypes: string[], ratings: number[], priceRange: [number, number] }) => void;
   initialFilters?: { productTypes: string[], ratings: number[], priceRange: [number, number] };
+  mainCategory: 'Eat' | 'Drink' | 'Dessert';
 }
 
 const display = (isDesktop: boolean): Variants => {
@@ -40,11 +41,7 @@ const display = (isDesktop: boolean): Variants => {
   };
 }
 
-const Categories = [
-    { id: 1, name: 'Eat', },
-    { id: 2, name: 'Drink', },
-    { id: 3, name: 'Dessert', }
-]
+
 
 const ProductTypes = [
     { id: 1, name: 'Pizza' },
@@ -64,14 +61,8 @@ const Ratings = [
     { id: 5, name: '5' }
 ]
 
-const Filters: React.FC<FiltersProps> = ({ onClose, onApply, initialFilters }) => {
+const Filters: React.FC<FiltersProps> = ({ onClose, onApply, initialFilters, mainCategory }) => {
   const isDesktop = useIsDesktop();
-
-    const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
-
-    const toggleCategory = (id: number) => {
-        setSelectedCategory(prev => prev === id ? null : id)
-    }
 
     // Pending states
     const [pendingProductTypes, setPendingProductTypes] = useState<string[]>(initialFilters?.productTypes || [])
@@ -117,21 +108,7 @@ const Filters: React.FC<FiltersProps> = ({ onClose, onApply, initialFilters }) =
         </div>
 
         <div className="flex-1 overflow-y-auto scrollbar-hidden space-y-6">
-            <div className='space-y-[15px]'>
-                <h1 className="text-[#666687] dark:text-[#DCDCE4] text-4 font-600">Select Categories</h1>
 
-                <div className='text-4 font-600 text-[#8E8EA9] gap-4 flex flex-wrap items-center'>
-                    {Categories.map((cat) => (
-                        <motion.button
-                            key={cat.id}
-                            onClick={() => toggleCategory(cat.id)}
-                            whileTap={{ scale: 0.95 }}
-                            className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 ${selectedCategory === cat.id ? 'bg-amber-500 text-white dark:text-black' : 'bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'}`}>
-                            <p>{cat.name}</p>
-                        </motion.button>
-                        ))}
-                </div>
-            </div>
 
             <div className='space-y-[15px]'>
                 <h1 className="text-[#666687] dark:text-[#DCDCE4] text-4 font-600">Select Product Type</h1>
@@ -141,9 +118,9 @@ const Filters: React.FC<FiltersProps> = ({ onClose, onApply, initialFilters }) =
                         <motion.button
                             key={type.id}
                             onClick={() => toggleProductType(type.name)}
-                            disabled={selectedCategory !== 1}
+                            disabled={mainCategory !== 'Eat'}
                             whileTap={{ scale: 0.95 }}
-                            className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 ${pendingProductTypes.includes(type.name) ? 'bg-amber-500 text-white dark:text-black' : 'bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'} ${selectedCategory !== 1 ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                            className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 ${pendingProductTypes.includes(type.name) ? 'bg-amber-500 text-white dark:text-black' : 'bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'} ${mainCategory !== 'Eat' ? 'opacity-50 cursor-not-allowed' : ''}`}>
                             <p>{type.name}</p>
                         </motion.button>
                         ))}
@@ -195,7 +172,7 @@ const Filters: React.FC<FiltersProps> = ({ onClose, onApply, initialFilters }) =
                 <motion.button 
                     whileTap={{ scale: 0.98 }}  
                     onClick={handleApply}
-                    className='rounded-2xl dark:text-[#FFFFFF] font-semibold bg-[#32324D] dark:bg-[#615793] p-4 cursor-pointer w-full'>Apply Filters
+                    className='rounded-2xl text-[#FFFFFF] font-semibold bg-[#32324D] dark:bg-[#615793] p-4 cursor-pointer w-full'>Apply Filters
                 </motion.button>
             </div>
         </div>
