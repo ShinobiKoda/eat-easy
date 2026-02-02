@@ -11,6 +11,7 @@ import Virtual from "./components/onboarding/Virtual";
 import Recommend from "./components/dashboard/Recommend";
 import Recommended from "./components/dashboard/Recommended";
 import FullMenu from "./components/FullMenu/Full-menu";
+import OrderStatus from "./components/dashboard/OrderStatus";
 import Step1 from "./components/onboarding/Step1";
 import { useTheme } from "./hooks/useTheme";
 import ConfirmLink from "./components/auth/ConfirmLink";
@@ -203,6 +204,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <FullMenu />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="OrderStatus"
+            element={
+              <ProtectedRoute>
+                <OrderStatus />
               </ProtectedRoute>
             }
           />

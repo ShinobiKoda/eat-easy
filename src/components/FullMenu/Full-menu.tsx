@@ -167,10 +167,10 @@ const FullMenu: React.FC = () => {
                     className='bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative cursor-pointer'
                     onClick={() => setSelectedItem(dish)}
                   >
-                    <div className="rounded-[50%] mb-2">
+                    <div className="rounded-[50%] mb-2 max-w-[100px] h-[100px]">
                       <img
                         src={dish.image}
-                        className="max-w-[100px] max-h-[100px] rounded-[50%]"
+                        className="rounded-[50%] w-full h-full object-cover"
                         alt=""
                       />
                     </div>
