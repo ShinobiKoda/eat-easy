@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({
     >
       <MotionItem className="w-full">
         {title && (
-          <div className="flex flex-center gap-3">
+          <div className="flex flex-center gap-3 items-center">
             {showBack ? (
               <PopIn>
                 <motion.button
@@ -53,7 +53,7 @@ const Navbar: React.FC<NavbarProps> = ({
               <span className="flex gap-2 items-center font-semibold text-[14px] text-(--neutral-500) dark:text-(--neutral-200) ">
                 {title}
               </span>
-              <span className="heading-font font-semibold text-[18px] text-(--neutral-800) dark:text-white">
+              <span className="heading-font font-semibold text-[18px] text-(--neutral-800) dark:text-white min-w-[145px] whitespace-nowrap">
                 {description}
               </span>
             </p>

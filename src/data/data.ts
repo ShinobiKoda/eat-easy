@@ -10,10 +10,10 @@ export const Eat: PropType[] = [
       { amount: "400", unit: "kcal" }, { amount: "510", unit: "gram" }, { amount: "30", unit: "proteins" }, { amount: "56", unit: "carbs" }, { amount: "24", unit: "fats" }
     ], 
     ingredients: [
-      { ingname: "Fresh Vegetables", ingimage: "/placeholder.svg" }, { ingname: "Premium Protein", ingimage: "/placeholder.svg" }, { ingname: "Herbs & Spices", ingimage: "/placeholder.svg" }
+      { ingname: "Vegetables", ingimage: "/placeholder.svg" }, { ingname: "Protein", ingimage: "/placeholder.svg" }, { ingname: "Spices", ingimage: "/placeholder.svg" }
     ], 
     toppings: [
-      { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
+      { id: 1, name: "Extra egg", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }
     ], 
     text: "Crispy toast topped with creamy avocado and perfectly poached eggs", tag: ["Most Popular", "Breakfast", "Healthy"] 
   },
@@ -25,7 +25,7 @@ export const Eat: PropType[] = [
       { amount: "400", unit: "kcal" }, { amount: "510", unit: "gram" }, { amount: "30", unit: "proteins" }, { amount: "56", unit: "carbs" }, { amount: "24", unit: "fats" }
     ], 
     ingredients: [
-      { ingname: "Fresh Vegetables", ingimage: "/placeholder.svg" }, { ingname: "Premium Protein", ingimage: "/placeholder.svg" }, { ingname: "Herbs & Spices", ingimage: "/placeholder.svg" }
+      { ingname: "Vegetables", ingimage: "/placeholder.svg" }, { ingname: "Protein", ingimage: "/placeholder.svg" }, { ingname: "Spices", ingimage: "/placeholder.svg" }
     ], 
     toppings: [
       { id: 1, name: "Extra portion", price: 4.2 }, { id: 2, name: "Add cheese", price: 2.8 }, { id: 3, name: "Extra sauce", price: 1.5 }

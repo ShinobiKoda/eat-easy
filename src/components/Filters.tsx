@@ -2,10 +2,9 @@ import React from 'react'
 import { motion, type Variants } from "motion/react";
 import { useState, type MouseEvent } from "react"
 import useIsDesktop from "../hooks/useIsDesktop"
-import Cancel from "/images/Cancel.png"
+import { FaTimes } from "react-icons/fa";
 import Star from "/images/star.svg"
 import MultiRangeSlider from "multi-range-slider-react";
-// import the component's default styles so we can override them
 import 'multi-range-slider-react/lib/multirangeslider.css';
 
 export type FiltersProps = {
@@ -116,7 +115,14 @@ const Filters: React.FC<FiltersProps> = ({ onClose, onApply, initialFilters, mai
         <div className='flex justify-between mb-4'>
             <h1 className='mx-auto sm:ml-0 text-[22px] dark:text-[#FFFFFF] font-semibold'>Filters</h1>
 
-            <motion.img whileTap={{ scale: 0.96 }} onClick={onClose} src={Cancel} className="w-6 sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50" alt="" />
+            {/* <motion.img whileTap={{ scale: 0.96 }} onClick={onClose} src={Cancel} className="w-6 sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50" alt="" /> */}
+            <motion.div
+                whileTap={{ scale: 0.96 }}
+                onClick={onClose}
+                className="sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50"
+            >
+                <FaTimes size={25} className="text-(--neutral-400) dark:text-(--neutral-200)" />
+            </motion.div>
         </div>
 
         <div className="flex-1 overflow-y-auto scrollbar-hidden space-y-6">
