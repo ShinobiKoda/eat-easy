@@ -1,14 +1,35 @@
+import React, { useEffect, useState } from 'react'
 import { motion } from "framer-motion";
 import AI from "/images/AI-image.png";
 import { NavLink } from "react-router-dom";
+import Header from "../layout/Header";
+import Loader from "../Loader";
+
 
 const Virtual: React.FC = () => {
+  const [showLoader, setShowLoader] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setShowLoader(false), 3000);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
-    <div className="bg-[#F7F7F7] w-full min-h-screen">
+    <div className="w-full min-h-screen">
+      {showLoader && <Loader />}
+
       <div
-        className={`transition-all duration-300`}
+        className={` ${
+          showLoader ? "pointer-events-none overflow-hidden" : ""
+        }`}
       >
-        <div className="max-w-6xl mx-auto flex flex-col items-center p-6 space-y-10 mb-5">
+        <Header
+          title="Food Menu"
+          description="Virtual Assistant"
+          navbarTitle="Gram Bistro"
+          showBack={false}
+        />
+
+        <div className='pt-18 md:pt-30 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5'>
           <div className="lg:max-w-1/2">
             <div>
               <img src={AI} alt="" />

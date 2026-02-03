@@ -261,7 +261,10 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
               exit={{ opacity: 0 }}
               className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
             >
-              <Filters onClose={() => setFilter(false)} />
+              <Filters 
+                onClose={() => setFilter(false)} 
+                mainCategory={(['Eat', 'Drink', 'Dessert'] as const)[menu]}
+              />
             </motion.div>
           )}
         </AnimatePresence>

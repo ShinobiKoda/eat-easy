@@ -24,13 +24,13 @@ const Recommend: React.FC = () => {
         }`}
       >
         <Header
-          title="Full Menu"
-          description="See All Our Dishes"
+          title="Food Menu"
+          description="Virtual Assistant"
           navbarTitle="Gram Bistro"
           showBack={false}
         />
 
-        <div className='pt-18 md:pt-24 max-w-[1440px] mx-auto flex flex-col items-center py-6 px-6 sm:px-20 lg:px-6 space-y-10'>
+        <div className='pt-18 md:pt-30 max-w-[1440px] mx-auto flex flex-col items-center py-6 px-6 sm:px-20 lg:px-6 space-y-10'>
 
           <div className='flex flex-col items-center text-center max-w-xl mb-20 md:mb-10'>
             <h1 className='text-[22px] lg:text-[32px] text-[#32324D] dark:text-[#FFFFFF] font-bold mb-2'>It seems like we already know <br/> each other 🤝</h1>
