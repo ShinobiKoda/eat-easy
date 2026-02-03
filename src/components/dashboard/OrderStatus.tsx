@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Add from "/images/add.svg";
-import { FaChevronDown } from "react-icons/fa6";
+import { FaPlus, FaChevronDown } from "react-icons/fa6";
 import { OrderStatusSchema } from "../../schemas/OrderStatusSchema";
 import Loader from "../Loader";
 import Header from "../layout/Header";
@@ -41,14 +40,18 @@ const OrderStatus: React.FC = () => {
           title="Full Menu"
           description="See All Our Dishes"
           navbarTitle="Gram Bistro"
+          navbarDescription="Your order status"
+          showBack={true}
         />
 
-        <div className="max-w-6xl mx-auto flex flex-col items-center py-6 px-6 space-y-10 my-5 ">
+        <div className="pt-18 md:pt-24 max-w-[1440px] mx-auto flex flex-col items-center py-6 px-6 space-y-10 my-5 ">
+
           <div className="flex flex-col sm:flex-row gap-2 lg:gap-8 w-full items-center sm:items-start">
-            <div className="bg-[#FFFFFF] dark:bg-[#4A4A6A] text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl pt-[30px] max-w-[340px] sm:max-w-full sm:w-[60%] h-[388px] sm:h-fit overflow-clip gap-[21px] lg:gap-[60px] flex flex-col items-center">
-              <h1 className="text-[16px] lg:text-[24px] text-[#8E8EA9] font-semibold dark:text-[#DCDCE4]">
+
+            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl pt-[30px] max-w-[340px] sm:max-w-full sm:w-[60%] h-[388px] sm:h-fit overflow-clip gap-[21px] lg:gap-[60px] flex flex-col items-center">
+              <h1 className="text-[16px] lg:text-[24px] text-[#8E8EA9] font-semibold dark:text-(--neutral-200)">
                 {currentStatus.text} <br />{" "}
-                <b className="text-[18px] lg:text-[24px] text-[#FFB01D] font-extrabold">
+                <b className="text-[18px] lg:text-[24px] text-(--yellow-1) font-extrabold">
                   {currentStatus.time}
                 </b>
               </h1>
@@ -58,16 +61,16 @@ const OrderStatus: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-[#FFFFFF] dark:bg-[#4A4A6A] text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-5 lg:p-[30px] space-y-4 w-[340px] sm:max-w-full sm:w-[40%] h-fit">
+            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-5 lg:p-[30px] space-y-4 sm:w-[40%] h-fit">
               <div className="w-full flex justify-between items-center">
-                <p className="text-[#DCDCE4] font-semibold dark:text-[#DCDCE4]">
+                <p className="text-(--neutral-200) font-semibold text-left">
                   Order list and prices
                 </p>
                 <FaChevronDown
                   onClick={() => {
                     setToggleList(!toggleList);
                   }}
-                  className={`w-5 h-5 cursor-pointer fill-[#DCDCE4] dark:fill-[#FFB01D] ${toggleList ? "rotate-180" : ""}`}
+                  className={`w-5 h-5 cursor-pointer fill-(--neutral-200) dark:fill-(--yellow-1) ${toggleList ? "rotate-180" : ""}`}
                 />
               </div>
 
@@ -78,7 +81,7 @@ const OrderStatus: React.FC = () => {
                   order.items.map((sent: any) => (
                     <div
                       key={sent.id}
-                      className="dark:text-[#FFFFFF] flex justify-between items-center gap-2"
+                      className="dark:text-[#FFFFFF] flex justify-between items-center gap-5"
                     >
                       <div className="flex items-center gap-2">
                         <img
@@ -92,7 +95,7 @@ const OrderStatus: React.FC = () => {
                       </div>
                       <p className="text-[14px]">
                         <span>{sent.qty}</span>x ${" "}
-                        <b>{(sent.price ?? 0).toFixed(2)}</b>
+                        <b className="text-(--yellow-1)">{(sent.price ?? 0).toFixed(2)}</b>
                       </p>
                     </div>
                   ))
@@ -105,13 +108,14 @@ const OrderStatus: React.FC = () => {
                 whileTap={{ scale: 0.96 }}
                 className="flex mx-auto items-center cursor-pointer space-x-2 w-fit"
               >
-                <img src={Add} alt="" />
-                <p className="text-[#FFB01D]">Add more food to order</p>
+                <FaPlus size={20} className="text-(--yellow-1)" />
+                <p className="text-(--yellow-1) text-[16px] font-semibold">Add more food to order</p>
               </motion.div>
             </div>
           </div>
 
-          <div className="w-full flex flex-col space-y-5 sm:flex-row justify-between items-center rounded-2xl px-5 py-4 text-[#8E8EA9] font-semibold dark:text-[#DCDCE4] bg-[#FFFFFF] dark:bg-[#4A4A6A] shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
+          <div className="w-full flex flex-col space-y-5 sm:flex-row justify-between items-center rounded-2xl px-5 py-4 text-[#8E8EA9] font-semibold dark:text-(--neutral-200) bg-[#FFFFFF] dark:bg-(--neutral-700) shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
+
             <p className="text-[18px] font-600">{currentStatus.action}</p>
 
             {showRecommend && (

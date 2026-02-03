@@ -1,7 +1,3 @@
-// Capitalize first letter of every word
-function capitalizeWords(str: string) {
-  return str.replace(/\b\w/g, c => c.toUpperCase());
-}
 import React, { useState, useEffect, useMemo } from "react";
 import Header from "../layout/Header";
 import { FaFilter } from "react-icons/fa6";
@@ -10,12 +6,11 @@ import { motion } from "framer-motion";
 import { AnimatePresence } from "motion/react";
 
 import Loader from "../Loader";
-import { Eat } from "../../data/data";
+import { Eat, Drink, Dessert } from "../../data/data";
 import ProductCarousel from "./ProductCarousel";
 import Filters from "../Filters";
 import ViewDish from "../dashboard/ViewDish";
 import ViewOrder from "../dashboard/ViewOrder";
-// ...existing code...
 import { productGridStagger, productCardFade } from "../animations/motion";
 import { useOrder } from "../../hooks/useOrder";
 
@@ -43,28 +38,31 @@ const FullMenu: React.FC = () => {
   // for the filter component
   const [filterButton, setFilterButton] = useState(false);
 
-  // Only show specific filter tags
-  const allowedTags = ['most popular', 'salad', 'pizza', 'pasta'];
-  const allTags = useMemo(() => {
-    const tags = Eat.flatMap(dish => dish.tag?.map((t: string) => t.toLowerCase()) || []);
-    const uniqueTags = Array.from(new Set(tags));
-    // Only include allowed tags, in the order specified
-    return allowedTags.filter(tag => uniqueTags.includes(tag));
-  }, []);
+  // Main Category State
+  const [mainCategory, setMainCategory] = useState<'Eat' | 'Drink' | 'Dessert'>('Eat');
 
-  // Add 'all' as the default filter
-  const [filterTag, setFilterTag] = useState<string>('all');
+  // Applied filters state
+  const [appliedFilters, setAppliedFilters] = useState<{ productTypes: string[], ratings: number[], priceRange: [number, number] }>({ productTypes: [], ratings: [], priceRange: [0, 30] });
 
-  // Filter dishes based on selected tag and search input
+  // Filter dishes based on selected tag, search input, and applied filters
   const filteredDishes = useMemo(() => {
-    let dishes = filterTag === 'all'
-      ? Eat
-      : Eat.filter(dish => dish.tag && dish.tag.some((t: string) => t.toLowerCase() === filterTag));
-    if (debouncedSearch.trim() === '') {
-      return dishes;
+    let dishes = mainCategory === 'Eat' ? Eat : mainCategory === 'Drink' ? Drink : Dessert;
+    
+    if (debouncedSearch.trim() !== '') {
+      dishes = dishes.filter(dish => dish.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
     }
-    return dishes.filter(dish => dish.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
-  }, [filterTag, debouncedSearch]);
+    
+    // Apply product type filters
+    if (appliedFilters.productTypes.length > 0) {
+      dishes = dishes.filter(dish => dish.tag && dish.tag.some(tag => appliedFilters.productTypes.some(pt => pt.toLowerCase() === tag.toLowerCase())));
+    }
+    
+    if (appliedFilters.ratings.length > 0) {
+      dishes = dishes.filter(dish => appliedFilters.ratings.includes(Math.floor(dish.rating)));
+    }
+    dishes = dishes.filter(dish => dish.price >= appliedFilters.priceRange[0] && dish.price <= appliedFilters.priceRange[1]);
+    return dishes;
+  }, [mainCategory, debouncedSearch, appliedFilters]);
 
 
   // Use shared order logic
@@ -108,9 +106,6 @@ const FullMenu: React.FC = () => {
                     value={search}
                     onChange={(e) => {
                       setSearch(e.target.value);
-                      if (e.target.value === '') {
-                        setFilterTag('all');
-                      }
                     }}
                   />
                   <CiSearch
@@ -132,25 +127,17 @@ const FullMenu: React.FC = () => {
         {/* carousel section */}
         <ProductCarousel />
 
-        {/* Dynamic filter buttons */}
+        {/* Main Category Buttons */}
         <div className='w-full p-6 lg:p-7 xl:p-10 flex items-center whitespace-nowrap overflow-auto scrollbar-hidden space-x-5 lg:space-y-5 h-fit'>
           <ul className='transition-all duration-700 transform flex items-center gap-2'>
-            <motion.li
-              whileTap={{ scale: 0.98 }}
-              key="all"
-              onClick={() => setFilterTag('all')}
-              className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-700 ${filterTag === 'all' ? 'bg-(--yellow-1) font-bold text-white dark:text-(--neutral-800)' : 'text-(--neutral-600) dark:text-(--neutral-100)'}`}
-            >
-              <p>All Dishes</p>
-            </motion.li>
-            {allTags.map(tag => (
+            {(['Eat', 'Drink', 'Dessert'] as const).map(category => (
               <motion.li
                 whileTap={{ scale: 0.98 }}
-                key={tag}
-                onClick={() => setFilterTag(tag)}
-                className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-700 ${filterTag === tag ? 'bg-(--yellow-1) font-bold text-white dark:text-(--neutral-800)' : 'text-(--neutral-600) dark:text-(--neutral-100)'}`}
+                key={category}
+                onClick={() => setMainCategory(category)}
+                className={`text-center w-full cursor-pointer rounded-2xl text-[clamp(1rem,3vw,1.1rem)] font-medium px-3.5 md:px-6 py-3 transition-colors duration-700 ${mainCategory === category ? 'bg-(--yellow-1) font-bold text-white dark:text-(--neutral-800)' : 'text-(--neutral-600) dark:text-(--neutral-100)'}`}
               >
-                <p>{capitalizeWords(tag)}</p>
+                <p>{category}</p>
               </motion.li>
             ))}
           </ul>
@@ -159,15 +146,13 @@ const FullMenu: React.FC = () => {
         {/* product/dishes listing section */}
         <div className='px-6 py-4 md:py-8 md:px-10.5 flex flex-col gap-6'>
             <h1 className="text-[18px] text-(--neutral-600) dark:text-(--neutral-200) font-semibold">
-              {filterTag === 'all'
-                ? 'All Dishes'
-                : capitalizeWords(filterTag)}
+              {mainCategory}
             </h1>
             
             {/* Staggered motion grid */}
             <AnimatePresence mode="wait">
               <motion.div
-                key={filterTag + '-' + debouncedSearch}
+                key={mainCategory + '-' + debouncedSearch + '-' + JSON.stringify(appliedFilters)}
                 className='items-center gap-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
                 variants={productGridStagger}
                 initial="hidden"
@@ -182,10 +167,10 @@ const FullMenu: React.FC = () => {
                     className='bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative cursor-pointer'
                     onClick={() => setSelectedItem(dish)}
                   >
-                    <div className="rounded-full mb-2">
+                    <div className="rounded-[50%] mb-2 max-w-[100px] h-[100px]">
                       <img
                         src={dish.image}
-                        className="max-w-[100px] max-h-[100px] rounded-full"
+                        className="rounded-[50%] w-full h-full object-cover"
                         alt=""
                       />
                     </div>
@@ -263,7 +248,7 @@ const FullMenu: React.FC = () => {
               exit={{ opacity: 0 }}
               className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
             >
-              <Filters onClose={() => setFilterButton(false)} />
+              <Filters onClose={() => setFilterButton(false)} onApply={setAppliedFilters} initialFilters={appliedFilters} mainCategory={mainCategory} />
             </motion.div>
           )}
         </AnimatePresence>

@@ -15,7 +15,7 @@ const options = [
     icon: "/images/bulb-icon.svg",
     title: "Choose Virtual Assistant",
     description: "Simplify your decisions through our Smart Menu",
-    link: "/recommended"
+    link: "/virtual"
   },
   {
     icon: "/images/menu-icon.svg",

@@ -2,14 +2,16 @@ import React from 'react'
 import { motion, type Variants } from "motion/react";
 import { useState, type MouseEvent } from "react"
 import useIsDesktop from "../hooks/useIsDesktop"
-import Cancel from "/images/Cancel.png"
+import { FaTimes } from "react-icons/fa";
 import Star from "/images/star.svg"
 import MultiRangeSlider from "multi-range-slider-react";
-// import the component's default styles so we can override them
 import 'multi-range-slider-react/lib/multirangeslider.css';
 
 export type FiltersProps = {
   onClose: () => void;
+  onApply?: (filters: { productTypes: string[], ratings: number[], priceRange: [number, number] }) => void;
+  initialFilters?: { productTypes: string[], ratings: number[], priceRange: [number, number] };
+  mainCategory: 'Eat' | 'Drink' | 'Dessert';
 }
 
 const display = (isDesktop: boolean): Variants => {
@@ -38,21 +40,29 @@ const display = (isDesktop: boolean): Variants => {
   };
 }
 
-const Categories = [
-    { id: 1, name: 'Eat', },
-    { id: 2, name: 'Drink', },
-    { id: 3, name: 'Dessert', }
-]
-
-const ProductTypes = [
-    { id: 1, name: 'Pizza' },
-    { id: 2, name: 'Butter' },
-    { id: 3, name: 'Salad' },
-    { id: 4, name: 'Soup' },
-    { id: 5, name: 'Chicken' },
-    { id: 6, name: 'Grill' },
-    { id: 7, name: 'Breakfast' },
-]
+const FilterOptions: Record<string, { id: number, name: string }[]> = {
+    Eat: [
+        { id: 1, name: 'Pizza' },
+        { id: 2, name: 'Burger' },
+        { id: 3, name: 'Salad' },
+        { id: 4, name: 'Soup' },
+        { id: 5, name: 'Chicken' },
+        { id: 6, name: 'Grill' },
+        { id: 7, name: 'Breakfast' },
+        { id: 8, name: 'Lunch' },
+        { id: 9, name: 'Dinner' },
+    ],
+    Drink: [
+        { id: 10, name: 'Coffee' },
+        { id: 11, name: 'Tea' },
+        { id: 12, name: 'Milk Drinks' },
+        { id: 13, name: 'Chocolate' },
+        { id: 14, name: 'Energy' },
+        { id: 15, name: 'Smoothie' },
+        { id: 16, name: 'Juice' },
+    ],
+    Dessert: []
+}
 
 const Ratings = [
     { id: 1, name: '1' },
@@ -62,34 +72,33 @@ const Ratings = [
     { id: 5, name: '5' }
 ]
 
-const Filters: React.FC<FiltersProps> = ({ onClose }) => {
+const Filters: React.FC<FiltersProps> = ({ onClose, onApply, initialFilters, mainCategory }) => {
   const isDesktop = useIsDesktop();
 
-    const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
+    // Pending states
+    const [pendingProductTypes, setPendingProductTypes] = useState<string[]>(initialFilters?.productTypes || [])
+    const [pendingRatings, setPendingRatings] = useState<number[]>(initialFilters?.ratings || [])
+    const [pendingMinValue, setPendingMinValue] = useState<number>(initialFilters?.priceRange[0] || 0);
+    const [pendingMaxValue, setPendingMaxValue] = useState<number>(initialFilters?.priceRange[1] || 30);
 
-    const toggleCategory = (id: number) => {
-        setSelectedCategory(prev => prev === id ? null : id)
+    const toggleProductType = (name: string) => {
+        setPendingProductTypes(prev => prev.includes(name) ? prev.filter(t => t !== name) : [...prev, name])
     }
 
-    const [selectedProductType, setSelectedProductType] = useState<number | null>(null)
-
-    const toggleProductType = (id: number) => {
-        setSelectedProductType(prev => prev === id ? null : id)
-    }
-
-    const [selectedRatings, setSelectedRatings] = useState<number | null>(null)
-
-    const toggleRating = (id: number) => {
-        setSelectedRatings(prev => prev === id ? null : id)
+    const toggleRating = (rating: number) => {
+        setPendingRatings(prev => prev.includes(rating) ? prev.filter(r => r !== rating) : [...prev, rating])
     }
 
     // slider state management
-    const [minValue, set_minValue] = useState<number>(2);
-    const [maxValue, set_maxValue] = useState<number>(4);
     const handleInput = (e: { minValue: number; maxValue: number }) => {
-        set_minValue(e.minValue);
-        set_maxValue(e.maxValue);
+        setPendingMinValue(e.minValue);
+        setPendingMaxValue(e.maxValue);
     };
+
+    const handleApply = () => {
+        onApply?.({ productTypes: pendingProductTypes, ratings: pendingRatings, priceRange: [pendingMinValue, pendingMaxValue] });
+        onClose();
+    }
 
   return (
     <motion.div
@@ -106,36 +115,29 @@ const Filters: React.FC<FiltersProps> = ({ onClose }) => {
         <div className='flex justify-between mb-4'>
             <h1 className='mx-auto sm:ml-0 text-[22px] dark:text-[#FFFFFF] font-semibold'>Filters</h1>
 
-            <motion.img whileTap={{ scale: 0.96 }} onClick={onClose} src={Cancel} className="w-6 sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50" alt="" />
+            {/* <motion.img whileTap={{ scale: 0.96 }} onClick={onClose} src={Cancel} className="w-6 sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50" alt="" /> */}
+            <motion.div
+                whileTap={{ scale: 0.96 }}
+                onClick={onClose}
+                className="sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50"
+            >
+                <FaTimes size={25} className="text-(--neutral-400) dark:text-(--neutral-200)" />
+            </motion.div>
         </div>
 
         <div className="flex-1 overflow-y-auto scrollbar-hidden space-y-6">
-            <div className='space-y-[15px]'>
-                <h1 className="text-[#666687] dark:text-[#DCDCE4] text-4 font-600">Select Categories</h1>
 
-                <div className='text-4 font-600 text-[#8E8EA9] gap-4 flex flex-wrap items-center'>
-                    {Categories.map((cat) => (
-                        <motion.button
-                            key={cat.id}
-                            onClick={() => toggleCategory(cat.id)}
-                            whileTap={{ scale: 0.95 }}
-                            className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 ${selectedCategory === cat.id ? 'bg-amber-500 text-white dark:text-black' : 'bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'}`}>
-                            <p>{cat.name}</p>
-                        </motion.button>
-                        ))}
-                </div>
-            </div>
 
             <div className='space-y-[15px]'>
                 <h1 className="text-[#666687] dark:text-[#DCDCE4] text-4 font-600">Select Product Type</h1>
 
                 <div className='text-4 font-600 text-[#8E8EA9] gap-4 flex flex-wrap items-center'>
-                    {ProductTypes.map((type) => (
+                    {FilterOptions[mainCategory]?.map((type) => (
                         <motion.button
                             key={type.id}
-                            onClick={() => toggleProductType(type.id)}
+                            onClick={() => toggleProductType(type.name)}
                             whileTap={{ scale: 0.95 }}
-                            className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 ${selectedProductType === type.id ? 'bg-amber-500 text-white dark:text-black' : 'bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'}`}>
+                            className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 ${pendingProductTypes.includes(type.name) ? 'bg-amber-500 text-white dark:text-black' : 'bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'}`}>
                             <p>{type.name}</p>
                         </motion.button>
                         ))}
@@ -149,9 +151,9 @@ const Filters: React.FC<FiltersProps> = ({ onClose }) => {
                     {Ratings.map((rating) => (
                     <motion.button
                         key={rating.id}
-                        onClick={() => toggleRating(rating.id)}
+                        onClick={() => toggleRating(parseInt(rating.name))}
                         whileTap={{ scale: 0.95 }}
-                        className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 border border-gray-500 ${selectedRatings === rating.id ? 'bg-amber-500 text-white dark:text-black' : 'bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF]'}`}>
+                        className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 border border-gray-500 ${pendingRatings.includes(parseInt(rating.name)) ? 'bg-amber-500 text-white dark:text-black' : 'bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF]'}`}>
                         <img src={Star} className='w-[18px] h-[18px]' alt="" />
                         <p className='text-4'>{rating.name}</p>
                     </motion.button>
@@ -165,20 +167,20 @@ const Filters: React.FC<FiltersProps> = ({ onClose }) => {
                 <div className='space-y-10'>
                     <div className="App">
                         <MultiRangeSlider
-                            min={1.0}
-                            max={6.0}
+                            min={0}
+                            max={30}
                             step={1}
-                            minValue={minValue}
-                            maxValue={maxValue}
+                            minValue={pendingMinValue}
+                            maxValue={pendingMaxValue}
                             onInput={(e) => handleInput(e)}
                         />
                     </div>
                     <div className="flex gap-4 items-center justify-center">
-                        <div className='text-[14px] text-center font-600 text-[#8E8EA9] rounded-2xl px-4 py-3 flex items-center bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'>Minimum price: ${minValue.toFixed(2)}</div>
+                        <div className='text-[14px] text-center font-600 text-[#8E8EA9] rounded-2xl px-4 py-3 flex items-center bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'>Minimum price: ${pendingMinValue.toFixed(2)}</div>
 
                         <div className='w-4 border border-[#DCDCE4]'></div>
 
-                        <div className='text-[14px] text-center font-600 text-[#8E8EA9] rounded-2xl px-4 py-3 flex items-center bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'>Maximum price: ${maxValue.toFixed(2)}</div>
+                        <div className='text-[14px] text-center font-600 text-[#8E8EA9] rounded-2xl px-4 py-3 flex items-center bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500'>Maximum price: ${pendingMaxValue.toFixed(2)}</div>
                     </div>
                 </div>
             </div>
@@ -186,7 +188,8 @@ const Filters: React.FC<FiltersProps> = ({ onClose }) => {
             <div  className='mt-10'>
                 <motion.button 
                     whileTap={{ scale: 0.98 }}  
-                    className='rounded-2xl dark:text-[#FFFFFF] font-semibold bg-[#32324D] dark:bg-[#615793] p-4 cursor-pointer w-full'>Apply Filters
+                    onClick={handleApply}
+                    className='rounded-2xl text-[#FFFFFF] font-semibold bg-[#32324D] dark:bg-[#615793] p-4 cursor-pointer w-full'>Apply Filters
                 </motion.button>
             </div>
         </div>

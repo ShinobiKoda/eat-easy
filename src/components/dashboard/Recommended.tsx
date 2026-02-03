@@ -5,7 +5,7 @@ import GridIcon from "/images/grid-icon.png";
 import ListIcon from "/images/list-icon.png";
 import { AiOutlinePlus } from "react-icons/ai";
 import type { PropType } from "../../types";
-import { Eat, Drink } from "../../data/data";
+import { Eat, Drink, Dessert } from "../../data/data";
 import ViewDish from "./ViewDish";
 import ViewOrder from "./ViewOrder";
 import Filters from "../Filters";
@@ -56,14 +56,14 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
     return shuffled.slice(0, n);
   }
 
-  // For Eat: show 9 random, for Drink: show all, for Dessert: filter Eat for dessert tag
-  let datum: typeof Eat | typeof Drink = Eat;
+  // For Eat: show 9 random, for Drink: show all, for Dessert: show all from Dessert array
+  let datum: PropType[] = [];
   if (menu === 0) {
     datum = getRandomItems(Eat, 9);
   } else if (menu === 1) {
     datum = Drink;
   } else if (menu === 2) {
-    datum = Eat.filter((item) => Array.isArray(item.tag) && item.tag.includes("Dessert"));
+    datum = Dessert;
   }
 
   // stop background scroll effect when any of this is open
@@ -261,7 +261,10 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
               exit={{ opacity: 0 }}
               className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
             >
-              <Filters onClose={() => setFilter(false)} />
+              <Filters 
+                onClose={() => setFilter(false)} 
+                mainCategory={(['Eat', 'Drink', 'Dessert'] as const)[menu]}
+              />
             </motion.div>
           )}
         </AnimatePresence>
