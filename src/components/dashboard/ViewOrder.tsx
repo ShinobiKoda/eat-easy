@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 // import { MotionContainer, PopIn, FadeIn, SlideIn } from "../animations/motion";
 import type { PropType } from "../../types";
 import { type MouseEvent } from "react";
-import { RiDeleteBinLine } from "react-icons/ri";
+import { RiDeleteBinLine, RiShoppingBag3Line } from "react-icons/ri";
 import { FaPlus, FaArrowRight } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -21,7 +21,7 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
   removeOrder,
   onSend,
 }) => {
-  if (!items || items.length === 0) return null;
+
 
   // subtotal: sum of item prices (you can expand to include toppings/counts)
   const orderTotal = items.reduce((sum, t) => sum + (t.price || 0), 0);
@@ -78,6 +78,7 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-hidden">
+        {items && items.length > 0 ? (
         <div className="p-6 space-y-[27px]">
           <div className="flex flex-col space-y-5">
             {items.map((order) => (
@@ -168,8 +169,27 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
             </p>
           </div>
         </div>
+        ) : (
+          <div className="h-full flex flex-col items-center justify-center p-6 text-center space-y-4">
+            <div className="w-20 h-20 rounded-full bg-(--neutral-200) dark:bg-(--neutral-600) flex items-center justify-center">
+              <RiShoppingBag3Line size={32} className="text-(--neutral-400) dark:text-(--neutral-300)" />
+            </div>
+            <div>
+              <p className="text-[18px] font-bold text-(--neutral-800) dark:text-white">Your cart is empty</p>
+              <p className="text-[14px] text-(--neutral-500) dark:text-(--neutral-300)">Add items from the menu to get started</p>
+            </div>
+            <motion.button
+              whileTap={{ scale: 0.96 }}
+              onClick={onClose}
+              className="mt-4 px-6 py-3 rounded-xl bg-(--purple-2) text-white font-semibold cursor-pointer"
+            >
+              Start Ordering
+            </motion.button>
+          </div>
+        )}
       </div>
 
+      {items && items.length > 0 && (
       <div className="w-full flex justify-center bottom-0 p-3">
         <motion.button
           onClick={() => {
@@ -205,6 +225,7 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
           <FaArrowRight size={18} className="group-hover:translate-x-3 transition-all duration-300 text-[#FFFFFF]"/>
         </motion.button>
       </div>
+      )}
     </motion.div>
   );
 };

@@ -44,7 +44,7 @@ const OrderStatus: React.FC = () => {
           showBack={true}
         />
 
-        <div className="pt-18 md:pt-24 max-w-[1440px] mx-auto flex flex-col items-center py-6 px-6 space-y-10 my-5 ">
+        <div className="pt-25 md:pt-30 max-w-[1440px] mx-auto flex flex-col items-center py-6 px-6 space-y-10">
 
           <div className="flex flex-col sm:flex-row gap-2 lg:gap-8 w-full items-center sm:items-start">
 
@@ -61,7 +61,7 @@ const OrderStatus: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-5 lg:p-[30px] space-y-4 sm:w-[40%] h-fit">
+            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-5 lg:p-[30px] space-y-4 max-w-[340px] w-[100%] sm:w-[40%] h-fit">
               <div className="w-full flex justify-between items-center">
                 <p className="text-(--neutral-200) font-semibold text-left">
                   Order list and prices
@@ -114,14 +114,14 @@ const OrderStatus: React.FC = () => {
             </div>
           </div>
 
-          <div className="w-full flex flex-col space-y-5 sm:flex-row justify-between items-center rounded-2xl px-5 py-4 text-[#8E8EA9] font-semibold dark:text-(--neutral-200) bg-[#FFFFFF] dark:bg-(--neutral-700) shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
+          <div className="max-w-[340px] w-full sm:max-w-full flex flex-col space-y-5 sm:flex-row justify-between items-center rounded-2xl px-5 py-4 text-[#8E8EA9] font-semibold dark:text-(--neutral-200) bg-[#FFFFFF] dark:bg-(--neutral-700) shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
 
-            <p className="text-[18px] font-600">{currentStatus.action}</p>
+            <p className="text-[14px] sm:text-[16px] lg:text-[18px] font-600">{currentStatus.action}</p>
 
             {showRecommend && (
               <motion.div
                 whileTap={{ scale: 0.96 }}
-                className="p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[16px] lg:text-[16px] text-white text-center cursor-pointer"
+                className="p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[12px] sm:text-[16px] text-white text-center cursor-pointer"
               >
                 Ask for Recommendations
               </motion.div>
@@ -130,7 +130,7 @@ const OrderStatus: React.FC = () => {
             {showSubmit && (
               <motion.div
                 whileTap={{ scale: 0.96 }}
-                className="p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[16px] lg:text-[16px] text-white cursor-pointer"
+                className="w-full text-center sm:w-fit p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[16px] lg:text-[16px] text-white cursor-pointer"
               >
                 Pay <b>${(order.total ?? 0).toFixed(2)}</b>
               </motion.div>

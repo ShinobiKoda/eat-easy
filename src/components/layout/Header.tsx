@@ -511,11 +511,11 @@ const Header: React.FC<HeaderProps> = ({
                           whileTap={{ scale: 0.98 }}
                           className="w-full px-4 py-3 bg-(--purple-2) text-white font-semibold text-sm rounded-xl cursor-pointer"
                           onClick={() => {
-                            navigate("/FullMenu");
+                            navigate("/orderStatus");
                             setOrderDropdownOpen(false);
                           }}
                         >
-                          Browse Menu
+                          OrderStatus
                         </motion.button>
                       </motion.div>
                     </div>
