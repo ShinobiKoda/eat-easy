@@ -66,8 +66,8 @@ const Step1: React.FC = () => {
         <div className='pt-20 md:py-30 lg:py-50 max-w-[900px] mx-auto flex flex-col items-center p-6'>
 
           <div className='flex flex-col items-center text-center mb-[60px]'>
-            <h1 className='text-[22px] lg:text-[40px] text-(--neutral-800) dark:text-[#FFFFFF] font-medium mb-2'>How are you feeling right now?</h1>
-            <p className='text-[16px] lg:text-[16px] font-medium text-(--neutral-600) dark:text-[#EAEAEF]'>Select all that applies</p>
+            <h1 className='text-[22px] md:text-[32px] lg:text-[40px] text-(--neutral-800) dark:text-[#FFFFFF] font-medium mb-2'>How are you feeling right now?</h1>
+            <p className='text-[16px] lg:text-[16px] font-medium text-(--neutral-600) dark:text-[#EAEAEF]'>Select all that applies:</p>
           </div>
 
           <div className='text-[16px] font-700 text-(--neutral-600) dark:text-[#EAEAEF] gap-4 max-w-[523px] mx-auto flex flex-wrap justify-center items-center mb-50 md:mb-30'>
@@ -83,17 +83,17 @@ const Step1: React.FC = () => {
             ))}
           </div>
 
-          <div className='text-[16px] lg:text-[20px] font-600 text-(--neutral-600) space-y-4 w-[480px] lg:w-xl flex flex-col items-center'>
-            <NavLink to="/recommended" className="w-full">
+          <div className='text-[16px] lg:text-[20px] font-600 text-(--neutral-600) space-y-4 w-full lg:w-xl flex flex-col justify-center items-center'>
+            <NavLink to="/recommended" className="w-[100%] md:w-[480px] flex justify-center">
                 <motion.button 
                     whileTap={{ scale: 0.98 }}  
-                    className='rounded-2xl bg-(--neutral-800) dark:bg-[#615793] dark:text-[#FFFFFF] p-4 cursor-pointer w-full'>Continue
+                    className='rounded-2xl bg-(--purple-2) dark:bg-[#615793] text-white dark:text-[#FFFFFF] p-4 cursor-pointer w-full mx-auto'>Continue
                 </motion.button>
             </NavLink>
-            <NavLink to="/welcome" className="w-full">
+            <NavLink to="/welcome" className="w-[100%] md:w-[480px] flex justify-center">
                 <motion.button 
                     whileTap={{ scale: 0.98 }}  
-                    className='p-4 cursor-pointer w-full dark:text-[#EBEAF2] rounded-2xl'>Take me to the menu
+                    className='p-4 cursor-pointer w-full mx-auto text-(--purple-3) dark:text-[#EBEAF2] rounded-2xl'>Take me to the menu
                 </motion.button>
             </NavLink>
           </div>

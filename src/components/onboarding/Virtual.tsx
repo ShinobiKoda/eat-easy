@@ -36,7 +36,7 @@ const Virtual: React.FC = () => {
           showBack={true}
         />
 
-        <div className='pt-20 md:py-50 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5'>
+        <div className='pt-20 md:py-30 lg:py-50 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5'>
           <div className="lg:max-w-1/2">
             <div>
               <img src={AI} alt="" />
@@ -53,8 +53,8 @@ const Virtual: React.FC = () => {
             </p>
           </div>
 
-          <div className="text-[16px] lg:text-[20px] font-600 text-[#8E8EA9] space-y-4 w-full lg:w-xl flex flex-col items-center">
-            <NavLink to="/welcome" className="w-full">
+          <div className="text-[16px] lg:text-[20px] font-600 space-y-4 w-full lg:w-xl flex flex-col-reverse items-center">
+            <NavLink to="/welcome" className="w-[100%] md:w-[480px]">
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 className="p-4 cursor-pointer w-full hover:bg-gray-600 rounded-2xl"
@@ -62,10 +62,10 @@ const Virtual: React.FC = () => {
                 Take me to the menu
               </motion.button>
             </NavLink>
-            <NavLink to="/recommend" className="w-full">
+            <NavLink to="/recommend" className="w-[100%] md:w-[480px]">
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                className="rounded-2xl bg-[#32324D] p-4 cursor-pointer w-full"
+                className="rounded-2xl bg-(--purple-2) text-white p-4 cursor-pointer w-full"
               >
                 Great, let's start
               </motion.button>
