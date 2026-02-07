@@ -130,9 +130,10 @@ const OrderStatus: React.FC = () => {
             {showSubmit && (
               <motion.div
                 whileTap={{ scale: 0.96 }}
-                className="w-full text-center sm:w-fit p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[16px] lg:text-[16px] text-white cursor-pointer"
+                className="w-full text-center sm:w-fit lg:w-[375px] p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[16px] lg:text-[16px] text-white cursor-pointer gap-2 flex justify-center"
               >
-                Pay <b>${(order.total ?? 0).toFixed(2)}</b>
+                <span>Pay</span>
+                <span><b>${(order.total ?? 0).toFixed(2)}</b></span>
               </motion.div>
             )}
           </div>
