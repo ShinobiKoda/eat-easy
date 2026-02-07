@@ -4,6 +4,7 @@ import { RiMenu2Fill } from "react-icons/ri";
 import { IoArrowBack } from "react-icons/io5";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MotionItem, PopIn } from "../animations/motion";
+import { useNavigate } from "react-router-dom";
 
 type NavbarProps = {
   description?: string;
@@ -20,6 +21,8 @@ const Navbar: React.FC<NavbarProps> = ({
   previous,
   showBack
 }) => {
+
+  const navigate = useNavigate();
   return (
     <nav
       className={`w-full flex justify-between items-center px-6 py-4 md:hidden ${className}`}
@@ -30,7 +33,7 @@ const Navbar: React.FC<NavbarProps> = ({
             {showBack ? (
               <PopIn>
                 <motion.button
-                  onClick={previous}
+                  onClick={previous || (() => navigate(-1))}
                   className="w-12 h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer dark:bg-(--neutral-700)"
                   aria-label="Go back"
                   whileHover={{ scale: 1.04 }}

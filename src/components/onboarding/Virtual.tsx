@@ -7,11 +7,18 @@ import Loader from "../Loader";
 
 
 const Virtual: React.FC = () => {
-  const [showLoader, setShowLoader] = useState(true);
+  const [showLoader, setShowLoader] = useState(() => {
+    return !sessionStorage.getItem('hasShownLoader_Virtual');
+  });
   useEffect(() => {
-    const t = setTimeout(() => setShowLoader(false), 3000);
-    return () => clearTimeout(t);
-  }, []);
+    if (showLoader) {
+      const t = setTimeout(() => {
+        setShowLoader(false);
+        sessionStorage.setItem('hasShownLoader_Virtual', 'true');
+      }, 3000);
+      return () => clearTimeout(t);
+    }
+  }, [showLoader]);
 
   return (
     <div className="w-full min-h-screen">
@@ -29,7 +36,7 @@ const Virtual: React.FC = () => {
           showBack={true}
         />
 
-        <div className='pt-18 md:pt-30 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5'>
+        <div className='pt-20 md:py-50 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5'>
           <div className="lg:max-w-1/2">
             <div>
               <img src={AI} alt="" />

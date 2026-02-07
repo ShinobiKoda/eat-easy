@@ -34,11 +34,18 @@ const Step1: React.FC = () => {
     { name: 'Other', image: Sick },
   ]
 
-  const [showLoader, setShowLoader] = useState(true);
-    useEffect(() => {
-      const t = setTimeout(() => setShowLoader(false), 3000);
+  const [showLoader, setShowLoader] = useState(() => {
+    return !sessionStorage.getItem('hasShownLoader_Step1');
+  });
+  useEffect(() => {
+    if (showLoader) {
+      const t = setTimeout(() => {
+        setShowLoader(false);
+        sessionStorage.setItem('hasShownLoader_Step1', 'true');
+      }, 3000);
       return () => clearTimeout(t);
-    }, []);
+    }
+  }, [showLoader]);
   
   return (
     <div className="w-full min-h-screen">
@@ -56,39 +63,39 @@ const Step1: React.FC = () => {
           showBack={true}
         />
 
-        <div className='pt-18 md:pt-30 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5'>
+        <div className='pt-20 md:py-30 lg:py-50 max-w-[900px] mx-auto flex flex-col items-center p-6'>
 
-          <div className='flex flex-col items-center text-center max-w-xl'>
-            <h1 className='text-[22px] lg:text-[32px] text-[#32324D] dark:text-[#FFFFFF] font-bold mb-2'>How are you feeling right now?</h1>
-            <p className='text-[16px] lg:text-[20px] font-600 text-[#8E8EA9] dark:text-[#EAEAEF]'>Select all that applies</p>
+          <div className='flex flex-col items-center text-center mb-[60px]'>
+            <h1 className='text-[22px] lg:text-[40px] text-(--neutral-800) dark:text-[#FFFFFF] font-medium mb-2'>How are you feeling right now?</h1>
+            <p className='text-[16px] lg:text-[16px] font-medium text-(--neutral-600) dark:text-[#EAEAEF]'>Select all that applies</p>
           </div>
 
-          <div className='text-[16px] font-700 text-[#8E8EA9] dark:text-[#EAEAEF] gap-4 w-full lg:w-xl flex flex-wrap justify-center items-center mb-50 md:mb-20'>
-              {Feelings.map((feeling, idx) => (
-              <motion.button
-                  key={idx}
-                  onClick={() => toggleFeeling(idx)}
-                  whileTap={{ scale: 0.95 }}
-                  className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 border-2 border-gray-500 ${selectedFeelings.includes(idx) ? 'bg-amber-500 text-white dark:text-[#32324D]' : ''}`}>
-                  <img src={feeling.image} className='w-5 h-5 md:w-7 md:h-7' alt="" />
-                  <p>{feeling.name}</p>
-              </motion.button>
-              ))}
+          <div className='text-[16px] font-700 text-(--neutral-600) dark:text-[#EAEAEF] gap-4 max-w-[523px] mx-auto flex flex-wrap justify-center items-center mb-50 md:mb-30'>
+            {Feelings.map((feeling, idx) => (
+            <motion.button
+              key={idx}
+              onClick={() => toggleFeeling(idx)}
+              whileTap={{ scale: 0.95 }}
+              className={`rounded-2xl px-3 md:px-4 py-2 cursor-pointer flex items-center gap-2 border border-(--neutral-500) ${selectedFeelings.includes(idx) ? 'bg-(--yellow-1) text-white dark:text-(--neutral-800)' : ''}`}>
+                <img src={feeling.image} className='w-5 h-5 md:w-7 md:h-7' alt="" />
+                <p>{feeling.name}</p>
+            </motion.button>
+            ))}
           </div>
 
-          <div className='text-[16px] lg:text-[20px] font-600 text-[#8E8EA9] space-y-4 w-full lg:w-xl flex flex-col items-center'>
-              <NavLink to="/welcome" className="w-full">
-                  <motion.button 
-                      whileTap={{ scale: 0.98 }}  
-                      className='p-4 cursor-pointer w-full dark:text-[#EBEAF2] rounded-2xl'>Take me to the menu
-                  </motion.button>
-              </NavLink>
-              <NavLink to="/recommended" className="w-full">
-                  <motion.button 
-                      whileTap={{ scale: 0.98 }}  
-                      className='rounded-2xl bg-[#32324D] dark:bg-[#615793] dark:text-[#FFFFFF] p-4 cursor-pointer w-full'>Continue
-                  </motion.button>
-              </NavLink>
+          <div className='text-[16px] lg:text-[20px] font-600 text-(--neutral-600) space-y-4 w-[480px] lg:w-xl flex flex-col items-center'>
+            <NavLink to="/recommended" className="w-full">
+                <motion.button 
+                    whileTap={{ scale: 0.98 }}  
+                    className='rounded-2xl bg-(--neutral-800) dark:bg-[#615793] dark:text-[#FFFFFF] p-4 cursor-pointer w-full'>Continue
+                </motion.button>
+            </NavLink>
+            <NavLink to="/welcome" className="w-full">
+                <motion.button 
+                    whileTap={{ scale: 0.98 }}  
+                    className='p-4 cursor-pointer w-full dark:text-[#EBEAF2] rounded-2xl'>Take me to the menu
+                </motion.button>
+            </NavLink>
           </div>
         </div>
       </div>
