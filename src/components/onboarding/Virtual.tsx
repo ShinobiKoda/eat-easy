@@ -26,7 +26,7 @@ const Virtual: React.FC = () => {
           title="Food Menu"
           description="Virtual Assistant"
           navbarTitle="Gram Bistro"
-          showBack={false}
+          showBack={true}
         />
 
         <div className='pt-18 md:pt-30 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5'>

@@ -1,33 +1,20 @@
-import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { NavLink } from 'react-router-dom'
 import { FaArrowRight } from "react-icons/fa";
 import Calendar from "/images/calender-icon.png"
 
 import Header from "../layout/Header";
-import Loader from "../Loader";
 
 const Recommend: React.FC = () => {
-  const [showLoader, setShowLoader] = useState(true);
-  useEffect(() => {
-    const t = setTimeout(() => setShowLoader(false), 3000);
-    return () => clearTimeout(t);
-  }, []);
 
   return (
     <div className="w-full min-h-screen">
-      {showLoader && <Loader />}
-
-      <div
-        className={` ${
-          showLoader ? "pointer-events-none overflow-hidden" : ""
-        }`}
-      >
+      <div>
         <Header
           title="Food Menu"
           description="Virtual Assistant"
           navbarTitle="Gram Bistro"
-          showBack={false}
+          showBack={true}
         />
 
         <div className='pt-18 md:pt-30 max-w-[1440px] mx-auto flex flex-col items-center py-6 px-6 sm:px-20 lg:px-6 space-y-10'>
