@@ -63,14 +63,14 @@ const Step1: React.FC = () => {
           showBack={true}
         />
 
-        <div className='pt-20 md:py-30 lg:py-50 max-w-[900px] mx-auto flex flex-col items-center p-6'>
+        <div className='pt-20 md:py-30 lg:pt-50 lg:pb-20 max-w-[900px] mx-auto flex flex-col items-center p-6'>
 
           <div className='flex flex-col items-center text-center mb-[60px]'>
-            <h1 className='text-[22px] md:text-[32px] lg:text-[40px] text-(--neutral-800) dark:text-[#FFFFFF] font-medium mb-2'>How are you feeling right now?</h1>
-            <p className='text-[16px] lg:text-[16px] font-medium text-(--neutral-600) dark:text-[#EAEAEF]'>Select all that applies:</p>
+            <h1 className='text-[22px] md:text-[32px] lg:text-[40px] text-(--neutral-800) dark:text-white font-medium mb-2'>How are you feeling right now?</h1>
+            <p className='text-[16px] lg:text-[16px] font-medium text-(--neutral-600) dark:text-(--neutral-150)'>Select all that applies:</p>
           </div>
 
-          <div className='text-[16px] font-700 text-(--neutral-600) dark:text-[#EAEAEF] gap-4 max-w-[523px] mx-auto flex flex-wrap justify-center items-center mb-50 md:mb-30'>
+          <div className='text-[16px] font-700 text-(--neutral-600) dark:text-(--neutral-150) gap-4 max-w-[523px] mx-auto flex flex-wrap justify-center items-center mb-50 md:mb-30'>
             {Feelings.map((feeling, idx) => (
             <motion.button
               key={idx}

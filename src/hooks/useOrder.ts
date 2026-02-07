@@ -25,9 +25,10 @@ export function useOrder() {
   };
 
   // Send order handler
-  const handleSend = (sent: PropType[]) => {
+  const handleSend = (sent: any) => {
     try {
       localStorage.setItem("eat-easy-last-order", JSON.stringify(sent));
+      localStorage.setItem("countdown_start", Date.now().toString());
       setOrderItems([]); // Clear cart after successful order
     } catch (e) {
       console.error("Failed to save order to localStorage", e);

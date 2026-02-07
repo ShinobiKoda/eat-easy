@@ -92,7 +92,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
           showBack={true}
         />
 
-        <div className={`pt-15 md:pt-20 transition-all duration-300`}>
+        <div className={`pt-15 md:pt-20 lg:pt-25 transition-all duration-300`}>
           <div className="max-w-6xl mx-auto flex flex-col p-6 space-y-5">
             <div className="md:hidden flex justify-between items-center">
               <h1 className="text-[22px] lg:text-[32px] text-[#32324D] dark:text-[#FFFFFF] font-bold">
@@ -164,10 +164,10 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
                   className="rounded-2xl items-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] bg-white dark:bg-(--neutral-700) p-3 group"
                 >
                   <div className="flex space-x-3 items-center relative">
-                    <div className="rounded-full">
+                    <div className="rounded-[50%] max-w-[100px] h-[100px]">
                       <img
                         src={eat.image}
-                        className="max-w-[100px] max-h-[100px] rounded-full"
+                        className="rounded-[50%] w-full h-full object-cover"
                         alt=""
                       />
                     </div>

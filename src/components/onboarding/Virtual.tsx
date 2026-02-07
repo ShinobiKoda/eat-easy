@@ -36,7 +36,7 @@ const Virtual: React.FC = () => {
           showBack={true}
         />
 
-        <div className='pt-20 md:py-30 lg:py-50 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5'>
+        <div className='pt-20 md:py-30 lg:pt-50 lg:pb-20 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5'>
           <div className="lg:max-w-1/2">
             <div>
               <img src={AI} alt="" />
@@ -44,20 +44,20 @@ const Virtual: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center text-center mb-30">
-            <h1 className="text-[22px] lg:text-[32px] text-[#32324D] font-bold">
+            <h1 className="text-[22px] lg:text-[32px] text-(--neutral-800) dark:text-white font-bold">
               Hello! <br /> I'm your virtual assistant.
             </h1>
-            <p className="text-[16px] lg:text-[px] font-600 text-[#8E8EA9]">
+            <p className="text-[16px] lg:text-[px] font-600 text-(--neutral-800) dark:text-(--neutral-150)">
               In order to find the best suited choice for you, please answer the
               next few questions.
             </p>
           </div>
 
-          <div className="text-[16px] lg:text-[20px] font-600 space-y-4 w-full lg:w-xl flex flex-col-reverse items-center">
+          <div className="text-[16px] lg:text-[20px] font-600 w-full lg:w-xl flex flex-col-reverse items-center gap-4">
             <NavLink to="/welcome" className="w-[100%] md:w-[480px]">
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                className="p-4 cursor-pointer w-full hover:bg-gray-600 rounded-2xl"
+                className="p-4 cursor-pointer text-white w-full hover:bg-gray-600 rounded-2xl"
               >
                 Take me to the menu
               </motion.button>
