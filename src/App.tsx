@@ -23,6 +23,7 @@ import SelectRestaurant from "./components/onboarding/SelectRestaurant";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import PublicRoute from "./components/auth/PublicRoute";
 import SetCustomLocation from "./components/onboarding/SetCustomLocation";
+import Checkout1 from "./Checkout/Checkout1";
 
 function App() {
   const location = useLocation();
@@ -212,6 +213,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <OrderStatus />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="Checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout1 />
               </ProtectedRoute>
             }
           />

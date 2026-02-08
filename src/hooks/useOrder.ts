@@ -1,13 +1,27 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { PropType } from "../types";
 import { useNavigate } from "react-router-dom";
 
 export function useOrder() {
   const [selectedItem, setSelectedItem] = useState<PropType | null>(null);
-  const [orderItems, setOrderItems] = useState<PropType[]>([]);
+  const [orderItems, setOrderItems] = useState<PropType[]>(() => {
+    try {
+      const saved = localStorage.getItem("eat-easy-cart");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
   const [showOrder, setShowOrder] = useState(false);
   const navigate = useNavigate();
+
+  // Persist cart to localStorage
+  useEffect(() => {
+    localStorage.setItem("eat-easy-cart", JSON.stringify(orderItems));
+  }, [orderItems]);
+
+
 
   // Add a dish to order
   const addToOrder = (order: PropType) => {
@@ -25,9 +39,10 @@ export function useOrder() {
   };
 
   // Send order handler
-  const handleSend = (sent: PropType[]) => {
+  const handleSend = (sent: any) => {
     try {
       localStorage.setItem("eat-easy-last-order", JSON.stringify(sent));
+      localStorage.setItem("countdown_start", Date.now().toString());
       setOrderItems([]); // Clear cart after successful order
     } catch (e) {
       console.error("Failed to save order to localStorage", e);

@@ -8,8 +8,8 @@ export type ContentStatus = {
 };
 
 export const OrderStatusSchema = () => {
-  const TOTAL_TIME = 2 * 60 * 1000; // 10 mins
-  const MID_TIME = 1 * 60 * 1000; // 5 mins
+  const TOTAL_TIME = 2 * 60 * 1000; // 2 mins
+  const MID_TIME = 1 * 60 * 1000; // 1 mins
 
   const status: Record<string, ContentStatus> = {
     start: { text: "Your order will be ready in", time: "10 minutes", action: "Your order is being made. Would you like to order anything else?", img: "/images/thumbsup.svg" },
@@ -35,12 +35,14 @@ export const OrderStatusSchema = () => {
     const interval = setInterval(() => {
       const elapsed = Date.now() - start;
 
-      if (elapsed <= TOTAL_TIME) {
+      if (elapsed <= MID_TIME) {
         setCurrentStatus(status.start);
         setShowRecommend(true);
         setShowSubmit(false);
-      } else if (elapsed <= MID_TIME) {
+      } else if (elapsed <= TOTAL_TIME) {
         setCurrentStatus(status.mid);
+        setShowRecommend(true);
+        setShowSubmit(false);
       } else {
         setCurrentStatus(status.end);
         setShowSubmit(true);

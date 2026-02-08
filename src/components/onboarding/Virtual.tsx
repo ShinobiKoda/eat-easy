@@ -7,11 +7,18 @@ import Loader from "../Loader";
 
 
 const Virtual: React.FC = () => {
-  const [showLoader, setShowLoader] = useState(true);
+  const [showLoader, setShowLoader] = useState(() => {
+    return !sessionStorage.getItem('hasShownLoader_Virtual');
+  });
   useEffect(() => {
-    const t = setTimeout(() => setShowLoader(false), 3000);
-    return () => clearTimeout(t);
-  }, []);
+    if (showLoader) {
+      const t = setTimeout(() => {
+        setShowLoader(false);
+        sessionStorage.setItem('hasShownLoader_Virtual', 'true');
+      }, 3000);
+      return () => clearTimeout(t);
+    }
+  }, [showLoader]);
 
   return (
     <div className="w-full min-h-screen">
@@ -26,10 +33,10 @@ const Virtual: React.FC = () => {
           title="Food Menu"
           description="Virtual Assistant"
           navbarTitle="Gram Bistro"
-          showBack={false}
+          showBack={true}
         />
 
-        <div className='pt-18 md:pt-30 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5'>
+        <div className='pt-20 md:py-30 lg:pt-50 lg:pb-20 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5'>
           <div className="lg:max-w-1/2">
             <div>
               <img src={AI} alt="" />
@@ -37,28 +44,28 @@ const Virtual: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center text-center mb-30">
-            <h1 className="text-[22px] lg:text-[32px] text-[#32324D] font-bold">
+            <h1 className="text-[22px] lg:text-[32px] text-(--neutral-800) dark:text-white font-bold">
               Hello! <br /> I'm your virtual assistant.
             </h1>
-            <p className="text-[16px] lg:text-[px] font-600 text-[#8E8EA9]">
+            <p className="text-[16px] lg:text-[px] font-600 text-(--neutral-800) dark:text-(--neutral-150)">
               In order to find the best suited choice for you, please answer the
               next few questions.
             </p>
           </div>
 
-          <div className="text-[16px] lg:text-[20px] font-600 text-[#8E8EA9] space-y-4 w-full lg:w-xl flex flex-col items-center">
-            <NavLink to="/welcome" className="w-full">
+          <div className="text-[16px] lg:text-[20px] font-600 w-full lg:w-xl flex flex-col-reverse items-center gap-4">
+            <NavLink to="/welcome" className="w-[100%] md:w-[480px]">
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                className="p-4 cursor-pointer w-full hover:bg-gray-600 rounded-2xl"
+                className="p-4 cursor-pointer text-white w-full hover:bg-gray-600 rounded-2xl"
               >
                 Take me to the menu
               </motion.button>
             </NavLink>
-            <NavLink to="/recommend" className="w-full">
+            <NavLink to="/recommend" className="w-[100%] md:w-[480px]">
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                className="rounded-2xl bg-[#32324D] p-4 cursor-pointer w-full"
+                className="rounded-2xl bg-(--purple-2) text-white p-4 cursor-pointer w-full"
               >
                 Great, let's start
               </motion.button>

@@ -29,7 +29,7 @@ interface HeaderProps {
   previous?: () => void;
   navbarTitle?: string;
   navbarDescription?: string;
-  showBack?: boolean;
+  showBack: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -108,10 +108,10 @@ const Header: React.FC<HeaderProps> = ({
       {/* Tablet Header - Combined dropdown for location & order */}
       <MotionContainer className="w-full hidden md:flex lg:hidden px-[30px] py-5 border-b-[1.5px] border-b-(--neutral-150) dark:border-b-(--neutral-700) items-center justify-between bg-(--light-mode-bg) dark:bg-(--dark-mode-bg)">
         <div className="flex items-center gap-3">
-          {previous && (
+          {showBack && (
             <PopIn>
               <motion.button
-                onClick={previous}
+                onClick={previous || (() => navigate(-1))}
                 className="w-12 h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer dark:bg-(--neutral-700)"
                 aria-label="Go back"
                 whileHover={{ scale: 1.04 }}
@@ -288,10 +288,10 @@ const Header: React.FC<HeaderProps> = ({
       {/* Desktop Header - Separate location and order dropdowns */}
       <MotionContainer className="w-full hidden lg:flex px-[30px] py-5 border-b-[1.5px] border-b-(--neutral-150) dark:border-b-(--neutral-700) items-center justify-between bg-(--light-mode-bg) dark:bg-(--dark-mode-bg)">
         <div className="flex items-center gap-3">
-          {previous && (
+          {showBack && (
             <PopIn>
               <motion.button
-                onClick={previous}
+                onClick={previous || (() => navigate(-1))}
                 className="w-12 h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer dark:bg-(--neutral-700)"
                 aria-label="Go back"
                 whileHover={{ scale: 1.04 }}
@@ -511,11 +511,11 @@ const Header: React.FC<HeaderProps> = ({
                           whileTap={{ scale: 0.98 }}
                           className="w-full px-4 py-3 bg-(--purple-2) text-white font-semibold text-sm rounded-xl cursor-pointer"
                           onClick={() => {
-                            navigate("/FullMenu");
+                            navigate("/orderStatus");
                             setOrderDropdownOpen(false);
                           }}
                         >
-                          Browse Menu
+                          OrderStatus
                         </motion.button>
                       </motion.div>
                     </div>
