@@ -164,10 +164,9 @@ const FullMenu: React.FC = () => {
               {mainCategory}
             </h1>
             
-            {/* Staggered motion grid */}
             <AnimatePresence mode="wait">
               <motion.div
-                key={mainCategory + '-' + debouncedSearch + '-' + JSON.stringify(appliedFilters)}
+                key={`${mainCategory}-${debouncedSearch}-${JSON.stringify(appliedFilters)}-${allItems.length}`}
                 className='items-center gap-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
                 variants={productGridStagger}
                 initial="hidden"
