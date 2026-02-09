@@ -29,7 +29,7 @@ interface HeaderProps {
   previous?: () => void;
   navbarTitle?: string;
   navbarDescription?: string;
-  showBack: boolean;
+  showBack?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -38,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({
   previous,
   navbarTitle = "",
   navbarDescription = "",
-  showBack,
+  showBack = false,
 }) => {
   const locationCtx = useLocation();
   const location = locationCtx.location;
