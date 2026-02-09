@@ -77,7 +77,7 @@ const FullMenu: React.FC = () => {
     }
     dishes = dishes.filter(dish => dish.price >= appliedFilters.priceRange[0] && dish.price <= appliedFilters.priceRange[1]);
     return dishes;
-  }, [mainCategory, debouncedSearch, appliedFilters]);
+  }, [mainCategory, debouncedSearch, appliedFilters, allItems]);
 
 
   // Use shared order logic
