@@ -13,7 +13,6 @@ import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import AsideCard from "../onboarding/AsideCard";
 import ThemeSwitchButton from "../ThemeSwitchButton";
-import { supabase } from "../../config/supabaseClient";
 import { Link } from "react-router-dom";
 
 function SignUp() {
@@ -36,50 +35,17 @@ function SignUp() {
     setSubmitError(null);
     setIsSubmitting(true);
     try {
-      // Pre-check: attempt signUp to detect existing account
-      const { error: precheckError } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/verify-url`,
-          data: {
-            username: data.username,
-            phone_number: data.phoneNumber ?? "",
-          },
-        },
+      // Call our backend to send the code
+      const response = await fetch("/api/send-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: data.email }),
       });
 
-      if (precheckError) {
-        // Supabase returns a specific message when the user exists
-        const msg = precheckError.message?.toLowerCase() || "";
-        if (
-          msg.includes("already registered") ||
-          msg.includes("user already exists") ||
-          precheckError.status === 400
-        ) {
-          setSubmitError("This email is already registered. Please log in.");
-          return; // Do not send magic link or navigate
-        }
-        throw precheckError;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to send verification code");
       }
-
-      // If signUp succeeded, ensure no active session so we wait for the magic link
-      await supabase.auth.signOut();
-
-      // Proceed to send magic link for sign-in completion
-      const { error } = await supabase.auth.signInWithOtp({
-        email: data.email,
-        options: {
-          shouldCreateUser: true,
-          emailRedirectTo: `${window.location.origin}/verify-url`,
-          data: {
-            username: data.username,
-            phone_number: data.phoneNumber ?? "",
-          },
-        },
-      });
-
-      if (error) throw error;
 
       navigate("/verify-url", {
         state: {

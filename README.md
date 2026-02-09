@@ -1,95 +1,129 @@
 # Eat Easy
 
+Eat Easy is a modern web application built with **React (Vite)** and **TypeScript** that helps users discover and recommend dishes and nearby locations. It features a robust authentication system using **Supabase** and a custom **Express.js** backend for handling secure OTP verification via **Resend**.
+
 ## Table of Contents
 
-- [Overview](#overview)
 - [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Environment Setup](#environment-setup)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Screenshots](#screenshots)
+- [Development](#development)
+- [Production Build](#production-build)
+- [Project Structure](#project-structure)
 - [Contributing](#contributing)
-- [Roadmap](#roadmap)
-- [License](#license)
-- [Contact](#contact)
-
-## Overview
-
-Eat Easy is a small single-page application built with Vite, React, and TypeScript that helps users discover and recommend dishes and nearby locations. It includes responsive layouts, theme switching, basic authentication flows, and animated UI components.
-
-The project is organized under `src/` and includes components for onboarding, recommendations, views for individual dishes, and layout components (header, footer, sidebar).
 
 ## Features
 
-- **Recommendations:**: Personalized dish recommendations and a `Recommend` component.
-- **Responsive UI:**: Desktop and mobile optimized views with `useIsDesktop` hook and separate signup components.
-- **Authentication:**: Signup flows with separate mobile/desktop components present in `src/components/auth/`.
-- **Theme support:**: Light/dark theme toggling via `ThemeContext` and `ThemeSwitchButton`.
-- **Animated UI:**: Motion/animation helpers under `src/components/animations`.
-- **Location-aware:**: Components for showing locations and recommended places.
+- **Personalized Recommendations**: Discover dishes based on preferences.
+- **Secure Authentication**: Custom 4-digit OTP email verification flow using Resend and Supabase Admin API.
+- **Responsive Design**: Optimized for both desktop and mobile experiences.
+- **Theme Support**: seamless Dark/Light mode toggling.
+- **Smooth Animations**: Integrated `framer-motion` for engaging UI interactions.
+- **Location Services**: Interactive components for finding nearby places.
+
+## Prerequisites
+
+Ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (v16+ recommended)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+
+## Environment Setup
+
+Create a `.env` file in the root directory of the project. You will need credentials from **Supabase** and **Resend**.
+
+```env
+# Supabase Configuration (Client-side)
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Supabase Configuration (Server-side)
+# Required for the backend to create verified users directly
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# Resend Configuration (Email Service)
+RESEND_API_KEY=re_123456789...
+
+# Backend Server Configuration
+SERVER_PORT=5174
+```
+
+> **Warning**: Never commit your `.env` file to version control.
 
 ## Installation
 
-- **Requirements:**: Node.js (14+ recommended) and npm or yarn.
-- **Clone the repo:**
+1.  **Clone the repository:**
 
-```bash
-git clone https://github.com/ShinobiKoda/eat-easy.git
-cd eat-easy
-```
+    ```bash
+    git clone https://github.com/ShinobiKoda/eat-easy.git
+    cd eat-easy
+    ```
 
-- **Install dependencies:**
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-```bash
-npm install
-# or
-pnpm install
-```
+## Development
 
-## Usage
+To run the application locally, you need to start both the **backend server** and the **frontend client**.
 
-- **Run dev server:**
+1.  **Start the Backend Server:**
+    Open a terminal and run:
 
-```bash
-npm run dev
-```
+    ```bash
+    npm run server
+    ```
 
-- **Build for production:**
+    _This runs the Express server on port 5174 (or as defined in `.env`)._
 
-```bash
-npm run build
-```
+2.  **Start the Frontend Client:**
+    Open a **second terminal** and run:
 
-- **Preview production build locally:**
+    ```bash
+    npm run dev
+    ```
 
-```bash
-npm run preview
-```
+    _This starts the Vite development server, usually on port 5173._
 
-Open the app in your browser (Vite typically serves at `http://localhost:5173`).
+3.  **Access the App:**
+    Open your browser and navigate to `http://localhost:5173`.
 
-## Screenshots
+## Production Build
 
-<!-- Add screenshots here -->
+To deploy the application, you need to build both the frontend and the backend.
+
+1.  **Build Frontend and Backend:**
+
+    ```bash
+    npm run build         # Builds the frontend to /dist
+    npm run build:server  # Builds the backend to /dist (server)
+    ```
+
+2.  **Start Production Server:**
+    ```bash
+    npm run start:server
+    ```
+    _This starts the compiled Node.js server._
+
+## Project Structure
+
+- **`src/components/`**: Reusable UI components (auth, animations, layout).
+- **`src/pages/`**: Main application pages.
+- **`src/Server.ts`**: Express backend source code.
+- **`src/services/`**: API service layers (UserProfile, etc.).
+- **`src/config/`**: Configuration files (Supabase client).
 
 ## Contributing
 
-Contributions are welcome. If you'd like to contribute:
+Contributions are welcome!
 
-- Fork the repository.
-- Create a feature branch: `git checkout -b feature/your-feature`.
-- Open a PR with a clear description of changes.
-
-Please follow existing code style and add small focused commits.
-
-## Roadmap
-
-Planned features and improvements:
-
-- Improve recommendations with user preferences and persistence.
-- Add unit and integration tests.
-- Add backend integration for authentication and data persistence.
-- Expand accessibility and internationalization support.
+1.  Fork the repository.
+2.  Create a feature branch (`git checkout -b feature/amazing-feature`).
+3.  Commit your changes.
+4.  Open a Pull Request.
 
 ## License
 
-## Contact
+[MIT](LICENSE)

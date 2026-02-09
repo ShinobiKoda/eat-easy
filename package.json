@@ -8,15 +8,17 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "tsx src/Server.ts"
+    "server": "tsx src/Server.ts",
+    "build:server": "tsc -p tsconfig.server.json",
+    "start:server": "node dist/Server.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@supabase/supabase-js": "^2.86.2",
     "@tailwindcss/vite": "^4.1.16",
     "bcrypt": "^6.0.0",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.4",
     "express": "^5.2.1",
     "libphonenumber-js": "^1.12.29",
     "motion": "^12.23.24",
@@ -30,6 +32,7 @@
     "react-slick": "^0.31.0",
     "react-spinners": "^0.17.0",
     "react-theme-switch-animation": "^1.0.0",
+    "resend": "^6.9.1",
     "slick-carousel": "^1.8.1",
     "tailwindcss": "^4.1.16",
     "zod": "^4.1.12"
