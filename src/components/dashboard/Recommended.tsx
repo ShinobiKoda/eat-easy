@@ -5,7 +5,6 @@ import GridIcon from "/images/grid-icon.png";
 import ListIcon from "/images/list-icon.png";
 import { AiOutlinePlus } from "react-icons/ai";
 import type { PropType } from "../../types";
-import { Eat, Drink, Dessert } from "../../data/data";
 import ViewDish from "./ViewDish";
 import ViewOrder from "./ViewOrder";
 import Filters from "../Filters";
@@ -14,6 +13,7 @@ import Loader from "../Loader";
 import { AnimatePresence } from "motion/react";
 // ...existing code...
 import { useOrder } from "../../hooks/useOrder";
+import { getMenuItems } from "../../services/menuService";
 
 type RecommendedProps = {
   items?: PropType[];
@@ -57,13 +57,28 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
   }
 
   // For Eat: show 9 random, for Drink: show all, for Dessert: show all from Dessert array
+  // All menu items from Supabase
+  const [allItems, setAllItems] = useState<(PropType & { category: string })[]>([]);
+  const [isLoadingMenu, setIsLoadingMenu] = useState(true);
+
+  useEffect(() => {
+    async function fetchMenu() {
+      setIsLoadingMenu(true);
+      const items = await getMenuItems();
+      setAllItems(items);
+      setIsLoadingMenu(false);
+    }
+    fetchMenu();
+  }, []);
+
   let datum: PropType[] = [];
+  const categoryName = (['Eat', 'Drink', 'Dessert'] as const)[menu];
+  const itemsInCategory = allItems.filter(item => item.category === categoryName);
+
   if (menu === 0) {
-    datum = getRandomItems(Eat, 9);
-  } else if (menu === 1) {
-    datum = Drink;
-  } else if (menu === 2) {
-    datum = Dessert;
+    datum = getRandomItems(itemsInCategory, 9);
+  } else {
+    datum = itemsInCategory;
   }
 
   // stop background scroll effect when any of this is open

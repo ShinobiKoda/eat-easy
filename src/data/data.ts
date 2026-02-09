@@ -1,4 +1,4 @@
-import StarHalf from "/images/star-half-icon.png";
+const StarHalf = "/images/star-half-icon.png";
 
 import type { PropType } from "../types"
 

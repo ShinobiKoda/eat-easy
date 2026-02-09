@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "tsx src/Server.ts",
+    "migrate:menu": "tsx src/scripts/migrateMenu.ts",
     "build:server": "tsc -p tsconfig.server.json",
     "start:server": "node dist/Server.js"
   },
