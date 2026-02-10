@@ -36,7 +36,7 @@ function SignUp() {
     setIsSubmitting(true);
     try {
       // Call our backend to send the code
-      const response = await fetch("/api/send-code", {
+      const response = await fetch("/api/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: data.email }),
