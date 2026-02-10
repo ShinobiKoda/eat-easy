@@ -6,13 +6,14 @@ import { motion } from "framer-motion";
 import { AnimatePresence } from "motion/react";
 
 import Loader from "../Loader";
-import { Eat, Drink, Dessert } from "../../data/data";
 import ProductCarousel from "./ProductCarousel";
 import Filters from "../Filters";
 import ViewDish from "../dashboard/ViewDish";
 import ViewOrder from "../dashboard/ViewOrder";
 import { productGridStagger, productCardFade } from "../animations/motion";
 import { useOrder } from "../../hooks/useOrder";
+import { getMenuItems } from "../../services/menuService";
+import type { PropType } from "../../types";
 
 const FullMenu: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
@@ -41,12 +42,26 @@ const FullMenu: React.FC = () => {
   // Main Category State
   const [mainCategory, setMainCategory] = useState<'Eat' | 'Drink' | 'Dessert'>('Eat');
 
+  // All menu items from Supabase
+  const [allItems, setAllItems] = useState<(PropType & { category: string })[]>([]);
+  const [isLoadingMenu, setIsLoadingMenu] = useState(true);
+
+  useEffect(() => {
+    async function fetchMenu() {
+      setIsLoadingMenu(true);
+      const items = await getMenuItems();
+      setAllItems(items);
+      setIsLoadingMenu(false);
+    }
+    fetchMenu();
+  }, []);
+
   // Applied filters state
   const [appliedFilters, setAppliedFilters] = useState<{ productTypes: string[], ratings: number[], priceRange: [number, number] }>({ productTypes: [], ratings: [], priceRange: [0, 30] });
 
   // Filter dishes based on selected tag, search input, and applied filters
   const filteredDishes = useMemo(() => {
-    let dishes = mainCategory === 'Eat' ? Eat : mainCategory === 'Drink' ? Drink : Dessert;
+    let dishes = allItems.filter(item => item.category === mainCategory);
     
     if (debouncedSearch.trim() !== '') {
       dishes = dishes.filter(dish => dish.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
@@ -62,7 +77,7 @@ const FullMenu: React.FC = () => {
     }
     dishes = dishes.filter(dish => dish.price >= appliedFilters.priceRange[0] && dish.price <= appliedFilters.priceRange[1]);
     return dishes;
-  }, [mainCategory, debouncedSearch, appliedFilters]);
+  }, [mainCategory, debouncedSearch, appliedFilters, allItems]);
 
 
   // Use shared order logic
@@ -149,10 +164,9 @@ const FullMenu: React.FC = () => {
               {mainCategory}
             </h1>
             
-            {/* Staggered motion grid */}
             <AnimatePresence mode="wait">
               <motion.div
-                key={mainCategory + '-' + debouncedSearch + '-' + JSON.stringify(appliedFilters)}
+                key={`${mainCategory}-${debouncedSearch}-${JSON.stringify(appliedFilters)}-${allItems.length}`}
                 className='items-center gap-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
                 variants={productGridStagger}
                 initial="hidden"
