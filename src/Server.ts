@@ -45,7 +45,7 @@ app.post("/api/send-code", async (req, res) => {
   // Store code
   verificationCodes.set(email, { code, expiresAt });
 
-  console.log(`Code for ${email}: ${code}`); // Log for debugging
+  console.log(`Code for ${email}: ${code}`);
 
   // Professional email template matching website colors
   const emailHtml = `

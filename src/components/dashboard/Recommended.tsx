@@ -23,7 +23,7 @@ type RecommendedProps = {
 
 const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
   const [showLoader, setShowLoader] = useState(true);
-  
+
   useEffect(() => {
     const t = setTimeout(() => setShowLoader(false), 3000);
     return () => clearTimeout(t);
@@ -58,22 +58,23 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
 
   // For Eat: show 9 random, for Drink: show all, for Dessert: show all from Dessert array
   // All menu items from Supabase
-  const [allItems, setAllItems] = useState<(PropType & { category: string })[]>([]);
-  const [isLoadingMenu, setIsLoadingMenu] = useState(true);
+  const [allItems, setAllItems] = useState<(PropType & { category: string })[]>(
+    [],
+  );
 
   useEffect(() => {
     async function fetchMenu() {
-      setIsLoadingMenu(true);
       const items = await getMenuItems();
       setAllItems(items);
-      setIsLoadingMenu(false);
     }
     fetchMenu();
   }, []);
 
   let datum: PropType[] = [];
-  const categoryName = (['Eat', 'Drink', 'Dessert'] as const)[menu];
-  const itemsInCategory = allItems.filter(item => item.category === categoryName);
+  const categoryName = (["Eat", "Drink", "Dessert"] as const)[menu];
+  const itemsInCategory = allItems.filter(
+    (item) => item.category === categoryName,
+  );
 
   if (menu === 0) {
     datum = getRandomItems(itemsInCategory, 9);
@@ -119,7 +120,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
               <div
                 className={`flex md:w-fit h-fit md:mx-0 md:justify-items-normal mx-auto w-full justify-between space-x-4 md:space-x-0 lg:space-x-2 text-[15px]`}
               >
-                {['Eat', 'Drink', 'Dessert'].map((cat, idx) => (
+                {["Eat", "Drink", "Dessert"].map((cat, idx) => (
                   <div
                     key={cat}
                     onClick={() => setMenu(idx)}
@@ -128,7 +129,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
                     {cat}
                   </div>
                 ))}
-                
+
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.96 }}
@@ -194,9 +195,13 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
                       <div className=" text-[14px] font-semibold mb-2">
                         <div className="space-x-1 flex items-center">
                           <img src={eat.star} className="w-4 h-4" alt="" />
-                          <p className="text-(--neutral-500) dark:text-(--neutral-200)">{eat.rating}</p>
+                          <p className="text-(--neutral-500) dark:text-(--neutral-200)">
+                            {eat.rating}
+                          </p>
                         </div>
-                        <span className="text-(--neutral-300) dark:text-(--neutral-500)">({eat.reviews} reviews)</span>
+                        <span className="text-(--neutral-300) dark:text-(--neutral-500)">
+                          ({eat.reviews} reviews)
+                        </span>
                       </div>
 
                       <p className="text-(--orange-1) text-[15px] lg:text-[18px] font-extrabold">
@@ -219,7 +224,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
             </div>
           </div>
         </div>
-        
+
         {/* floating cart button */}
         <motion.div drag className="fixed right-6 bottom-6 z-50">
           <button
@@ -276,9 +281,9 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
               exit={{ opacity: 0 }}
               className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
             >
-              <Filters 
-                onClose={() => setFilter(false)} 
-                mainCategory={(['Eat', 'Drink', 'Dessert'] as const)[menu]}
+              <Filters
+                onClose={() => setFilter(false)}
+                mainCategory={(["Eat", "Drink", "Dessert"] as const)[menu]}
               />
             </motion.div>
           )}

@@ -155,6 +155,12 @@ function Login() {
                 "Sign In"
               )}
             </motion.button>
+            <p className="text-center mt-3 font-semibold text-(--neutral-500) dark:text-(--neutral-150)">
+              Don't have an account?{" "}
+              <Link to="/signup" className="text-(--yellow-1)">
+                Sign up
+              </Link>
+            </p>
           </motion.div>
         </form>
 
