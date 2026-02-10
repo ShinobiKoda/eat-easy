@@ -37,7 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Store code in Supabase
     const { error: dbError } = await supabaseAdmin
       .from("verification_codes")
-      .upsert({ email, code, expires_at: expiresAt });
+      .upsert({ email, code, expires_at: expiresAt }, { onConflict: "email" });
 
     if (dbError) {
       console.error("Database error:", dbError);
