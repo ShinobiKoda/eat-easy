@@ -80,7 +80,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         // Find user by email
         const { data: listData } = await supabaseAdmin.auth.admin.listUsers();
-        const existingUser = listData.users.find((u) => u.email === email);
+        const existingUser = listData.users.find((u: any) => u.email === email);
 
         if (existingUser) {
           await supabaseAdmin.auth.admin.updateUserById(existingUser.id, {
