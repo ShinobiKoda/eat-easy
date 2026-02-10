@@ -142,7 +142,7 @@ const ConfirmLink = () => {
     setError(null);
     setResending(true);
     try {
-      const response = await fetch("/api/send-code", {
+      const response = await fetch("/api/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: gmail }),
