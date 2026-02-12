@@ -9,7 +9,6 @@ import ViewDish from "./ViewDish";
 import ViewOrder from "./ViewOrder";
 import Filters from "../Filters";
 import Header from "../layout/Header";
-import Loader from "../Loader";
 import SkeletonCard from "../SkeletonCard";
 import { AnimatePresence } from "motion/react";
 // ...existing code...
@@ -23,7 +22,6 @@ type RecommendedProps = {
 };
 
 const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
-  const [showLoader, setShowLoader] = useState(true);
 
   // Loading state for menu items
   const [loading, setLoading] = useState(true);

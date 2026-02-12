@@ -5,7 +5,6 @@ import { CiSearch } from "react-icons/ci";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "motion/react";
 
-import Loader from "../Loader";
 import SkeletonCard from "../SkeletonCard";
 import ProductCarousel from "./ProductCarousel";
 import Filters from "../Filters";
@@ -17,7 +16,6 @@ import { getMenuItems } from "../../services/menuService";
 import type { PropType } from "../../types";
 
 const FullMenu: React.FC = () => {
-  const [showLoader, setShowLoader] = useState(true);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   // Debounce search input

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus, FaChevronDown } from "react-icons/fa6";
 import { OrderStatusSchema } from "../../schemas/OrderStatusSchema";
 import Loader from "../Loader";
@@ -48,7 +48,7 @@ const OrderStatus: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row gap-2 lg:gap-8 w-full items-center sm:items-start">
 
-            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl pt-[30px] max-w-[340px] sm:max-w-full sm:w-[60%] h-[388px] sm:h-fit overflow-clip gap-[21px] lg:gap-[60px] flex flex-col items-center">
+            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl pt-[30px] max-w-[340px] sm:max-w-full sm:w-[60%] h-auto sm:h-fit overflow-clip gap-[21px] lg:gap-[60px] flex flex-col items-center">
               <h1 className="text-[16px] lg:text-[24px] text-[#8E8EA9] font-semibold dark:text-(--neutral-200)">
                 {currentStatus.text} <br />{" "}
                 <b className="text-[18px] lg:text-[24px] text-(--yellow-1) font-extrabold">
@@ -63,46 +63,57 @@ const OrderStatus: React.FC = () => {
 
             <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-5 lg:p-[30px] space-y-4 max-w-[340px] w-[100%] sm:w-[40%] h-fit">
               <div className="w-full flex justify-between items-center">
-                <p className="text-(--neutral-200) font-semibold text-left">
+                <p className="text-(--neutral-500) font-semibold text-left">
                   Order list and prices
                 </p>
-                <FaChevronDown
-                  onClick={() => {
-                    setToggleList(!toggleList);
-                  }}
-                  className={`w-5 h-5 cursor-pointer fill-(--neutral-200) dark:fill-(--yellow-1) ${toggleList ? "rotate-180" : ""}`}
-                />
+                <motion.div
+                  animate={{ rotate: toggleList ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  onClick={() => setToggleList(!toggleList)}
+                  className="cursor-pointer"
+                >
+                  <FaChevronDown className="w-5 h-5 text-(--yellow-1)" />
+                </motion.div>
               </div>
 
-              <div
-                className={`space-y-3 ${!toggleList ? "flex flex-col" : "hidden"}`}
-              >
-                {order?.items ? (
-                  order.items.map((sent: any) => (
-                    <div
-                      key={sent.id}
-                      className="dark:text-[#FFFFFF] flex justify-between items-center gap-5"
-                    >
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={sent.image}
-                          className="w-[50px] h-[50px] rounded-full"
-                          alt=""
-                        />
-                        <p className="text-left text-[14px] font-semibold">
-                          {sent.name}
-                        </p>
-                      </div>
-                      <p className="text-[14px]">
-                        <span>{sent.qty}</span>x ${" "}
-                        <b className="text-(--yellow-1)">{(sent.price ?? 0).toFixed(2)}</b>
-                      </p>
+              <AnimatePresence>
+                {!toggleList && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="space-y-3 pt-4">
+                      {order?.items ? (
+                        order.items.map((sent: any) => (
+                          <div
+                            key={sent.id}
+                            className="dark:text-[#FFFFFF] flex justify-between items-center gap-5"
+                          >
+                            <div className="flex items-center gap-2">
+                              <img
+                                src={sent.image}
+                                className="w-[50px] h-[50px] rounded-full"
+                                alt=""
+                              />
+                              <p className="text-left text-[14px] font-semibold">
+                                {sent.name}
+                              </p>
+                            </div>
+                            <p className="text-[14px]">
+                              <span>{sent.qty}</span>x ${" "}
+                              <b className="text-(--yellow-1)">{(sent.price ?? 0).toFixed(2)}</b>
+                            </p>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-[14px] text-[#8E8EA9]">No order found.</p>
+                      )}
                     </div>
-                  ))
-                ) : (
-                  <p className="text-[14px] text-[#8E8EA9]">No order found.</p>
+                  </motion.div>
                 )}
-              </div>
+              </AnimatePresence>
 
               <motion.div
                 whileTap={{ scale: 0.96 }}
