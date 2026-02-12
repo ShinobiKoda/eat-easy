@@ -5,7 +5,10 @@ import { OrderStatusSchema } from "../../schemas/OrderStatusSchema";
 import Loader from "../Loader";
 import Header from "../layout/Header";
 
+import { useNavigate } from "react-router-dom";
+
 const OrderStatus: React.FC = () => {
+  const navigate = useNavigate();
   const [showLoader, setShowLoader] = useState(true);
   const [toggleList, setToggleList] = useState(false);
 
@@ -141,6 +144,7 @@ const OrderStatus: React.FC = () => {
             {showSubmit && (
               <motion.div
                 whileTap={{ scale: 0.96 }}
+                onClick={() => navigate("/Checkout", { state: { order } })}
                 className="w-full text-center sm:w-fit lg:w-[375px] p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[16px] lg:text-[16px] text-white cursor-pointer gap-2 flex justify-center"
               >
                 <span>Pay</span>

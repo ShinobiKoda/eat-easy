@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
+import type { PropType } from "../types";
 import { FaChevronDown, FaPlus } from "react-icons/fa6";
 import { BsPercent } from "react-icons/bs";
 import { MdOutlinePayments } from "react-icons/md";
@@ -11,19 +13,32 @@ import wallet from "/images/wallet.png";
 const Checkout1: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
   const [toggleOrderList, setToggleOrderList] = useState(false);
-  const [toggleDiscount, setToggleDiscount] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setShowLoader(false), 3000);
     return () => clearTimeout(t);
   }, []);
 
-  const { orderItems } = useOrder();
+  const { orderItems: cartItems } = useOrder();
+  const location = useLocation();
+  const orderFromState = location.state?.order;
+
+  // Use order items from state if available, otherwise cart
+  const itemsToDisplay = orderFromState?.items || cartItems;
 
   // Group items by ID to show quantities
-  const groupedItems = useMemo(() => {
-    const groups: Record<number, { item: any, qty: number }> = {};
-    orderItems.forEach(item => {
+  const groupedItems = useMemo<{ item: PropType; qty: number }[]>(() => {
+    // If using orderFromState, items are already grouped/have qty
+    if (orderFromState?.items) {
+      return orderFromState.items.map((item: any) => ({
+        item: item as PropType,
+        qty: item.qty || 1
+      }));
+    }
+
+    // Otherwise group cart items
+    const groups: Record<number, { item: PropType; qty: number }> = {};
+    cartItems.forEach(item => {
       if (groups[item.id]) {
         groups[item.id].qty += 1;
       } else {
@@ -31,11 +46,12 @@ const Checkout1: React.FC = () => {
       }
     });
     return Object.values(groups);
-  }, [orderItems]);
+  }, [itemsToDisplay, orderFromState]);
 
-  const orderTotal = useMemo(() => 
-    orderItems.reduce((sum, item) => sum + (item.price || 0), 0)
-  , [orderItems]);
+  const orderTotal = useMemo(() => {
+    if (orderFromState?.total) return orderFromState.total;
+    return cartItems.reduce((sum, item) => sum + (item.price || 0), 0);
+  }, [itemsToDisplay, orderFromState]);
   
   const tax = orderTotal * 0.11;
   const total = orderTotal + tax;
