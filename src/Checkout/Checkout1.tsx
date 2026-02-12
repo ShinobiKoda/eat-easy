@@ -57,10 +57,10 @@ const Checkout1: React.FC = () => {
         />
 
         <div className="pt-25 md:pt-30 max-w-[1440px] mx-auto flex flex-col items-center py-6 px-4 md:px-6 space-y-6 md:space-y-10">
-          <div className="flex flex-col lg:flex-row bg-red-500 gap-6 lg:gap-8 w-full items-center lg:items-start">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 w-full items-center lg:items-start">
             
             {/* Payment Method Column */}
-            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-8 md:p-12 w-full lg:w-[60%] flex flex-col items-center justify-center h-full">
+            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-8 md:p-12 w-full lg:w-[60%] flex flex-col items-center justify-center">
               <motion.div 
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -111,9 +111,9 @@ const Checkout1: React.FC = () => {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
+                      className="overflow-hidden flex flex-col gap-6"
                     >
-                      <div className="space-y-5 max-h-[300px] overflow-y-auto scrollbar-hidden pr-2">
+                      <div className="space-y-5 max-h-[300px] overflow-y-auto scrollbar-hidden pr-2 mb-6">
                         {groupedItems.map(({ item, qty }) => (
                           <div key={item.id} className="flex justify-between items-center group">
                              <div className="flex items-center gap-4">
@@ -132,7 +132,7 @@ const Checkout1: React.FC = () => {
                         ))}
                       </div>
                       
-                      <div className="mt-8 pt-6 border-t border-gray-100 dark:border-white/10 space-y-4">
+                      <div className="space-y-4">
                          <div className="flex justify-between items-center">
                             <p className="text-[#8E8EA9] dark:text-[#c0c0cf] text-[15px]">Subtotal</p>
                             <p className="font-bold text-[16px] dark:text-white">${orderTotal.toFixed(2)}</p>
@@ -142,74 +142,69 @@ const Checkout1: React.FC = () => {
                             <p className="font-bold text-[16px] dark:text-white">${tax.toFixed(2)}</p>
                          </div>
                       </div>
+                      
+                      <div className="w-full h-[1px] bg-(--neutral-150)"></div>
+
+                      {/* Discount and Tips */}
+                      <div className="">
+                        <div 
+                          className="flex justify-between items-center cursor-pointer"
+                        >
+                          <p className="text-[#32324D] dark:text-white font-bold text-[18px]">
+                            Add discount code/tips
+                          </p>
+                          <motion.div>
+                            <FaChevronDown className="text-(--yellow-1)" />
+                          </motion.div>
+                        </div>
+
+                        <div 
+                          className="overflow-hidden mt-6 space-y-4"
+                        >
+                          <div className="relative group">
+                            <BsPercent className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8E8EA9] group-focus-within:text-(--yellow-1) transition-colors" />
+                            <input 
+                              type="text" 
+                              placeholder="Apply discount code" 
+                              className="w-full bg-[#f6f6f9] dark:bg-[#32324D]/50 rounded-2xl py-4 pl-12 pr-4 outline-none text-[15px] dark:text-white border border-transparent focus:border-(--neutral-500) placeholder:text-[#8E8EA9] transition-all" 
+                            />
+                          </div>
+                          <div className="relative group">
+                            <MdOutlinePayments className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8E8EA9] group-focus-within:text-(--yellow-1) transition-colors" />
+                            <input 
+                              type="text" 
+                              placeholder="Add tips" 
+                              className="w-full bg-[#f6f6f9] dark:bg-[#32324D]/50 rounded-2xl py-4 pl-12 pr-4 outline-none text-[15px] dark:text-white border border-transparent focus:border-(--neutral-500) placeholder:text-[#8E8EA9] transition-all" 
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="w-full h-[1px] bg-(--neutral-150)"></div>
+                      
+                      {/* Total Price Card */}
+                      <div className="flex justify-between items-center">
+                        <p className="text-[#32324D] dark:text-white font-bold text-[20px]">Total price</p>
+                        <p className="text-(--orange-1) font-extrabold text-[24px] tracking-tight">${total.toFixed(2)}</p>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
 
-              {/* Discount and Tips */}
-              <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-2xl p-6 lg:p-8 shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
-                <div 
-                  className="flex justify-between items-center cursor-pointer"
-                  onClick={() => setToggleDiscount(!toggleDiscount)}
-                >
-                  <p className="text-[#32324D] dark:text-white font-bold text-[18px]">
-                    Add discount code/tips
-                  </p>
-                  <motion.div
-                    animate={{ rotate: toggleDiscount ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <FaChevronDown className="text-(--yellow-1)" />
-                  </motion.div>
-                </div>
-
-                <AnimatePresence>
-                  {!toggleDiscount && (
-                    <motion.div 
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden mt-6 space-y-4"
-                    >
-                      <div className="relative group">
-                        <BsPercent className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8E8EA9] group-focus-within:text-(--yellow-1) transition-colors" />
-                        <input 
-                          type="text" 
-                          placeholder="Apply discount code" 
-                          className="w-full bg-[#f6f6f9] dark:bg-[#32324D]/50 rounded-2xl py-4 pl-12 pr-4 outline-none text-[15px] dark:text-white border border-transparent focus:border-(--neutral-500) placeholder:text-[#8E8EA9] transition-all" 
-                        />
-                      </div>
-                      <div className="relative group">
-                        <MdOutlinePayments className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8E8EA9] group-focus-within:text-(--yellow-1) transition-colors" />
-                        <input 
-                          type="text" 
-                          placeholder="Add tips" 
-                          className="w-full bg-[#f6f6f9] dark:bg-[#32324D]/50 rounded-2xl py-4 pl-12 pr-4 outline-none text-[15px] dark:text-white border border-transparent focus:border-(--neutral-500) placeholder:text-[#8E8EA9] transition-all" 
-                        />
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Total Price Card */}
-              <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-2xl p-6 lg:p-8 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex justify-between items-center">
-                <p className="text-[#32324D] dark:text-white font-bold text-[20px]">Total price</p>
-                <p className="text-(--orange-1) font-extrabold text-[24px] tracking-tight">${total.toFixed(2)}</p>
-              </div>
+              
             </div>
           </div>
 
           {/* Action Bar */}
-          <div className="w-full flex flex-col sm:flex-row justify-between items-center rounded-[32px] px-8 py-6 bg-[#FFFFFF] dark:bg-(--neutral-700) shadow-[0_4px_12px_rgba(0,0,0,0.10)] gap-6 mt-4">
+          <div className="w-full flex flex-col sm:flex-row justify-between items-center rounded-2xl px-5 py-3 bg-[#FFFFFF] dark:bg-(--neutral-700) shadow-[0_4px_12px_rgba(0,0,0,0.10)] gap-6 mt-4">
             <p className="text-[#8E8EA9] dark:text-[#c0c0cf] font-semibold text-[18px]">
               No card added
             </p>
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full sm:w-[320px] py-5 rounded-2xl bg-(--purple-4) dark:bg-(--purple-4) text-white font-medium text-[20px] flex justify-center items-center gap-3 cursor-not-allowed shadow-inner"
+              className="w-full max-w-[320px] py-4 rounded-[16px] bg-(--purple-4) dark:bg-(--purple-4) text-white font-medium text-[20px] flex justify-center items-center gap-3 cursor-not-allowed shadow-inner"
             >
               Pay <span className="text-[16px] font-bold ml-1 mt-0.5">${total.toFixed(2)}</span>
             </motion.button>

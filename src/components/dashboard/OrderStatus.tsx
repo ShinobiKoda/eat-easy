@@ -61,7 +61,7 @@ const OrderStatus: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-5 lg:p-[30px] space-y-4 max-w-[340px] w-[100%] sm:w-[40%] h-fit">
+            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-5 lg:p-[30px] space-y-4 max-w-[340px] sm:max-w-full w-full sm:w-[40%] h-fit">
               <div className="w-full flex justify-between items-center">
                 <p className="text-(--neutral-500) font-semibold text-left">
                   Order list and prices
