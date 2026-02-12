@@ -10,6 +10,7 @@ import ViewOrder from "./ViewOrder";
 import Filters from "../Filters";
 import Header from "../layout/Header";
 import Loader from "../Loader";
+import SkeletonCard from "../SkeletonCard";
 import { AnimatePresence } from "motion/react";
 // ...existing code...
 import { useOrder } from "../../hooks/useOrder";
@@ -24,10 +25,8 @@ type RecommendedProps = {
 const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
   const [showLoader, setShowLoader] = useState(true);
 
-  useEffect(() => {
-    const t = setTimeout(() => setShowLoader(false), 3000);
-    return () => clearTimeout(t);
-  }, []);
+  // Loading state for menu items
+  const [loading, setLoading] = useState(true);
 
   // Use shared order logic
   const {
@@ -64,8 +63,15 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
 
   useEffect(() => {
     async function fetchMenu() {
-      const items = await getMenuItems();
-      setAllItems(items);
+      try {
+        setLoading(true);
+        const items = await getMenuItems();
+        setAllItems(items);
+      } catch (error) {
+        console.error("Failed to fetch menu items", error);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchMenu();
   }, []);
@@ -94,12 +100,8 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
 
   return (
     <div className="w-full min-h-screen">
-      {showLoader && <Loader />}
-
       <div
-        className={` ${
-          showLoader ? "pointer-events-none overflow-hidden" : ""
-        }`}
+        className={``}
       >
         <Header
           title="Full Menu"
@@ -174,53 +176,62 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              {datum.map((eat) => (
-                <div
-                  key={`${menu}-${eat.id}`}
-                  className="rounded-2xl items-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] bg-white dark:bg-(--neutral-700) p-3 group"
-                >
-                  <div className="flex space-x-3 items-center relative">
-                    <div className="rounded-[50%] max-w-[100px] h-[100px]">
-                      <img
-                        src={eat.image}
-                        className="rounded-[50%] w-full h-full object-cover"
-                        alt=""
-                      />
+              {loading
+                ? Array.from({ length: 9 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)] bg-white dark:bg-(--neutral-700) p-3"
+                    >
+                      <SkeletonCard variant="horizontal" />
                     </div>
-                    <div className="">
-                      <p className="text-[15px] lg:text-[18px] dark:text-[#FFFFFF] font-semibold">
-                        {eat.name}
-                      </p>
+                  ))
+                : datum.map((eat) => (
+                    <div
+                      key={`${menu}-${eat.id}`}
+                      className="rounded-2xl items-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] bg-white dark:bg-(--neutral-700) p-3 group"
+                    >
+                      <div className="flex space-x-3 items-center relative">
+                        <div className="rounded-[50%] max-w-[100px] h-[100px]">
+                          <img
+                            src={eat.image}
+                            className="rounded-[50%] w-full h-full object-cover"
+                            alt=""
+                          />
+                        </div>
+                        <div className="">
+                          <p className="text-[15px] lg:text-[18px] dark:text-[#FFFFFF] font-semibold">
+                            {eat.name}
+                          </p>
 
-                      <div className=" text-[14px] font-semibold mb-2">
-                        <div className="space-x-1 flex items-center">
-                          <img src={eat.star} className="w-4 h-4" alt="" />
-                          <p className="text-(--neutral-500) dark:text-(--neutral-200)">
-                            {eat.rating}
+                          <div className=" text-[14px] font-semibold mb-2">
+                            <div className="space-x-1 flex items-center">
+                              <img src={eat.star} className="w-4 h-4" alt="" />
+                              <p className="text-(--neutral-500) dark:text-(--neutral-200)">
+                                {eat.rating}
+                              </p>
+                            </div>
+                            <span className="text-(--neutral-300) dark:text-(--neutral-500)">
+                              ({eat.reviews} reviews)
+                            </span>
+                          </div>
+
+                          <p className="text-(--orange-1) text-[15px] lg:text-[18px] font-extrabold">
+                            ${eat.price.toFixed(2)}
                           </p>
                         </div>
-                        <span className="text-(--neutral-300) dark:text-(--neutral-500)">
-                          ({eat.reviews} reviews)
-                        </span>
+
+                        <motion.div
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => {
+                            (setSelectedItem(eat), showSelected?.(eat));
+                          }}
+                          className="flex justify-self-end absolute right-0 bottom-0 cursor-pointer rounded-xl p-2 bg-[#FFF2EA] dark:bg-(--orange-1)"
+                        >
+                          <AiOutlinePlus className="w-fit h-fit text-(--orange-1) dark:text-[#FFF2EA]" />
+                        </motion.div>
                       </div>
-
-                      <p className="text-(--orange-1) text-[15px] lg:text-[18px] font-extrabold">
-                        ${eat.price.toFixed(2)}
-                      </p>
                     </div>
-
-                    <motion.div
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => {
-                        (setSelectedItem(eat), showSelected?.(eat));
-                      }}
-                      className="flex justify-self-end absolute right-0 bottom-0 cursor-pointer rounded-xl p-2 bg-[#FFF2EA] dark:bg-(--orange-1)"
-                    >
-                      <AiOutlinePlus className="w-fit h-fit text-(--orange-1) dark:text-[#FFF2EA]" />
-                    </motion.div>
-                  </div>
-                </div>
-              ))}
+                  ))}
             </div>
           </div>
         </div>
