@@ -13,6 +13,7 @@ import wallet from "/images/wallet.png";
 const Checkout1: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
   const [toggleOrderList, setToggleOrderList] = useState(false);
+  const [tip, setTip] = useState(0);
 
   useEffect(() => {
     const t = setTimeout(() => setShowLoader(false), 3000);
@@ -54,7 +55,7 @@ const Checkout1: React.FC = () => {
   }, [itemsToDisplay, orderFromState]);
   
   const tax = orderTotal * 0.11;
-  const total = orderTotal + tax;
+  const total = orderTotal + tax + tip;
 
   return (
     <div className="w-full min-h-screen">
@@ -177,6 +178,7 @@ const Checkout1: React.FC = () => {
                         <div 
                           className="overflow-hidden mt-6 space-y-4"
                         >
+                          {/* discount */}
                           <div className="relative group">
                             <BsPercent className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8E8EA9] group-focus-within:text-(--yellow-1) transition-colors" />
                             <input 
@@ -185,11 +187,14 @@ const Checkout1: React.FC = () => {
                               className="w-full bg-[#f6f6f9] dark:bg-[#32324D]/50 rounded-2xl py-4 pl-12 pr-4 outline-none text-[15px] dark:text-white border border-transparent focus:border-(--neutral-500) placeholder:text-[#8E8EA9] transition-all" 
                             />
                           </div>
+                          {/* tip */}
                           <div className="relative group">
                             <MdOutlinePayments className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8E8EA9] group-focus-within:text-(--yellow-1) transition-colors" />
                             <input 
-                              type="text" 
+                              type="number" 
                               placeholder="Add tips" 
+                              value={tip > 0 ? tip : ""}
+                              onChange={(e) => setTip(parseFloat(e.target.value) || 0)}
                               className="w-full bg-[#f6f6f9] dark:bg-[#32324D]/50 rounded-2xl py-4 pl-12 pr-4 outline-none text-[15px] dark:text-white border border-transparent focus:border-(--neutral-500) placeholder:text-[#8E8EA9] transition-all" 
                             />
                           </div>
