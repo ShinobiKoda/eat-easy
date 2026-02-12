@@ -159,6 +159,7 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <motion.button
                     onClick={() => {
+                      if (!isOpen) setIsOpen(true);
                       toggleMenu(1);
                       setSelectedItem(1);
                     }}
