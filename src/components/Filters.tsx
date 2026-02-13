@@ -121,7 +121,7 @@ const Filters: React.FC<FiltersProps> = ({ onClose, onApply, initialFilters, mai
                 onClick={onClose}
                 className="sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50"
             >
-                <FaTimes size={25} className="text-(--neutral-400) dark:text-(--neutral-200)" />
+                <FaTimes size={24} className="text-(--neutral-400) dark:text-(--neutral-200)" />
             </motion.div>
         </div>
 

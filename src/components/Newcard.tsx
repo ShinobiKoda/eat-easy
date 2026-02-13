@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, type Variants } from "motion/react";
 import { FaTimes } from "react-icons/fa";
 import useIsDesktop from "../hooks/useIsDesktop";
+import { useTheme } from "../hooks/useTheme";
 import { FcSimCardChip } from "react-icons/fc";
 import { SiVisa, SiMastercard } from "react-icons/si";
 
@@ -38,6 +39,8 @@ const display = (isDesktop: boolean): Variants => {
 
 const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
   const isDesktop = useIsDesktop();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   
   const [cardNumber, setCardNumber] = useState("");
   const [cardHolder, setCardHolder] = useState("");
@@ -85,7 +88,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
             animate={{ opacity: 0.5 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm min-h-screen"
         />
 
         <motion.div
@@ -93,7 +96,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="z-50 fixed right-0 w-full sm:min-h-screen sm:w-[500px] top-[10%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-3xl sm:rounded-tr-none sm:rounded-l-3xl bg-[#f7f7f7] dark:bg-[#2c2c45] shadow-2xl flex flex-col"
+            className="z-50 fixed right-0 w-full sm:min-h-screen sm:w-[55%] md:w-[45%] lg:w-[450px] top-[10%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-3xl sm:rounded-tr-none sm:rounded-l-3xl bg-[#f7f7f7] dark:bg-[#2c2c45] shadow-2xl flex flex-col"
         >
              {/* Mobile Pull Indicator */}
             <div onClick={onClose} className="w-full flex justify-center pt-3 pb-1 sm:hidden cursor-pointer">
@@ -103,56 +106,52 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
             <div className="flex flex-col h-full px-6 py-6 overflow-y-auto scrollbar-hidden">
                 
                 {/* Header */}
-                <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-2xl font-bold font-['DM_Sans'] text-[#32324D] dark:text-white">Add a new card</h2>
+                <div className="flex justify-between items-center mb-8 border-b border-gray-200 dark:border-gray-600">
+                    <h2 className="text-[22px] font-bold text-(--neutral-800) dark:text-white">Add a new card</h2>
                     <button 
                         onClick={onClose}
                         className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
                     >
-                        <FaTimes size={20} className="text-gray-500 dark:text-gray-300" />
+                        <FaTimes size={24} className="text-(-neutral-400) dark:text-(--neutral-200)" />
                     </button>
                 </div>
 
                 {/* Card Preview */}
-                <div className="w-full aspect-[1.586/1] rounded-2xl p-6 mb-8 relative overflow-hidden shadow-xl
-                    bg-gradient-to-br from-[#2c3e50] to-[#000000] dark:from-[#3a3a52] dark:to-[#1a1a2e]"
+                <div 
+                    style={{
+                        backgroundImage: isDark ? "url('/images/Card-dark.png')" : "url('/images/Card.png')",
+                        backgroundPosition: "center",
+                    }} 
+                    className="w-[402px] h-[240px] bg-no-repeat rounded-2xl p-6 flex flex-col justify-between shadow-xl text-white mb-8"
                 >
-                    {/* Abstract circles for decoration */}
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3 blur-xl pointer-events-none"></div>
-                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/4 blur-xl pointer-events-none"></div>
+                    <div className="flex">
+                        <FcSimCardChip size={48} />
+                        
+                    </div>
 
-                    <div className="relative z-10 flex flex-col justify-between h-full text-white">
-                        <div className="flex justify-between items-start">
-                            <FcSimCardChip size={48} />
-                            {getCardTypeIcon()}
+                    <div>
+                        <p className="text-xs font-medium text-white/60">Card number</p>
+                        <p className="text-[24px] font-semibold tracking-wider text-center dark:text-(--neutral-800)">{cardNumber || "512X XXXX XXXX XXXX"}</p>
+                    </div>
+                    
+                    <div className="flex justify-between">
+                        <div>
+                            <p className="text-xs font-medium text-white/60">Cardholder name</p>
+                            <p className="text-sm font-medium uppercase tracking-wide">{cardHolder || "YOUR NAME"}</p>
                         </div>
-
-                        <div className="space-y-4">
-                            <div>
-                                <p className="text-xs font-medium text-white/60 mb-1">Card number</p>
-                                <p className="text-2xl font-mono tracking-wider">{cardNumber || "512X XXXX XXXX XXXX"}</p>
-                            </div>
-                            
-                            <div className="flex justify-between">
-                                <div>
-                                    <p className="text-xs font-medium text-white/60 mb-1">Cardholder name</p>
-                                    <p className="text-sm font-medium uppercase tracking-wide">{cardHolder || "YOUR NAME"}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs font-medium text-white/60 mb-1">mm/yy</p>
-                                    <p className="text-sm font-medium">{expiryDate || "12/24"}</p>
-                                </div>
-                                <div>
-                                    <p className="text-xs font-medium text-white/60 mb-1 text-center">CVV</p>
-                                    <p className="text-sm font-medium text-center">***</p>
-                                </div>
-                            </div>
+                        <div>
+                            <p className="text-xs font-medium text-white/60">mm/yy</p>
+                            <p className="text-sm font-medium">{expiryDate || "12/24"}</p>
+                        </div>
+                        <div>
+                            <p className="text-xs font-medium text-white/ text-center">CVV</p>
+                            <p className="text-sm font-medium text-center">***</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Form Fields */}
-                <div className="space-y-5 flex-1">
+                <div className="space-y-6 flex-1">
                     
                     <div className="space-y-2">
                          <label className="text-sm font-semibold text-[#666687] dark:text-[#a5a5ba]">Card number</label>
