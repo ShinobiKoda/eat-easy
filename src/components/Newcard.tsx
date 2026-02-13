@@ -203,7 +203,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                                 value={cvv}
                                 onChange={(e) => setCvv(e.target.value.replace(/\D/g,''))}
                                 placeholder="CVV"
-                                 className="w-full bg-white dark:bg-[#383854] border border-(--neutral-600) focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-(--neutral-500) dark:text-white transition-all"
+                                className="w-full bg-white dark:bg-[#383854] border border-(--neutral-600) focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-(--neutral-500) dark:text-white transition-all"
                             />
                         </div>
                     </div>
