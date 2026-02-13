@@ -74,10 +74,10 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
   }
 
   // Determine card type for display
-  const getCardTypeIcon = () => {
-      if (cardNumber.startsWith("4")) return <SiVisa size={32} className="text-white/90" />;
-      if (cardNumber.startsWith("5")) return <SiMastercard size={32} className="text-white/90" />;
-      return <SiMastercard size={32} className="text-white/90" />; // Default
+  const getCardTypeIcon = (number: string) => {
+      if (number.startsWith("4")) return <SiVisa size={32} className="text-[#EB001B]" />;
+      if (number.startsWith("5")) return <SiMastercard size={32} className="text-[#EB001B]" />;
+      return <SiMastercard size={32} className="text-[#EB001B]" />; // Default
   }
 
   return (
@@ -124,28 +124,28 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                     }} 
                     className="w-[402px] h-[240px] bg-no-repeat rounded-2xl p-6 flex flex-col justify-between shadow-xl text-white mb-8"
                 >
-                    <div className="flex">
+                    <div className="flex justify-between items-center">
                         <FcSimCardChip size={48} />
-                        
+                        {getCardTypeIcon(cardNumber)}
                     </div>
 
                     <div>
-                        <p className="text-xs font-medium text-white/60">Card number</p>
+                        <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">Card number</p>
                         <p className="text-[24px] font-semibold tracking-wider text-center dark:text-(--neutral-800)">{cardNumber || "512X XXXX XXXX XXXX"}</p>
                     </div>
                     
                     <div className="flex justify-between">
                         <div>
-                            <p className="text-xs font-medium text-white/60">Cardholder name</p>
-                            <p className="text-sm font-medium uppercase tracking-wide">{cardHolder || "YOUR NAME"}</p>
+                            <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">Cardholder name</p>
+                            <p className="text-sm dark:text-(--neutral-800) font-medium uppercase tracking-wide">{cardHolder || "YOUR NAME"}</p>
                         </div>
                         <div>
-                            <p className="text-xs font-medium text-white/60">mm/yy</p>
-                            <p className="text-sm font-medium">{expiryDate || "12/24"}</p>
+                            <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">mm/yy</p>
+                            <p className="text-sm dark:text-(--neutral-800) font-medium">{expiryDate || "12/24"}</p>
                         </div>
                         <div>
-                            <p className="text-xs font-medium text-white/ text-center">CVV</p>
-                            <p className="text-sm font-medium text-center">***</p>
+                            <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">CVV</p>
+                            <p className="text-sm dark:text-(--neutral-800) font-medium text-center dark:text-(--neutral-800)">***</p>
                         </div>
                     </div>
                 </div>
@@ -154,14 +154,14 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                 <div className="space-y-6 flex-1">
                     
                     <div className="space-y-2">
-                         <label className="text-sm font-semibold text-[#666687] dark:text-[#a5a5ba]">Card number</label>
+                        <label className="text-sm font-semibold text-[#666687] dark:text-[#a5a5ba]">Card number</label>
                         <div className="relative flex items-center">
                             <input 
                                 type="text" 
                                 value={cardNumber}
                                 onChange={handleCardNumberChange}
                                 placeholder="512X XXXX XXXX XXXX"
-                                className="w-full bg-white dark:bg-[#383854] border border-transparent focus:border-[#615793] rounded-2xl px-4 py-3.5 outline-none text-[#32324D] dark:text-white transition-all font-mono"
+                                className="w-full bg-white dark:bg-[#383854] border border-(--neutral-600) focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-[#32324D] dark:text-white transition-all font-mono"
                             />
                             <div className="absolute right-4 pointer-events-none">
                                 <SiMastercard className="text-orange-500" size={24} />
@@ -176,7 +176,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                             value={cardHolder}
                             onChange={(e) => setCardHolder(e.target.value)}
                             placeholder="Cardholder name"
-                             className="w-full bg-white dark:bg-[#383854] border border-transparent focus:border-[#615793] rounded-2xl px-4 py-3.5 outline-none text-[#32324D] dark:text-white transition-all"
+                             className="w-full bg-white dark:bg-[#383854] border border-(--neutral-600) focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-[#32324D] dark:text-white transition-all"
                         />
                     </div>
 
@@ -188,7 +188,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                                 value={expiryDate}
                                 onChange={handleExpiryChange}
                                 placeholder="MM/YY"
-                                className="w-full bg-white dark:bg-[#383854] border border-transparent focus:border-[#615793] rounded-2xl px-4 py-3.5 outline-none text-[#32324D] dark:text-white transition-all text-center"
+                                className="w-full bg-white dark:bg-[#383854] border border-(--neutral-600) focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-[#32324D] dark:text-white transition-all"
                             />
                         </div>
                         <div className="space-y-2 flex-1">
@@ -199,7 +199,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                                 value={cvv}
                                 onChange={(e) => setCvv(e.target.value.replace(/\D/g,''))}
                                 placeholder="CVV"
-                                 className="w-full bg-white dark:bg-[#383854] border border-transparent focus:border-[#615793] rounded-2xl px-4 py-3.5 outline-none text-[#32324D] dark:text-white transition-all text-center"
+                                 className="w-full bg-white dark:bg-[#383854] border border-(--neutral-600) focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-[#32324D] dark:text-white transition-all"
                             />
                         </div>
                     </div>
