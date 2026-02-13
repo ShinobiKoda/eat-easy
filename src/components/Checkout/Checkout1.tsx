@@ -1,19 +1,21 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
-import type { PropType } from "../types";
+import type { PropType } from "../../types";
 import { FaChevronDown, FaPlus } from "react-icons/fa6";
 import { BsPercent } from "react-icons/bs";
 import { MdOutlinePayments } from "react-icons/md";
-import Loader from "../components/Loader";
-import Header from "../components/layout/Header";
-import { useOrder } from "../hooks/useOrder";
+import Loader from "../Loader";
+import Header from "../layout/Header";
+import { useOrder } from "../../hooks/useOrder";
 import wallet from "/images/wallet.png";
+import Newcard from "../Newcard";
 
 const Checkout1: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
   const [toggleOrderList, setToggleOrderList] = useState(false);
   const [tip, setTip] = useState(0);
+  const [showNewCard, setShowNewCard] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setShowLoader(false), 3000);
@@ -96,10 +98,13 @@ const Checkout1: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="flex items-center gap-2 text-(--yellow-1) font-bold text-[18px] cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={() => setShowNewCard(true)}
               >
                 <FaPlus size={18} />
                 Add a new card
               </motion.button>
+              
+              
             </div>
 
             {/* Order Summary Column */}
@@ -230,6 +235,14 @@ const Checkout1: React.FC = () => {
               Pay <span className="text-[16px] font-bold ml-1 mt-0.5">${total.toFixed(2)}</span>
             </motion.button>
           </div>
+
+          <AnimatePresence>
+            {showNewCard && (
+                <Newcard 
+                    onClose={() => setShowNewCard(false)} 
+                />
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
