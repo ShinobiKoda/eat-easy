@@ -215,7 +215,6 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                         Add card
                     </motion.button>
                 </div>
-
             </div>
         </motion.div>
     </>

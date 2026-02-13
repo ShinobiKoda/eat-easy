@@ -59,6 +59,16 @@ const Checkout1: React.FC = () => {
   const tax = orderTotal * 0.11;
   const total = orderTotal + tax + tip;
 
+  // stop background scroll effect when any of this is open
+  const isModalOpen = Boolean(showNewCard);
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+  }, [showNewCard]);
+
   return (
     <div className="w-full min-h-screen">
       {showLoader && <Loader />}

@@ -117,6 +117,16 @@ const FullMenu: React.FC = () => {
     handleSend,
   } = useOrder();
 
+  // stop background scroll effect when any of this is open
+  const isModalOpen = Boolean(selectedItem || showOrder || filterButton);
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+  }, [selectedItem, showOrder, filterButton]);
+
   return (
     <div className="w-full min-h-screen">
       <div
