@@ -154,44 +154,44 @@ const Checkout1: React.FC = () => {
                     </div>
 
                     <div className="w-full max-w-[400px] mx-auto mb-8">
-                        <Slider {...sliderSettings}>
-                            {cards.map((card, index) => (
-                                <div key={index} className="px-2">
-                                     <div 
-                                        style={{
-                                            backgroundImage: isDark ? "url('/images/Card-dark.png')" : "url('/images/Card.png')",
-                                            backgroundPosition: "center",
-                                        }} 
-                                        className="w-full bg-no-repeat aspect-[1.586/1] rounded-2xl p-6 flex flex-col justify-between shadow-xl text-white relative"
-                                    >
-                                        <div className="flex justify-between items-center">
-                                            <FcSimCardChip size={48} />
-                                            {getCardTypeIcon(card.cardNumber)}
-                                        </div>
+                      <Slider {...sliderSettings}>
+                        {cards.map((card, index) => (
+                          <div key={index} className="px-2">
+                            <div 
+                              style={{
+                                  backgroundImage: isDark ? "url('/images/Card-dark.png')" : "url('/images/Card.png')",
+                                  backgroundPosition: "center",
+                              }} 
+                              className="w-full bg-no-repeat aspect-[1.586/1] rounded-2xl p-6 flex flex-col justify-between shadow-xl text-white relative"
+                            >
+                              <div className="flex justify-between items-center">
+                                <FcSimCardChip size={48} />
+                                {getCardTypeIcon(card.cardNumber)}
+                              </div>
 
-                                        <div>
-                                            <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">Card number</p>
-                                            <p className="text-[20px] md:text-[24px] font-semibold tracking-wider dark:text-(--neutral-800)">{card.cardNumber || "512X XXXX XXXX XXXX"}</p>
-                                        </div>
-                                        
-                                        <div className="flex justify-between">
-                                            <div>
-                                                <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">Cardholder name</p>
-                                                <p className="text-sm dark:text-(--neutral-800) font-medium uppercase tracking-wide">{card.cardHolder || "YOUR NAME"}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">mm/yy</p>
-                                                <p className="text-sm dark:text-(--neutral-800) font-medium">{card.expiryDate || "12/24"}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">CVV</p>
-                                                <p className="text-sm dark:text-(--neutral-800) font-medium text-center">***</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                              <div>
+                                <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">Card number</p>
+                                <p className="text-[20px] md:text-[24px] font-semibold tracking-wider dark:text-(--neutral-800)">{card.cardNumber || "512X XXXX XXXX XXXX"}</p>
+                              </div>
+                                
+                              <div className="flex justify-between">
+                                <div>
+                                  <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">Cardholder name</p>
+                                  <p className="text-sm dark:text-(--neutral-800) font-medium uppercase tracking-wide">{card.cardHolder || "YOUR NAME"}</p>
                                 </div>
-                            ))}
-                        </Slider>
+                                <div>
+                                  <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">mm/yy</p>
+                                  <p className="text-sm dark:text-(--neutral-800) font-medium">{card.expiryDate || "12/24"}</p>
+                                </div>
+                                <div>
+                                  <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">CVV</p>
+                                  <p className="text-sm dark:text-(--neutral-800) font-medium text-center">***</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </Slider>
                     </div>
 
                     <div className="bg-[#FFF8E1] dark:bg-(--neutral-900) border border-[#FFB01D]/20 rounded-2xl p-4 flex gap-4 items-center w-full mt-auto">

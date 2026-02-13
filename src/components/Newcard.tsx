@@ -46,6 +46,10 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
   const [cardHolder, setCardHolder] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
+
+  const validateCardNumber = (number: string) => number.replace(/\s/g, "").length === 16;
+  const validateCvv = (value: string) => value.length === 3;
 
   const formatCardNumber = (value: string) => {
     const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
@@ -57,10 +61,16 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
   };
 
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    if (val.replace(/\s/g, "").length <= 16) {
-        setCardNumber(formatCardNumber(val));
+    const rawVal = e.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric
+    if (rawVal.length <= 16) {
+        setCardNumber(formatCardNumber(rawVal));
     }
+  };
+
+  const handleCardHolderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const val = e.target.value.replace(/[^a-zA-Z\s]/g, ""); // Allow only letters and spaces
+      setCardHolder(val);
+      if (errors.cardHolder) setErrors({...errors, cardHolder: false});
   };
 
   const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,10 +85,29 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
 
   // Determine card type for display
   const getCardTypeIcon = (number: string) => {
-      if (number.startsWith("4")) return <SiVisa size={32} className="text-[#EB001B]" />;
-      if (number.startsWith("5")) return <SiMastercard size={32} className="text-[#EB001B]" />;
+      const cleanNumber = number.replace(/\s/g, "");
+      if (cleanNumber.startsWith("4")) return <SiVisa size={32} className="text-[#EB001B]" />;
+      if (cleanNumber.startsWith("5")) return <SiMastercard size={32} className="text-[#EB001B]" />;
       return <SiMastercard size={32} className="text-[#EB001B]" />; // Default
   }
+
+  const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      
+      const newErrors = {
+          cardNumber: !validateCardNumber(cardNumber),
+          cvv: !validateCvv(cvv),
+          cardHolder: !cardHolder.trim(),
+          expiryDate: !expiryDate.trim(),
+      };
+
+      setErrors(newErrors);
+
+      if (Object.values(newErrors).every(err => !err)) {
+          onAddCard?.({ cardNumber, cardHolder, expiryDate, cvv });
+          onClose();
+      }
+  };
 
   return (
     <>
@@ -103,12 +132,13 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                 <div className="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full" />
             </div>
 
-            <div className="flex flex-col h-full px-6 py-6 overflow-y-auto scrollbar-hidden">
+            <form onSubmit={handleSubmit} className="flex flex-col h-full px-6 py-6 overflow-y-auto scrollbar-hidden">
                 
                 {/* Header */}
                 <div className="flex justify-between items-center mb-8">
                     <h2 className="text-[22px] w-full sm:w-auto text-center sm:text-left font-bold text-(--neutral-800) dark:text-white">Add a new card</h2>
                     <button 
+                        type="button"
                         onClick={onClose}
                         className="p-2 rounded-full transition-colors hidden sm:block cursor-pointer"
                     >
@@ -159,17 +189,18 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                                 type="text"
                                 inputMode="numeric"
                                 required 
-                                minLength={16}
-                                maxLength={16}
+                                minLength={19} // 16 digits + 3 spaces
+                                maxLength={19}
                                 value={cardNumber}
                                 onChange={handleCardNumberChange}
                                 placeholder="512X XXXX XXXX XXXX"
-                                className="w-full bg-white dark:bg-[#383854] border border-(--neutral-600) focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-(--neutral-500) dark:text-white transition-all font-mono"
+                                className={`w-full bg-white dark:bg-[#383854] border ${errors.cardNumber ? 'border-red-500' : 'border-(--neutral-600)'} focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-(--neutral-500) dark:text-white transition-all font-mono`}
                             />
                             <div className="absolute right-4 pointer-events-none">
-                                <SiMastercard className="text-orange-500" size={24} />
+                                {getCardTypeIcon(cardNumber)}
                             </div>
                         </div>
+                        {errors.cardNumber && <p className="text-red-500 text-xs mt-1">Please enter a valid 16-digit card number</p>}
                     </div>
 
                     <div className="space-y-2">
@@ -177,9 +208,9 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                             type="text"
                             required 
                             value={cardHolder}
-                            onChange={(e) => setCardHolder(e.target.value)}
+                            onChange={handleCardHolderChange}
                             placeholder="Cardholder name"
-                            className="w-full bg-white dark:bg-[#383854] border border-(--neutral-600) focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-(--neutral-500) dark:text-white transition-all"
+                            className={`w-full bg-white dark:bg-[#383854] border ${errors.cardHolder ? 'border-red-500' : 'border-(--neutral-600)'} focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-(--neutral-500) dark:text-white transition-all`}
                         />
                     </div>
 
@@ -191,7 +222,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                                 value={expiryDate}
                                 onChange={handleExpiryChange}
                                 placeholder="MM/YY"
-                                className="w-full bg-white dark:bg-[#383854] border border-(--neutral-600) focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-(--neutral-500) dark:text-white transition-all"
+                                className={`w-full bg-white dark:bg-[#383854] border ${errors.expiryDate ? 'border-red-500' : 'border-(--neutral-600)'} focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-(--neutral-500) dark:text-white transition-all`}
                             />
                         </div>
                         <div className="space-y-2 flex-1">
@@ -201,9 +232,12 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                                 required
                                 maxLength={3}
                                 value={cvv}
-                                onChange={(e) => setCvv(e.target.value.replace(/\D/g,''))}
+                                onChange={(e) => {
+                                    setCvv(e.target.value.replace(/\D/g,''));
+                                    if (errors.cvv) setErrors({...errors, cvv: false});
+                                }}
                                 placeholder="CVV"
-                                 className="w-full bg-white dark:bg-[#383854] border border-(--neutral-600) focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-(--neutral-500) dark:text-white transition-all"
+                                className={`w-full bg-white dark:bg-[#383854] border ${errors.cvv ? 'border-red-500' : 'border-(--neutral-600)'} focus:border-(--purple-2) rounded-2xl px-4 py-3.5 outline-none text-(--neutral-500) dark:text-white transition-all`}
                             />
                         </div>
                     </div>
@@ -212,18 +246,15 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                 {/* Footer Button */}
                 <div className="mt-8 mb-4">
                     <motion.button 
+                        type="submit"
                         whileTap={{ scale: 0.98 }}
                         whileHover={{ scale: 1.02 }}
-                        onClick={() => {
-                            onAddCard?.({ cardNumber, cardHolder, expiryDate, cvv });
-                            onClose();
-                        }}
                         className="w-full bg-[#615793] dark:bg-[#6c5dd3] text-white font-bold text-lg py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all"
                     >
                         Add card
                     </motion.button>
                 </div>
-            </div>
+            </form>
         </motion.div>
     </>
   );
