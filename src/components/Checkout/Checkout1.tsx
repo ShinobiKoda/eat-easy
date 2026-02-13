@@ -248,9 +248,9 @@ const Checkout1: React.FC = () => {
 
           <AnimatePresence>
             {showNewCard && (
-                <Newcard 
-                    onClose={() => setShowNewCard(false)} 
-                />
+              <Newcard 
+                  onClose={() => setShowNewCard(false)} 
+              />
             )}
           </AnimatePresence>
         </div>

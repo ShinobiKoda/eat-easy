@@ -3,9 +3,8 @@ import { motion, type Variants } from "motion/react";
 import type { PropType } from "../../types";
 import { useState, type MouseEvent } from "react";
 import useIsDesktop from "../../hooks/useIsDesktop";
-import { FaPlus, FaMinus } from "react-icons/fa6";
-import { FaTimes } from "react-icons/fa";
-import { FaCheck } from "react-icons/fa6";
+import { FaPlus, FaMinus, FaCheck } from "react-icons/fa6";
+import { LiaTimesSolid } from "react-icons/lia";
 
 export type ViewDishProps = {
   item: PropType | null;
@@ -121,7 +120,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
           onClick={onClose}
           className="sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50"
         >
-          <FaTimes size={25} className="text-(--neutral-400) dark:text-(--neutral-200)" />
+          <LiaTimesSolid size={25} className="text-(--neutral-400) dark:text-(--neutral-200)" />
         </motion.div>
 
         <div className="flex-1 overflow-y-auto scrollbar-hidden">
