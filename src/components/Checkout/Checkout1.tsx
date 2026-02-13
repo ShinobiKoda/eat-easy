@@ -10,12 +10,40 @@ import Header from "../layout/Header";
 import { useOrder } from "../../hooks/useOrder";
 import wallet from "/images/wallet.png";
 import Newcard from "../Newcard";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { FcSimCardChip } from "react-icons/fc";
+import { SiVisa, SiMastercard } from "react-icons/si";
+import { useTheme } from "../../hooks/useTheme";
 
 const Checkout1: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
   const [toggleOrderList, setToggleOrderList] = useState(false);
   const [tip, setTip] = useState(0);
   const [showNewCard, setShowNewCard] = useState(false);
+  const [cards, setCards] = useState<any[]>([]);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  const handleAddCard = (card: any) => {
+    setCards([...cards, card]);
+  };
+
+  const getCardTypeIcon = (number: string) => {
+    if (number.startsWith("4")) return <SiVisa size={32} className="text-[#EB001B]" />;
+    if (number.startsWith("5")) return <SiMastercard size={32} className="text-[#EB001B]" />;
+    return <SiMastercard size={32} className="text-[#EB001B]" />;
+  };
+
+  const sliderSettings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+  };
 
   useEffect(() => {
     const t = setTimeout(() => setShowLoader(false), 3000);
@@ -89,37 +117,98 @@ const Checkout1: React.FC = () => {
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 w-full items-center lg:items-start">
             
             {/* Payment Method Column */}
-            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-8 md:p-12 w-full lg:w-[60%] flex flex-col items-center justify-center">
-              <motion.div 
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="mb-8"
-              >
-                <img src={wallet} alt="Wallet" className="w-56 md:w-64 h-auto drop-shadow-2xl" />
-              </motion.div>
-              <h2 className="text-[22px] md:text-[28px] font-bold text-[#32324D] dark:text-white mb-3">
-                You don't have any card
-              </h2>
-              <p className="text-[14px] md:text-[16px] text-[#8E8EA9] dark:text-[#c0c0cf] mb-8 max-w-sm">
-                Please add a credit or a debit card in order to pay your order.
-              </p>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 text-(--yellow-1) font-bold text-[18px] cursor-pointer hover:opacity-80 transition-opacity"
-                onClick={() => setShowNewCard(true)}
-              >
-                <FaPlus size={18} />
-                Add a new card
-              </motion.button>
-              
-              
+            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-8 md:p-12 w-full lg:w-[60%] flex flex-col items-center justify-center min-h-[500px]">
+              {cards.length === 0 ? (
+                <>
+                  <motion.div 
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="mb-8"
+                  >
+                    <img src={wallet} alt="Wallet" className="w-56 md:w-64 h-auto drop-shadow-2xl" />
+                  </motion.div>
+                  <h2 className="text-[22px] md:text-[28px] font-bold text-[#32324D] dark:text-white mb-3">
+                    You don't have any card
+                  </h2>
+                  <p className="text-[14px] md:text-[16px] text-[#8E8EA9] dark:text-[#c0c0cf] mb-8 max-w-sm">
+                    Please add a credit or a debit card in order to pay your order.
+                  </p>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2 text-(--yellow-1) font-bold text-[18px] cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => setShowNewCard(true)}
+                  >
+                    <FaPlus size={18} />
+                    Add a new card
+                  </motion.button>
+                </>
+              ) : (
+                <div className="w-full h-full flex flex-col">
+                    <div className="flex justify-between items-center w-full mb-8">
+                        <h2 className="text-[20px] font-bold text-[#32324D] dark:text-white">Payment method</h2>
+                        <button onClick={() => setShowNewCard(true)} className="flex items-center gap-2 text-(--orange-text) font-bold text-[14px] cursor-pointer">
+                            <FaPlus size={12} /> Add a new card
+                        </button>
+                    </div>
+
+                    <div className="w-full max-w-[400px] mx-auto mb-8">
+                        <Slider {...sliderSettings}>
+                            {cards.map((card, index) => (
+                                <div key={index} className="px-2">
+                                     <div 
+                                        style={{
+                                            backgroundImage: isDark ? "url('/images/Card-dark.png')" : "url('/images/Card.png')",
+                                            backgroundPosition: "center",
+                                        }} 
+                                        className="w-full bg-no-repeat aspect-[1.586/1] rounded-2xl p-6 flex flex-col justify-between shadow-xl text-white relative"
+                                    >
+                                        <div className="flex justify-between items-center">
+                                            <FcSimCardChip size={48} />
+                                            {getCardTypeIcon(card.cardNumber)}
+                                        </div>
+
+                                        <div>
+                                            <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">Card number</p>
+                                            <p className="text-[20px] md:text-[24px] font-semibold tracking-wider dark:text-(--neutral-800)">{card.cardNumber || "512X XXXX XXXX XXXX"}</p>
+                                        </div>
+                                        
+                                        <div className="flex justify-between">
+                                            <div>
+                                                <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">Cardholder name</p>
+                                                <p className="text-sm dark:text-(--neutral-800) font-medium uppercase tracking-wide">{card.cardHolder || "YOUR NAME"}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">mm/yy</p>
+                                                <p className="text-sm dark:text-(--neutral-800) font-medium">{card.expiryDate || "12/24"}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">CVV</p>
+                                                <p className="text-sm dark:text-(--neutral-800) font-medium text-center">***</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </Slider>
+                    </div>
+
+                    <div className="bg-[#FFF8E1] dark:bg-(--neutral-900) border border-[#FFB01D]/20 rounded-2xl p-4 flex gap-4 items-center w-full mt-auto">
+                        <div className="min-w-[40px] h-[40px]">
+                             <img src={wallet} className="w-full h-full object-contain" alt="Wallet icon" />
+                        </div>
+                        <div className="text-left">
+                            <p className="text-[14px] font-bold text-[#32324D] dark:text-white">More info about your payment</p>
+                            <p className="text-[12px] text-[#8E8EA9]">This card is used as default for all your payments.</p>
+                        </div>
+                    </div>
+                </div>
+              )}
             </div>
 
             {/* Order Summary Column */}
             <div className="flex flex-col gap-6 w-full lg:w-[40%]">
-              
               {/* Order List and Prices */}
               <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-2xl p-6 lg:p-8  shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
                 <div 
@@ -227,20 +316,23 @@ const Checkout1: React.FC = () => {
                   )}
                 </AnimatePresence>
               </div>
-
-              
             </div>
           </div>
 
           {/* Action Bar */}
           <div className="w-full flex flex-col sm:flex-row justify-between items-center rounded-2xl px-5 py-3 bg-[#FFFFFF] dark:bg-(--neutral-700) shadow-[0_4px_12px_rgba(0,0,0,0.10)] gap-6 mt-4">
             <p className="text-[#8E8EA9] dark:text-[#c0c0cf] font-semibold text-[18px]">
-              No card added
+              {cards.length > 0 ? "Payment success" : "No card added"}
             </p>
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full max-w-[320px] py-4 rounded-[16px] bg-(--purple-4) dark:bg-(--purple-4) text-white font-medium text-[20px] flex justify-center items-center gap-3 cursor-not-allowed shadow-inner"
+              disabled={cards.length === 0}
+              className={`w-full max-w-[320px] py-4 rounded-[16px] text-white font-medium text-[20px] flex justify-center items-center gap-3 shadow-inner ${
+                cards.length > 0 
+                ? "bg-(--purple-2) cursor-pointer" 
+                : "bg-(--purple-4) cursor-not-allowed"
+              }`}
             >
               Pay <span className="text-[16px] font-bold ml-1 mt-0.5">${total.toFixed(2)}</span>
             </motion.button>
@@ -250,6 +342,7 @@ const Checkout1: React.FC = () => {
             {showNewCard && (
               <Newcard 
                   onClose={() => setShowNewCard(false)} 
+                  onAddCard={handleAddCard}
               />
             )}
           </AnimatePresence>

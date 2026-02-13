@@ -156,7 +156,11 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                     <div className="space-y-2">
                         <div className="relative flex items-center">
                             <input 
-                                type="text" 
+                                type="text"
+                                inputMode="numeric"
+                                required 
+                                minLength={16}
+                                maxLength={16}
                                 value={cardNumber}
                                 onChange={handleCardNumberChange}
                                 placeholder="512X XXXX XXXX XXXX"
@@ -170,7 +174,8 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
 
                     <div className="space-y-2">
                         <input 
-                            type="text" 
+                            type="text"
+                            required 
                             value={cardHolder}
                             onChange={(e) => setCardHolder(e.target.value)}
                             placeholder="Cardholder name"
@@ -181,7 +186,8 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                     <div className="flex gap-4">
                         <div className="space-y-2 flex-1">
                             <input 
-                                type="text" 
+                                type="text"
+                                required 
                                 value={expiryDate}
                                 onChange={handleExpiryChange}
                                 placeholder="MM/YY"
@@ -191,6 +197,8 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                         <div className="space-y-2 flex-1">
                             <input 
                                 type="text"
+                                inputMode="numeric"
+                                required
                                 maxLength={3}
                                 value={cvv}
                                 onChange={(e) => setCvv(e.target.value.replace(/\D/g,''))}
@@ -206,6 +214,10 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                     <motion.button 
                         whileTap={{ scale: 0.98 }}
                         whileHover={{ scale: 1.02 }}
+                        onClick={() => {
+                            onAddCard?.({ cardNumber, cardHolder, expiryDate, cvv });
+                            onClose();
+                        }}
                         className="w-full bg-[#615793] dark:bg-[#6c5dd3] text-white font-bold text-lg py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all"
                     >
                         Add card
