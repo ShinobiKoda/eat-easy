@@ -341,8 +341,8 @@ const Checkout1: React.FC = () => {
           <AnimatePresence>
             {showNewCard && (
               <Newcard 
-                  onClose={() => setShowNewCard(false)} 
-                  onAddCard={handleAddCard}
+                onClose={() => setShowNewCard(false)} 
+                onAddCard={handleAddCard}
               />
             )}
           </AnimatePresence>

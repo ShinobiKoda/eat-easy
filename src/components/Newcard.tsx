@@ -125,7 +125,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="z-50 fixed right-0 w-full sm:min-h-screen sm:w-[55%] md:w-[45%] lg:w-[450px] top-[10%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-3xl sm:rounded-tr-none sm:rounded-l-3xl bg-[#f7f7f7] dark:bg-[#2c2c45] shadow-2xl flex flex-col"
+            className="z-50 fixed right-0 w-full sm:min-h-screen sm:w-[55%] md:w-[45%] lg:w-[450px] top-[10%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-3xl sm:rounded-tr-none sm:rounded-l-3xl bg-(--neutral-100) dark:bg-(--neutral-800) shadow-2xl flex flex-col"
         >
              {/* Mobile Pull Indicator */}
             <div onClick={onClose} className="w-full flex justify-center pt-3 pb-1 sm:hidden cursor-pointer">
@@ -136,7 +136,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                 
                 {/* Header */}
                 <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-[22px] w-full sm:w-auto text-center sm:text-left font-bold text-(--neutral-800) dark:text-white">Add a new card</h2>
+                    <h2 className="text-[22px] w-full sm:w-auto text-center sm:text-left font-bold text-(--neutral-800) dark:text-(--neutral-100)">Add a new card</h2>
                     <button 
                         type="button"
                         onClick={onClose}

@@ -1,7 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
 @import "tailwindcss";
 
-@import "https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap";
-@import "https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --light-mode-bg: linear-gradient(
@@ -12,11 +13,12 @@
     #f7f7f7 90%,
     #fcfcfc 100%
   );
+
   --light-progress-bg: #eaeaef;
   --yellow-1: #ffb01d;
   --yellow-2: #faa300;
   --orange-1: #ff7b2c;
-  --orange-5: #fff2ea;
+  --orange-5: #FFF2EA;
   --neutral-700: #4a4a6a;
   --neutral-800: #32324d;
   --neutral-600: #666687;
@@ -27,6 +29,7 @@
   --neutral-200: #dcdce4;
   --neutral-400: #a5a5ba;
   --neutral-300: #c0c0cf;
+
   --dark-mode-bg: linear-gradient(
     90deg,
     #32324d 0%,
@@ -43,41 +46,6 @@
   --neutral-900: #212134;
 }
 
-@theme {
-  --font-mulish: "Mulish", sans-serif;
-  --font-dm-sans: "DM Sans", sans-serif;
-
-  --color-orange-1: var(--orange-1);
-  --color-yellow-1: var(--yellow-1);
-  --color-purple-2: var(--purple-2);
-  --color-purple-4: var(--purple-4);
-  --color-orange-5: var(--orange-5);
-  --color-orange-text: var(--orange-text);
-}
-
-* {
-  box-sizing: border-box;
-  font-family: "Mulish", sans-serif;
-}
-
-#root,
-body,
-html {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.scrollbar-hidden {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-hidden::-webkit-scrollbar {
-  display: none;
-}
-
 .vieworder-bg {
   background: var(--light-mode-bg);
 }
@@ -86,52 +54,159 @@ html {
   background: var(--dark-mode-bg);
 }
 
-.heading-font {
-  font-family: "DM Sans", sans-serif;
+* {
+  font-family: "Mulish";
+
+  box-sizing: border-box;
 }
 
-/* Custom Component Styles reconstructed from dist */
+#root,
+body,
+html {
+  width: 100%;
+  height: 100%;
+}
 
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Styled scrollbar for suggestion list */
+.suggestions-scroll {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: var(--neutral-400) transparent;
+}
+.suggestions-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.suggestions-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.suggestions-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--neutral-200);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+}
+.dark .suggestions-scroll {
+  scrollbar-color: var(--neutral-600) transparent;
+}
+.dark .suggestions-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--neutral-600);
+}
+
+.heading-font {
+  font-family: "DM Sans";
+}
+
+/* target range inputs inside the wrapper (update selector if the component uses different class names) */
 .App input[type="range"] {
   -webkit-appearance: none;
-  appearance: none;
-  background: transparent;
   width: 100%;
-  height: 10px;
+  height: 10px; /* track height */
+  background: transparent; /* we'll style track via pseudo */
 }
 
+/* track (webkit) */
+.App input[type="range"]::-webkit-slider-runnable-track {
+  border: none;
+}
+
+/* thumb */
 .App input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  background: #615793;
-  border: 3px solid #fff;
-  border-radius: 50%;
   width: 22px;
   height: 22px;
-  margin-top: -6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  background: #615793; /* thumb color */
+  border: 3px solid #fff; /* white rim */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  margin-top: -6px; /* vertically center thumb on track height 10px */
 }
 
+.App input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #615793;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* highlight between handles if the library uses a .selected-range element — example */
+.App .selected-range {
+  background: linear-gradient(90deg, #FFB01D, #FF7B2C); /* active track color */
+}
+
+/* increase touch/hit area without changing visual size */
+.App input[type="range"]::-webkit-slider-thumb {
+  padding: 6px;
+}
+
+/* Overrides for multi-range-slider-react to match app theme */
 .multi-range-slider .bar-inner {
   background: linear-gradient(90deg, var(--yellow-1), var(--orange-1));
 }
-
-.multi-range-slider .thumb:before {
+.multi-range-slider .thumb::before {
   background-color: var(--purple-2);
-  border: 3px solid #fff;
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.18), inset 0 2px 6px rgba(255,255,255,0.06);
+}
+.multi-range-slider .bar-left,
+.multi-range-slider .bar-right {
+  background-color: #ffffff;
 }
 
+/* remove the default container border/shadow from the library */
+.multi-range-slider {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* remove inner border on the active area if present */
+.multi-range-slider .bar-inner {
+  border: none !important;
+}
 .phone-input {
-  border: 1px solid var(--neutral-150);
-  background: #fff;
-  border-radius: 1rem;
+  width: 100%;
   display: flex;
   align-items: center;
+  background: white;
+  border-radius: 1rem;
+  border: 1px solid var(--neutral-150);
+}
+
+.phone-input .PhoneInputInput {
   width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--neutral-500);
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.phone-input .PhoneInputInput:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.phone-input .PhoneInputCountry {
+  padding-left: 16px;
 }
 
 .dark .phone-input {
   background: var(--dark-mode-input-bg);
   border: 1px solid var(--neutral-600);
+}
+
+.dark .phone-input .PhoneInputInput {
+  color: var(--neutral-200);
 }
 
 .aside {
