@@ -5,7 +5,6 @@ import { IoArrowBack } from "react-icons/io5";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MotionItem, PopIn } from "../animations/motion";
 import { useNavigate } from "react-router-dom";
-import { closeSidebar } from "../../utils/sidebar";
 
 type NavbarProps = {
   description?: string;
@@ -33,11 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({
             {showBack ? (
               <PopIn>
                 <motion.button
-                  onClick={() => {
-                    if (previous) previous();
-                    else navigate(-1);
-                    closeSidebar();
-                  }}
+                  onClick={previous || (() => navigate(-1))}
                   className="w-12 h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer dark:bg-(--neutral-700)"
                   aria-label="Go back"
                   whileHover={{ scale: 1.04 }}
