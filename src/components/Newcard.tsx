@@ -15,40 +15,51 @@ const display = (isDesktop: boolean): Variants => {
   if (isDesktop) {
     // slide in from the RIGHT on desktop
     return {
-        hidden: { x: "100%", opacity: 0 },
-        visible: {
-          x: "0",
-          opacity: 1,
-          transition: { duration: 0.3, type: "spring", damping: 25, stiffness: 300 }
+      hidden: { x: "100%", opacity: 0 },
+      visible: {
+        x: "0",
+        opacity: 1,
+        transition: {
+          duration: 0.3,
+          type: "spring",
+          damping: 25,
+          stiffness: 300,
         },
-        exit: { x: "100%", opacity: 0 }
+      },
+      exit: { x: "100%", opacity: 0 },
     };
   }
-  
+
   // MOBILE — slide from bottom
   return {
-      hidden: { y: "100%", opacity: 0 },
-      visible: {
-          y: "0",
-          opacity: 1,
-          transition: { duration: 0.3, type: "spring", damping: 25, stiffness: 300 }
+    hidden: { y: "100%", opacity: 0 },
+    visible: {
+      y: "0",
+      opacity: 1,
+      transition: {
+        duration: 0.3,
+        type: "spring",
+        damping: 25,
+        stiffness: 300,
       },
-      exit: { y: "100%", opacity: 0 }
+    },
+    exit: { y: "100%", opacity: 0 },
   };
-}
+};
 
 const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
   const isDesktop = useIsDesktop();
   const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  
+  const isDark = theme === "dark";
+
   const [cardNumber, setCardNumber] = useState("");
   const [cardHolder, setCardHolder] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
   const [errors, setErrors] = useState<Record<string, boolean>>({});
 
-  const validateCardNumber = (number: string) => number.replace(/\s/g, "").length === 16;
+  const validateCardNumber = (number: string) =>
+    number.replace(/\s/g, "").length === 16;
   const validateCvv = (value: string) => value.length === 3;
 
   const formatCardNumber = (value: string) => {
@@ -63,50 +74,52 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawVal = e.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric
     if (rawVal.length <= 16) {
-        setCardNumber(formatCardNumber(rawVal));
+      setCardNumber(formatCardNumber(rawVal));
     }
   };
 
   const handleCardHolderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const val = e.target.value.replace(/[^a-zA-Z\s]/g, ""); // Allow only letters and spaces
-      setCardHolder(val);
-      if (errors.cardHolder) setErrors({...errors, cardHolder: false});
+    const val = e.target.value.replace(/[^a-zA-Z\s]/g, ""); // Allow only letters and spaces
+    setCardHolder(val);
+    if (errors.cardHolder) setErrors({ ...errors, cardHolder: false });
   };
 
   const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      let val = e.target.value.replace(/[^0-9]/g, "");
-      if (val.length > 2) {
-          val = val.substring(0, 2) + "/" + val.substring(2, 4);
-      }
-      if (val.length <= 5) {
-          setExpiryDate(val);
-      }
-  }
+    let val = e.target.value.replace(/[^0-9]/g, "");
+    if (val.length > 2) {
+      val = val.substring(0, 2) + "/" + val.substring(2, 4);
+    }
+    if (val.length <= 5) {
+      setExpiryDate(val);
+    }
+  };
 
   // Determine card type for display
   const getCardTypeIcon = (number: string) => {
-      const cleanNumber = number.replace(/\s/g, "");
-      if (cleanNumber.startsWith("4")) return <SiVisa size={32} className="text-[#EB001B]" />;
-      if (cleanNumber.startsWith("5")) return <SiMastercard size={32} className="text-[#EB001B]" />;
-      return <SiMastercard size={32} className="text-[#EB001B]" />; // Default
-  }
+    const cleanNumber = number.replace(/\s/g, "");
+    if (cleanNumber.startsWith("4"))
+      return <SiVisa size={32} className="text-[#EB001B]" />;
+    if (cleanNumber.startsWith("5"))
+      return <SiMastercard size={32} className="text-[#EB001B]" />;
+    return <SiMastercard size={32} className="text-[#EB001B]" />; // Default
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      
-      const newErrors = {
-          cardNumber: !validateCardNumber(cardNumber),
-          cvv: !validateCvv(cvv),
-          cardHolder: !cardHolder.trim(),
-          expiryDate: !expiryDate.trim(),
-      };
+    e.preventDefault();
 
-      setErrors(newErrors);
+    const newErrors = {
+      cardNumber: !validateCardNumber(cardNumber),
+      cvv: !validateCvv(cvv),
+      cardHolder: !cardHolder.trim(),
+      expiryDate: !expiryDate.trim(),
+    };
 
-      if (Object.values(newErrors).every(err => !err)) {
-          onAddCard?.({ cardNumber, cardHolder, expiryDate, cvv });
-          onClose();
-      }
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).every((err) => !err)) {
+      onAddCard?.({ cardNumber, cardHolder, expiryDate, cvv });
+      onClose();
+    }
   };
 
   return (
