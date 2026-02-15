@@ -303,8 +303,6 @@ const Checkout1: React.FC = () => {
                       </motion.div>
                     )}
                   </AnimatePresence>
-
-
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <p className="text-[#8E8EA9] dark:text-[#c0c0cf] text-[15px]">
