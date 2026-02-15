@@ -19,9 +19,8 @@ const Navbar: React.FC<NavbarProps> = ({
   description = "",
   className = "",
   previous,
-  showBack
+  showBack,
 }) => {
-
   const navigate = useNavigate();
   return (
     <nav
@@ -48,8 +47,8 @@ const Navbar: React.FC<NavbarProps> = ({
               </PopIn>
             ) : (
               <HiOutlineLocationMarker
-               size={20}
-               className="dark:text-(--neutral-200)"
+                size={20}
+                className="dark:text-(--neutral-200)"
               />
             )}
             <p className="flex flex-col">

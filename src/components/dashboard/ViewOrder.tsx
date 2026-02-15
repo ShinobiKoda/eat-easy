@@ -4,7 +4,7 @@ import type { PropType } from "../../types";
 import { type MouseEvent } from "react";
 import { RiDeleteBinLine, RiShoppingBag3Line } from "react-icons/ri";
 import { FaPlus, FaArrowRight } from "react-icons/fa6";
-import { FaTimes } from "react-icons/fa";
+import { LiaTimesSolid } from "react-icons/lia";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import Navbar from "../layout/Navbar";
 
@@ -73,7 +73,7 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
           onClick={onClose}
           className="sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50"
         >
-          <FaTimes size={25} className="text-(--neutral-400) dark:text-(--neutral-200)" />
+          <LiaTimesSolid size={25} className="text-(--neutral-400) dark:text-(--neutral-200)" />
         </motion.div>
       </div>
 

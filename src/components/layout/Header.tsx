@@ -22,6 +22,7 @@ import { useLocation } from "../../hooks/useLocation";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../hooks/useTheme";
+import { closeSidebar } from "../../utils/sidebar";
 
 interface HeaderProps {
   title?: string;
@@ -96,13 +97,17 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <div
-      style={{backgroundImage}}
+      style={{ backgroundImage }}
       className={`fixed top-0 right-0 z-40 transition-all duration-300 left-0 ${
         sidebarOpen ? "md:left-[260px]" : "md:left-36"
       }`}
     >
       <SlideIn direction="down" className="w-full md:hidden">
-        <Navbar title={navbarTitle} description={navbarDescription} showBack={showBack} />
+        <Navbar
+          title={navbarTitle}
+          description={navbarDescription}
+          showBack={showBack}
+        />
       </SlideIn>
 
       {/* Tablet Header - Combined dropdown for location & order */}
@@ -111,7 +116,11 @@ const Header: React.FC<HeaderProps> = ({
           {showBack && (
             <PopIn>
               <motion.button
-                onClick={previous || (() => navigate(-1))}
+                onClick={() => {
+                  if (previous) previous();
+                  else navigate(-1);
+                  closeSidebar();
+                }}
                 className="w-12 h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer dark:bg-(--neutral-700)"
                 aria-label="Go back"
                 whileHover={{ scale: 1.04 }}
@@ -291,7 +300,11 @@ const Header: React.FC<HeaderProps> = ({
           {showBack && (
             <PopIn>
               <motion.button
-                onClick={previous || (() => navigate(-1))}
+                onClick={() => {
+                  if (previous) previous();
+                  else navigate(-1);
+                  closeSidebar();
+                }}
                 className="w-12 h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer dark:bg-(--neutral-700)"
                 aria-label="Go back"
                 whileHover={{ scale: 1.04 }}
@@ -416,9 +429,7 @@ const Header: React.FC<HeaderProps> = ({
                           >
                             <div className="flex items-center gap-3 text-(--purple-3) dark:text-(--purple-5)">
                               <div className="w-10 h-10 rounded-xl bg-(--purple-2) flex items-center justify-center">
-                                <CiLocationOn
-                                  size={20}
-                                />
+                                <CiLocationOn size={20} />
                               </div>
                               <div className="flex-1">
                                 <p className="font-semibold text-sm">
@@ -438,7 +449,7 @@ const Header: React.FC<HeaderProps> = ({
               </AnimatePresence>
             </div>
           </FadeIn>
-          
+
           <FadeIn>
             <div className="w-[21px] h-full border-[1.5px] border-(--neutral-200) rotate-90"></div>
           </FadeIn>

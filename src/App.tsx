@@ -23,7 +23,7 @@ import SelectRestaurant from "./components/onboarding/SelectRestaurant";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import PublicRoute from "./components/auth/PublicRoute";
 import SetCustomLocation from "./components/onboarding/SetCustomLocation";
-import Checkout1 from "./Checkout/Checkout1";
+import Checkout1 from "./components/Checkout/Checkout1";
 
 function App() {
   const location = useLocation();

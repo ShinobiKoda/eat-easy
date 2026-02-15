@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Profile from "/images/profile-img.png";
 import { IoIosLogOut } from "react-icons/io";
 import { PiMedalThin } from "react-icons/pi";
 import { MdChevronRight } from "react-icons/md";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { TfiBook } from "react-icons/tfi";
 import { MdOutlineHistory } from "react-icons/md";
 import { IoLocationOutline } from "react-icons/io5";
@@ -15,7 +15,7 @@ import LogoutModal from "../LogoutModal";
 import { supabase } from "../../config/supabaseClient";
 
 const Sidebar: React.FC = () => {
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [selectedItem, setSelectedItem] = useState<number | null>(1);
@@ -23,6 +23,8 @@ const Sidebar: React.FC = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [username, setUsername] = useState<string>("");
   const navigate = useNavigate();
+  const location = useLocation();
+
   // Fetch username from Supabase session
   useEffect(() => {
     const fetchUser = async () => {
@@ -31,7 +33,6 @@ const Sidebar: React.FC = () => {
         console.error("Error fetching user:", error);
       }
       if (data?.user) {
-        // Try user_metadata.username, fallback to email prefix
         const meta = data.user.user_metadata as any;
         let uname = meta?.username || data.user.email?.split("@")[0] || "User";
         setUsername(uname);
@@ -62,17 +63,37 @@ const Sidebar: React.FC = () => {
     setOpenMenuId((prev) => (prev === id ? null : id));
   };
 
+  // Listen to global toggle
   useEffect(() => {
     const onGlobalToggle = () => setIsOpen((v) => !v);
     window.addEventListener("toggle-sidebar", onGlobalToggle);
     return () => window.removeEventListener("toggle-sidebar", onGlobalToggle);
   }, []);
 
+  // Listen to explicit open/close states
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ open: boolean }>).detail;
+      if (detail && typeof detail.open === "boolean") {
+        setIsOpen(detail.open);
+      }
+    };
+    window.addEventListener("sidebar-state", handler as EventListener);
+    return () =>
+      window.removeEventListener("sidebar-state", handler as EventListener);
+  }, []);
+
+  // Sync sidebar-state for components like Header
   useEffect(() => {
     window.dispatchEvent(
       new CustomEvent("sidebar-state", { detail: { open: isOpen } }),
     );
   }, [isOpen]);
+
+  // Auto-close on navigation
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   return (
     <>
@@ -85,9 +106,7 @@ const Sidebar: React.FC = () => {
           whileTap={{ scale: 0.96 }}
           className="hidden md:flex w-[38px] h-[38px] bg-(--neutral-800) top-28 -right-4 absolute rounded-full items-center justify-center border border-(--neutral-400)"
         >
-          <button
-            className="rounded-full cursor-pointer"
-          >
+          <button className="rounded-full cursor-pointer">
             <MdChevronRight
               size={24}
               className={`${
@@ -159,6 +178,7 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <motion.button
                     onClick={() => {
+                      if (!isOpen) setIsOpen(true);
                       toggleMenu(1);
                       setSelectedItem(1);
                     }}
@@ -182,31 +202,35 @@ const Sidebar: React.FC = () => {
                       Food Menu
                     </p>
                   </motion.button>
-                  {effectiveIsOpen && (
-                    <div
-                      className={`border-l-2 border-(--yellow-2) ml-[25px] space-y-4 pl-[33px]  ${
-                        activeMenu === 1 ? "flex flex-col" : "hidden"
-                      }`}
-                    >
-                      <NavLink to="/recommended">
-                        <motion.div
-                          whileTap={{ scale: 0.95 }}
-                          className="cursor-pointer font-medium text-base text-white"
-                        >
-                          Smart Assistant
-                        </motion.div>
-                      </NavLink>
+                  <AnimatePresence>
+                    {effectiveIsOpen && activeMenu === 1 && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="border-l-2 border-(--yellow-2) ml-[25px] space-y-4 pl-[33px] overflow-hidden flex flex-col"
+                      >
+                        <NavLink to="/recommended">
+                          <motion.div
+                            whileTap={{ scale: 0.95 }}
+                            className="cursor-pointer font-medium text-base text-white"
+                          >
+                            Smart Assistant
+                          </motion.div>
+                        </NavLink>
 
-                      <NavLink to="/FullMenu">
-                        <motion.div
-                          whileTap={{ scale: 0.95 }}
-                          className="cursor-pointer font-medium text-base text-white"
-                        >
-                          Full Menu
-                        </motion.div>
-                      </NavLink>
-                    </div>
-                  )}
+                        <NavLink to="/FullMenu">
+                          <motion.div
+                            whileTap={{ scale: 0.95 }}
+                            className="cursor-pointer font-medium text-base text-white"
+                          >
+                            Full Menu
+                          </motion.div>
+                        </NavLink>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <div className="space-y-4">
@@ -330,18 +354,23 @@ const Sidebar: React.FC = () => {
                   </motion.button>
                 </div>
 
-                <div className="flex items-center gap-2.5 w-full py-1.5">
+                <motion.button
+                  type="button"
+                  onClick={toggleTheme}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer border-none bg-transparent outline-none"
+                >
                   <div className="p-3 rounded-2xl bg-white/15 cursor-pointer">
                     <ThemeSwitchButton />
                   </div>
                   <p
-                    className={`text-white text-base ${
+                    className={`text-white text-base cursor-pointer ${
                       effectiveIsOpen ? "flex" : "hidden"
                     }`}
                   >
                     {theme === "dark" ? "Dark" : "Light"}
                   </p>
-                </div>
+                </motion.button>
               </div>
             </div>
 
