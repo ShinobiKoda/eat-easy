@@ -15,6 +15,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FcSimCardChip } from "react-icons/fc";
 import { SiVisa, SiMastercard } from "react-icons/si";
+import { cardService } from "../../services/cardService";
 import { useTheme } from "../../hooks/useTheme";
 
 const Checkout1: React.FC = () => {
@@ -24,7 +25,19 @@ const Checkout1: React.FC = () => {
   const [showNewCard, setShowNewCard] = useState(false);
   const [cards, setCards] = useState<any[]>([]);
   const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const isDark = theme === "dark";
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const savedCards = await cardService.getUserCards();
+        setCards(savedCards);
+      } catch (error) {
+        console.error("Failed to fetch cards:", error);
+      }
+    };
+    fetchCards();
+  }, []);
 
   const handleAddCard = (card: any) => {
     setCards([...cards, card]);

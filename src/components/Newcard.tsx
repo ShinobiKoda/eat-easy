@@ -5,6 +5,7 @@ import useIsDesktop from "../hooks/useIsDesktop";
 import { useTheme } from "../hooks/useTheme";
 import { FcSimCardChip } from "react-icons/fc";
 import { SiVisa, SiMastercard } from "react-icons/si";
+import { cardService } from "../services/cardService";
 
 type NewcardProps = {
   onClose: () => void;
@@ -57,6 +58,8 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validateCardNumber = (number: string) =>
     number.replace(/\s/g, "").length === 16;
@@ -104,7 +107,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
     return <SiMastercard size={32} className="text-[#EB001B]" />; // Default
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const newErrors = {
@@ -117,8 +120,25 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
     setErrors(newErrors);
 
     if (Object.values(newErrors).every((err) => !err)) {
-      onAddCard?.({ cardNumber, cardHolder, expiryDate, cvv });
-      onClose();
+      setIsSubmitting(true);
+      setSubmitError(null);
+      try {
+        // Save to Supabase (excluding CVV)
+        await cardService.saveCard({
+          card_number: cardNumber,
+          card_holder: cardHolder,
+          expiry_date: expiryDate,
+        });
+
+        // Update local state and close
+        onAddCard?.({ cardNumber, cardHolder, expiryDate, cvv });
+        onClose();
+      } catch (err: any) {
+        console.error("Failed to save card:", err);
+        setSubmitError(err.message || "Failed to save card. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -289,13 +309,19 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
 
           {/* Footer Button */}
           <div className="mt-8 mb-4">
+            {submitError && (
+              <p className="text-red-500 text-sm mb-4 text-center">
+                {submitError}
+              </p>
+            )}
             <motion.button
               type="submit"
+              disabled={isSubmitting}
               whileTap={{ scale: 0.98 }}
               whileHover={{ scale: 1.02 }}
-              className="w-full bg-[#615793] dark:bg-[#6c5dd3] text-white font-bold text-lg py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all"
+              className="w-full bg-[#615793] dark:bg-[#6c5dd3] text-white font-bold text-lg py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Add card
+              {isSubmitting ? "Adding card..." : "Add card"}
             </motion.button>
           </div>
         </form>
