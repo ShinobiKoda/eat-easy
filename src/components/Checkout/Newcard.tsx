@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { motion, type Variants } from "motion/react";
 import { LiaTimesSolid } from "react-icons/lia";
-import useIsDesktop from "../hooks/useIsDesktop";
-import { useTheme } from "../hooks/useTheme";
+import useIsDesktop from "../../hooks/useIsDesktop";
+import { useTheme } from "../../hooks/useTheme";
 import { FcSimCardChip } from "react-icons/fc";
 import { SiVisa, SiMastercard } from "react-icons/si";
-import { cardService } from "../services/cardService";
+import { cardService } from "../../services/cardService";
 
 type NewcardProps = {
   onClose: () => void;
