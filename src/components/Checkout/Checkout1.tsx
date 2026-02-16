@@ -10,6 +10,7 @@ import Header from "../layout/Header";
 import { useOrder } from "../../hooks/useOrder";
 import wallet from "/images/wallet.png";
 import Newcard from "../Newcard";
+import CvvModal from "../CvvModal";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -23,7 +24,10 @@ const Checkout1: React.FC = () => {
   const [toggleOrderList, setToggleOrderList] = useState(false);
   const [tip, setTip] = useState(0);
   const [showNewCard, setShowNewCard] = useState(false);
+  const [showCvvModal, setShowCvvModal] = useState(false);
+  const [cvvConfirmed, setCvvConfirmed] = useState(false);
   const [cards, setCards] = useState<any[]>([]);
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -41,6 +45,22 @@ const Checkout1: React.FC = () => {
 
   const handleAddCard = (card: any) => {
     setCards([...cards, card]);
+    setCvvConfirmed(false);
+  };
+
+  const handleCvvConfirm = (cvv: string) => {
+    sessionStorage.setItem("checkout_cvv", cvv);
+    setCvvConfirmed(true);
+    setShowCvvModal(false);
+  };
+
+  const handlePay = () => {
+    const cvv = sessionStorage.getItem("checkout_cvv");
+    if (!cvv) return;
+    // Use CVV for payment processing here
+    console.log("Processing payment with CVV:", cvv);
+    sessionStorage.removeItem("checkout_cvv");
+    setCvvConfirmed(false);
   };
 
   const getCardTypeIcon = (number: string) => {
@@ -58,6 +78,11 @@ const Checkout1: React.FC = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: true,
+    afterChange: (index: number) => {
+      setActiveCardIndex(index);
+      setCvvConfirmed(false);
+      sessionStorage.removeItem("checkout_cvv");
+    },
   };
 
   useEffect(() => {
@@ -103,14 +128,14 @@ const Checkout1: React.FC = () => {
   const total = orderTotal + tax + tip;
 
   // stop background scroll effect when any of this is open
-  const isModalOpen = Boolean(showNewCard);
+  const isModalOpen = Boolean(showNewCard) || Boolean(showCvvModal);
   useEffect(() => {
     if (isModalOpen) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
-  }, [showNewCard]);
+  }, [showNewCard, showCvvModal]);
 
   return (
     <div className="w-full min-h-screen">
@@ -209,7 +234,7 @@ const Checkout1: React.FC = () => {
                                 <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">
                                   Cardholder name
                                 </p>
-                                <p className="text-sm dark:text-(--neutral-800) font-medium uppercase tracking-wide">
+                                <p className="text-sm dark:text-(--neutral-800) font-medium uppercase tracking-wide max-w-[150px] truncate">
                                   {card.cardHolder || "YOUR NAME"}
                                 </p>
                               </div>
@@ -226,10 +251,31 @@ const Checkout1: React.FC = () => {
                                   CVV
                                 </p>
                                 <p className="text-sm dark:text-(--neutral-800) font-medium text-center">
-                                  ***
+                                  {cvvConfirmed && activeCardIndex === index
+                                    ? "✓"
+                                    : "***"}
                                 </p>
                               </div>
                             </div>
+                            {/* Enter CVV button */}
+                            <motion.button
+                              type="button"
+                              whileTap={{ scale: 0.95 }}
+                              whileHover={{ scale: 1.03 }}
+                              onClick={() => {
+                                setActiveCardIndex(index);
+                                setShowCvvModal(true);
+                              }}
+                              className={`mt-3 w-full py-2.5 rounded-xl text-[13px] font-bold tracking-wide transition-all cursor-pointer ${
+                                cvvConfirmed && activeCardIndex === index
+                                  ? "bg-green-500/20 text-green-300 border border-green-400/30"
+                                  : "bg-white/15 hover:bg-white/25 text-white border border-white/20"
+                              }`}
+                            >
+                              {cvvConfirmed && activeCardIndex === index
+                                ? "✓ CVV Entered"
+                                : "Enter CVV to Pay"}
+                            </motion.button>
                           </div>
                         </div>
                       ))}
@@ -393,14 +439,21 @@ const Checkout1: React.FC = () => {
           {/* Action Bar */}
           <div className="w-full flex flex-col sm:flex-row justify-between items-center rounded-2xl px-5 py-3 bg-[#FFFFFF] dark:bg-(--neutral-700) shadow-[0_4px_12px_rgba(0,0,0,0.10)] gap-6 mt-4">
             <p className="text-[#8E8EA9] dark:text-[#c0c0cf] font-semibold text-[18px]">
-              {cards.length > 0 ? "Payment success" : "No card added"}
+              {cards.length === 0
+                ? "No card added"
+                : cvvConfirmed
+                  ? "Ready to pay"
+                  : "Enter CVV to continue"}
             </p>
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              disabled={cards.length === 0}
+              whileHover={
+                cards.length > 0 && cvvConfirmed ? { scale: 1.02 } : {}
+              }
+              whileTap={cards.length > 0 && cvvConfirmed ? { scale: 0.98 } : {}}
+              disabled={cards.length === 0 || !cvvConfirmed}
+              onClick={handlePay}
               className={`w-full max-w-[320px] py-4 rounded-[16px] text-white font-medium text-[20px] flex justify-center items-center gap-3 shadow-inner ${
-                cards.length > 0
+                cards.length > 0 && cvvConfirmed
                   ? "bg-(--purple-2) cursor-pointer"
                   : "bg-(--purple-4) cursor-not-allowed"
               }`}
@@ -417,6 +470,20 @@ const Checkout1: React.FC = () => {
               <Newcard
                 onClose={() => setShowNewCard(false)}
                 onAddCard={handleAddCard}
+              />
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {showCvvModal && (
+              <CvvModal
+                onClose={() => setShowCvvModal(false)}
+                onConfirm={handleCvvConfirm}
+                lastFourDigits={
+                  cards[activeCardIndex]?.cardNumber
+                    ?.replace(/\s/g, "")
+                    .slice(-4) || ""
+                }
               />
             )}
           </AnimatePresence>
