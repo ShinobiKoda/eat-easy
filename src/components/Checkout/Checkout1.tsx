@@ -189,8 +189,8 @@ const Checkout1: React.FC = () => {
                   </motion.button>
                 </>
               ) : (
-                <div className="w-full h-full flex flex-col">
-                  <div className="flex justify-between items-center w-full mb-8">
+                <div className="w-full h-full flex flex-col gap-8">
+                  <div className="flex justify-between items-center w-full">
                     <h2 className="text-[20px] font-bold text-[#32324D] dark:text-white">
                       Payment method
                     </h2>
@@ -213,17 +213,14 @@ const Checkout1: React.FC = () => {
                                 : "url('/images/Card.png')",
                               backgroundPosition: "center",
                             }}
-                            className="w-full bg-no-repeat aspect-[1.586/1] rounded-2xl p-6 flex flex-col justify-between shadow-xl text-white relative"
+                            className="w-full bg-no-repeat rounded-2xl p-6 flex flex-col justify-between gap-3 shadow-xl text-white relative"
                           >
                             <div className="flex justify-between items-center">
                               <FcSimCardChip size={48} />
                               {getCardTypeIcon(card.cardNumber)}
                             </div>
 
-                            <div>
-                              <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">
-                                Card number
-                              </p>
+                            <div className="mb-2">
                               <p className="text-[20px] md:text-[24px] font-semibold tracking-wider dark:text-(--neutral-800)">
                                 {card.cardNumber || "512X XXXX XXXX XXXX"}
                               </p>
@@ -231,29 +228,18 @@ const Checkout1: React.FC = () => {
 
                             <div className="flex justify-between">
                               <div>
-                                <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">
-                                  Cardholder name
-                                </p>
                                 <p className="text-sm dark:text-(--neutral-800) font-medium uppercase tracking-wide max-w-[150px] truncate">
                                   {card.cardHolder || "YOUR NAME"}
                                 </p>
                               </div>
                               <div>
-                                <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">
-                                  mm/yy
-                                </p>
                                 <p className="text-sm dark:text-(--neutral-800) font-medium">
                                   {card.expiryDate || "12/24"}
                                 </p>
                               </div>
                               <div>
-                                <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">
-                                  CVV
-                                </p>
                                 <p className="text-sm dark:text-(--neutral-800) font-medium text-center">
-                                  {cvvConfirmed && activeCardIndex === index
-                                    ? "✓"
-                                    : "***"}
+                                  ***
                                 </p>
                               </div>
                             </div>
@@ -261,12 +247,12 @@ const Checkout1: React.FC = () => {
                             <motion.button
                               type="button"
                               whileTap={{ scale: 0.95 }}
-                              whileHover={{ scale: 1.03 }}
+                              whileHover={{ scale: 1.01 }}
                               onClick={() => {
                                 setActiveCardIndex(index);
                                 setShowCvvModal(true);
                               }}
-                              className={`mt-3 w-full py-2.5 rounded-xl text-[13px] font-bold tracking-wide transition-all cursor-pointer ${
+                              className={`mt-3 w-full py-2 rounded-xl text-[12px] font-bold tracking-wide transition-all cursor-pointer ${
                                 cvvConfirmed && activeCardIndex === index
                                   ? "bg-green-500/20 text-green-300 border border-green-400/30"
                                   : "bg-white/15 hover:bg-white/25 text-white border border-white/20"

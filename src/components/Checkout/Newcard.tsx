@@ -275,7 +275,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
                 <p className="text-xs font-medium text-white/60 dark:text-(--neutral-500)">
                   Cardholder name
                 </p>
-                <p className="text-sm dark:text-(--neutral-800) font-medium uppercase tracking-wide">
+                <p className="text-sm dark:text-(--neutral-800) font-medium uppercase tracking-wide max-w-[100px] truncate">
                   {cardHolder || "YOUR NAME"}
                 </p>
               </div>
