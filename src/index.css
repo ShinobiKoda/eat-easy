@@ -216,3 +216,55 @@ html {
 .dark .aside {
   background: var(--neutral-900);
 }
+
+/* Custom slick slider dots — pill active, circle inactive */
+.slick-dots {
+  bottom: -30px !important;
+}
+
+.slick-dots li {
+  width: 10px !important;
+  height: 4px !important;
+  margin: 0 4px !important;
+  transition: all 0.3s ease;
+}
+
+.slick-dots li button {
+  width: 10px !important;
+  height: 10px !important;
+  padding: 0 !important;
+}
+
+.slick-dots li button::before {
+  content: "" !important;
+  display: block !important;
+  width: 10px !important;
+  height: 4px !important;
+  border-radius: 9999px !important;
+  background: var(--neutral-400) !important;
+  opacity: 1 !important;
+  transition: all 0.3s ease;
+}
+
+.slick-dots li.slick-active {
+  width: 28px !important;
+}
+
+.slick-dots li.slick-active button {
+  width: 28px !important;
+}
+
+.slick-dots li.slick-active button::before {
+  width: 28px !important;
+  background: var(--yellow-1) !important;
+  border-radius: 9999px !important;
+}
+
+/* Dark mode dot overrides */
+.dark .slick-dots li button::before {
+  background: #e6c78e !important;
+}
+
+.dark .slick-dots li.slick-active button::before {
+  background: var(--yellow-1) !important;
+}

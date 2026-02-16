@@ -11,6 +11,7 @@ import { useOrder } from "../../hooks/useOrder";
 import wallet from "/images/wallet.png";
 import Newcard from "./Newcard";
 import CvvModal from "./CvvModal";
+import { SlickPrevArrow, SlickNextArrow } from "./SliderArrows";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -78,6 +79,8 @@ const Checkout1: React.FC = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: true,
+    prevArrow: <SlickPrevArrow isDark={isDark} />,
+    nextArrow: <SlickNextArrow isDark={isDark} />,
     afterChange: (index: number) => {
       setActiveCardIndex(index);
       setCvvConfirmed(false);
@@ -255,7 +258,7 @@ const Checkout1: React.FC = () => {
                               className={`mt-3 w-full py-2 rounded-xl text-[12px] font-bold tracking-wide transition-all cursor-pointer ${
                                 cvvConfirmed && activeCardIndex === index
                                   ? "bg-green-500/20 text-green-300 border border-green-400/30"
-                                  : "bg-white/15 hover:bg-white/25 text-white border border-white/20"
+                                  : "bg-white/15 dark:bg-(--neutral-400)/50 hover:bg-white/25 text-white dark:text-(--neutral-800) border border-white/20"
                               }`}
                             >
                               {cvvConfirmed && activeCardIndex === index
@@ -268,7 +271,7 @@ const Checkout1: React.FC = () => {
                     </Slider>
                   </div>
 
-                  <div className="bg-[#FFF8E1] dark:bg-(--neutral-900) border border-[#FFB01D]/20 rounded-2xl p-4 flex gap-4 items-center w-full mt-auto">
+                  <div className="bg-[#FFF8E1] dark:bg-(--neutral-400) border border-[#FFB01D]/20 rounded-2xl p-4 flex gap-4 md:gap-8 items-center w-full mt-auto">
                     <div className="min-w-[40px] h-[40px]">
                       <img
                         src={wallet}
@@ -280,7 +283,7 @@ const Checkout1: React.FC = () => {
                       <p className="text-[14px] font-bold text-[#32324D] dark:text-white">
                         More info about your payment
                       </p>
-                      <p className="text-[12px] text-[#8E8EA9]">
+                      <p className="text-[12px] text-(--neutral-200)">
                         This card is used as default for all your payments.
                       </p>
                     </div>
