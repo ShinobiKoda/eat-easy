@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Profile from "/images/profile-img.png";
 import { IoIosLogOut } from "react-icons/io";
 import { PiMedalThin } from "react-icons/pi";
@@ -202,31 +202,39 @@ const Sidebar: React.FC = () => {
                       Food Menu
                     </p>
                   </motion.button>
-                  {effectiveIsOpen && (
-                    <div
-                      className={`border-l-2 border-(--yellow-2) ml-[25px] space-y-4 pl-[33px]  ${
-                        activeMenu === 1 ? "flex flex-col" : "hidden"
-                      }`}
-                    >
-                      <NavLink to="/recommended">
-                        <motion.div
-                          whileTap={{ scale: 0.95 }}
-                          className="cursor-pointer font-medium text-base text-white"
-                        >
-                          Smart Assistant
-                        </motion.div>
-                      </NavLink>
+                  <AnimatePresence>
+                    {effectiveIsOpen && activeMenu === 1 && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className={`border-l-2 border-(--yellow-2) ml-[25px] space-y-4 pl-[33px] overflow-hidden ${
+                          activeMenu === 1
+                            ? "max-h-[300px] overflow-y-auto scrollbar-hidden"
+                            : ""
+                        }`}
+                      >
+                        <NavLink to="/recommended">
+                          <motion.div
+                            whileTap={{ scale: 0.95 }}
+                            className="cursor-pointer font-medium text-base text-white"
+                          >
+                            Smart Assistant
+                          </motion.div>
+                        </NavLink>
 
-                      <NavLink to="/FullMenu">
-                        <motion.div
-                          whileTap={{ scale: 0.95 }}
-                          className="cursor-pointer font-medium text-base text-white"
-                        >
-                          Full Menu
-                        </motion.div>
-                      </NavLink>
-                    </div>
-                  )}
+                        <NavLink to="/FullMenu">
+                          <motion.div
+                            whileTap={{ scale: 0.95 }}
+                            className="cursor-pointer font-medium text-base text-white"
+                          >
+                            Full Menu
+                          </motion.div>
+                        </NavLink>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <div className="space-y-4">
@@ -356,7 +364,10 @@ const Sidebar: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer border-none bg-transparent outline-none"
                 >
-                  <div className="p-3 rounded-2xl bg-white/15 cursor-pointer">
+                  <div
+                    onClick={toggleTheme}
+                    className="p-3 rounded-2xl bg-white/15 cursor-pointer"
+                  >
                     <ThemeSwitchButton />
                   </div>
                   <p
