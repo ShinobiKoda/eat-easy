@@ -19,6 +19,7 @@ import { FcSimCardChip } from "react-icons/fc";
 import { SiVisa, SiMastercard } from "react-icons/si";
 import { cardService } from "../../services/cardService";
 import { useTheme } from "../../hooks/useTheme";
+import Success from "./Success";
 
 const Checkout1: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
@@ -29,6 +30,7 @@ const Checkout1: React.FC = () => {
   const [cvvConfirmed, setCvvConfirmed] = useState(false);
   const [cards, setCards] = useState<any[]>([]);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -62,6 +64,7 @@ const Checkout1: React.FC = () => {
     console.log("Processing payment with CVV:", cvv);
     sessionStorage.removeItem("checkout_cvv");
     setCvvConfirmed(false);
+    setShowSuccessModal(true);
   };
 
   const getCardTypeIcon = (number: string) => {
@@ -131,14 +134,15 @@ const Checkout1: React.FC = () => {
   const total = orderTotal + tax + tip;
 
   // stop background scroll effect when any of this is open
-  const isModalOpen = Boolean(showNewCard) || Boolean(showCvvModal);
+  const isModalOpen =
+    Boolean(showNewCard) || Boolean(showCvvModal) || Boolean(showSuccessModal);
   useEffect(() => {
     if (isModalOpen) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
-  }, [showNewCard, showCvvModal]);
+  }, [showNewCard, showCvvModal, showSuccessModal]);
 
   return (
     <div className="w-full min-h-screen">
@@ -476,6 +480,11 @@ const Checkout1: React.FC = () => {
               />
             )}
           </AnimatePresence>
+
+          <Success
+            isOpen={showSuccessModal}
+            onClose={() => setShowSuccessModal(false)}
+          />
         </div>
       </div>
     </div>
