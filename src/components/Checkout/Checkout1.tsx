@@ -136,6 +136,7 @@ const Checkout1: React.FC = () => {
   // stop background scroll effect when any of this is open
   const isModalOpen =
     Boolean(showNewCard) || Boolean(showCvvModal) || Boolean(showSuccessModal);
+
   useEffect(() => {
     if (isModalOpen) {
       document.body.classList.add("overflow-hidden");
@@ -261,7 +262,7 @@ const Checkout1: React.FC = () => {
                               }}
                               className={`mt-3 w-full py-2 rounded-xl text-[12px] font-bold tracking-wide transition-all cursor-pointer ${
                                 cvvConfirmed && activeCardIndex === index
-                                  ? "bg-green-500/20 text-green-300 border border-green-400/30"
+                                  ? "bg-green-500/20 dark:bg-green-900/70 text-green-300 border border-green-400/30"
                                   : "bg-white/15 dark:bg-(--neutral-400)/50 hover:bg-white/25 text-white dark:text-(--neutral-800) border border-white/20"
                               }`}
                             >
@@ -275,7 +276,7 @@ const Checkout1: React.FC = () => {
                     </Slider>
                   </div>
 
-                  <div className="bg-[#FFF8E1] dark:bg-(--neutral-400) border border-[#FFB01D]/20 rounded-2xl p-4 flex gap-4 md:gap-8 items-center w-full mt-auto">
+                  <div className="bg-[#FFF8E1] dark:bg-(--neutral-400) border border-[#FFB01D]/20 rounded-2xl p-6 flex gap-4 md:gap-8 items-center w-full mt-auto">
                     <div className="min-w-[40px] h-[40px]">
                       <img
                         src={wallet}
@@ -401,12 +402,18 @@ const Checkout1: React.FC = () => {
                       <div className="relative group">
                         <MdOutlinePayments className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8E8EA9] group-focus-within:text-(--yellow-1) transition-colors" />
                         <input
-                          type="number"
+                          type="text"
                           placeholder="Add tips"
-                          value={tip > 0 ? tip : ""}
-                          onChange={(e) =>
-                            setTip(parseFloat(e.target.value) || 0)
-                          }
+                          value={tip > 0 ? `$ ${tip.toFixed(2)}` : ""}
+                          onChange={(e) => {
+                            const rawValue = e.target.value.replace(/\D/g, "");
+                            if (!rawValue) {
+                              setTip(0);
+                              return;
+                            }
+                            const numericValue = parseInt(rawValue, 10);
+                            setTip(numericValue / 100);
+                          }}
                           className="w-full bg-[#f6f6f9] dark:bg-[#32324D]/50 rounded-2xl py-4 pl-12 pr-4 outline-none text-[15px] dark:text-white border border-transparent focus:border-(--neutral-500) placeholder:text-[#8E8EA9] transition-all"
                         />
                       </div>
