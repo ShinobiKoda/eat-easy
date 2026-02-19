@@ -488,10 +488,7 @@ const Checkout1: React.FC = () => {
             )}
           </AnimatePresence>
 
-          <Success
-            isOpen={showSuccessModal}
-            onClose={() => setShowSuccessModal(false)}
-          />
+          <Success isOpen={showSuccessModal} />
         </div>
       </div>
     </div>

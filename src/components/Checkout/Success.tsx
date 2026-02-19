@@ -1,14 +1,15 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LiaTimesSolid } from "react-icons/lia";
 import wallet from "/images/wallet.png"; // Fallback to existing wallet or generated image
+import Header from "../layout/Header";
+import { useNavigate } from "react-router-dom";
 
 type SuccessProps = {
   isOpen: boolean;
-  onClose: () => void;
 };
 
-const Success: React.FC<SuccessProps> = ({ isOpen, onClose }) => {
+const Success: React.FC<SuccessProps> = ({ isOpen }) => {
+  const navigate = useNavigate();
   return (
     <AnimatePresence>
       {isOpen && (
@@ -20,28 +21,16 @@ const Success: React.FC<SuccessProps> = ({ isOpen, onClose }) => {
             exit={{ opacity: 0 }}
             className="hidden sm:fixed inset-0 bg-black/60 z-100 backdrop-blur-md min-h-screen"
           />
-
+          <Header navbarTitle="Gram Bistro" showBack={false} />
           {/* Modal */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ type: "spring", damping: 25, stiffness: 350 }}
-            className="fixed inset-0 z-101 flex items-center justify-center sm:px-4 pointer-events-none"
+            className="fixed inset-0 flex items-center justify-center sm:px-4 pointer-events-none top-14"
           >
             <div className="bg-[#2a2a4a] dark:bg-[#2a2a4a] sm:rounded-3xl sm:shadow-2xl h-full w-full md:max-w-[624px] p-10 relative pointer-events-auto">
-              {/* Close button */}
-              <button
-                type="button"
-                onClick={onClose}
-                className="absolute top-5 right-5 p-1.5 rounded-full hover:bg-white/10 transition-colors cursor-pointer"
-              >
-                <LiaTimesSolid
-                  size={22}
-                  className="text-gray-400 hover:text-white"
-                />
-              </button>
-
               {/* Success Asset */}
               <div className="flex justify-center mb-8">
                 <motion.div
@@ -71,7 +60,7 @@ const Success: React.FC<SuccessProps> = ({ isOpen, onClose }) => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={onClose}
+                  onClick={() => navigate("/welcome")}
                   className="w-full py-4 rounded-2xl bg-[#615793] hover:bg-[#6c5dd3] text-white font-bold text-[18px] shadow-lg shadow-[#615793]/30 transition-all cursor-pointer"
                 >
                   Done
