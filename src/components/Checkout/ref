@@ -18,7 +18,7 @@ const Success: React.FC<SuccessProps> = ({ isOpen, onClose }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="hidden sm:fixed inset-0 bg-black/60 z-100 backdrop-blur-md min-h-screen"
+            className="fixed inset-0 bg-black/60 z-100 backdrop-blur-md min-h-screen"
           />
 
           {/* Modal */}
@@ -27,9 +27,9 @@ const Success: React.FC<SuccessProps> = ({ isOpen, onClose }) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ type: "spring", damping: 25, stiffness: 350 }}
-            className="fixed inset-0 z-101 flex items-center justify-center sm:px-4 pointer-events-none"
+            className="fixed inset-0 z-101 flex items-center justify-center px-4 pointer-events-none"
           >
-            <div className="bg-[#2a2a4a] dark:bg-[#2a2a4a] sm:rounded-3xl sm:shadow-2xl h-full w-full md:max-w-[624px] p-10 relative pointer-events-auto">
+            <div className="bg-[#2a2a4a] dark:bg-[#2a2a4a] rounded-3xl shadow-2xl w-full max-w-[624px] p-10 relative pointer-events-auto">
               {/* Close button */}
               <button
                 type="button"

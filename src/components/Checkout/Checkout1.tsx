@@ -164,7 +164,7 @@ const Checkout1: React.FC = () => {
         <div className="pt-25 md:pt-30 max-w-[1440px] mx-auto flex flex-col items-center py-6 px-4 md:px-6 space-y-6 md:space-y-10">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 w-full items-center lg:items-start">
             {/* Payment Method Column */}
-            <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-4 md:p-8 w-full lg:w-[60%] flex flex-col items-center justify-center min-h-[500px]">
+            <div className="md:bg-[#FFFFFF] dark:md:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl md:p-8 w-full lg:w-[60%] flex flex-col items-center justify-center min-h-[500px]">
               {cards.length === 0 ? (
                 <>
                   <motion.div
