@@ -107,7 +107,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="z-50 fixed right-0 w-full min-h-screen sm:w-[55%] md:w-[45%] lg:w-[37%] top-[15%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl vieworder-bg"
+      className="z-50 fixed right-0 w-full min-h-screen sm:w-[55%] md:w-[45%] lg:w-[450px] top-[15%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl vieworder-bg"
     >
       <div className="flex flex-col h-full">
         <div
@@ -120,12 +120,14 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
           onClick={onClose}
           className="sticky ml-auto hidden sm:block cursor-pointer top-6 right-2 z-50"
         >
-          <LiaTimesSolid size={25} className="text-(--neutral-400) dark:text-(--neutral-200)" />
+          <LiaTimesSolid
+            size={25}
+            className="text-(--neutral-400) dark:text-(--neutral-200)"
+          />
         </motion.div>
 
         <div className="flex-1 overflow-y-auto scrollbar-hidden">
           <div className="max-w-[600px] min-h-[204px] flex flex-col items-center overflow-hidden relative">
-
             <div className="w-[454px] h-[444px] absolute -top-[265px] rounded-[50%] shadow-[0_4px_12px_rgba(0,0,0,0.10)]" />
             <div className="w-60 h-[245px] absolute -top-20 rounded-[50%] shadow-[0_4px_12px_rgba(0,0,0,0.10)]" />
 
@@ -158,12 +160,16 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
             <div className="p-2.5 space-x-2.5 flex justify-between bg-[#FFFFFF] dark:bg-(--neutral-700)  rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
               {item.nutrients.map((nut, idx) => (
                 <div key={idx} className="px-2 text-center">
-                  <p className="text-[14px] font-semibold text-(--purple-1) dark:text-white">{nut.amount}</p>
-                  <p className="text-[12px] font-600 text-(--neutral-800) dark:text-(--neutral-150)">{nut.unit}</p>
+                  <p className="text-[14px] font-semibold text-(--purple-1) dark:text-white">
+                    {nut.amount}
+                  </p>
+                  <p className="text-[12px] font-600 text-(--neutral-800) dark:text-(--neutral-150)">
+                    {nut.unit}
+                  </p>
                 </div>
               ))}
             </div>
-            
+
             {/* ingredients */}
             <div>
               <h1 className="text-(--neutral-600) text-[18px] dark:text-(--neutral-200) font-semibold">
@@ -172,10 +178,13 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
               <div className="py-2.5 space-x-2.5 flex flex-nowrap overflow-x-auto scrollbar-hidden">
                 {item.ingredients.map((ingredient, idx) => (
                   <div
-                    key={idx} 
-                    className="py-3 min-w-20 space-y-2.5 text-center flex flex-col items-center bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
+                    key={idx}
+                    className="py-3 min-w-20 space-y-2.5 text-center flex flex-col items-center bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]"
+                  >
                     <img src={ingredient.ingimage} alt="" />
-                    <p className="text-[12px] text-(--neutral-600) dark:text-(--neutral-150) font-600">{ingredient.ingname}</p>
+                    <p className="text-[12px] text-(--neutral-600) dark:text-(--neutral-150) font-600">
+                      {ingredient.ingname}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -209,7 +218,9 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
                             }}
                             className={`w-4 h-4 border rounded-sm cursor-pointer flex items-center justify-center ${selectedToppings.has(top.id) ? "bg-(--yellow-1) border-(--yellow-1)" : "border-(--neutral-300) dark:border-(--neutral-150)"}`}
                           >
-                            <FaCheck className={`text-white dark:text-(--neutral-700) ${selectedToppings.has(top.id) ? "w-full h-full " : "hidden"}`}/>
+                            <FaCheck
+                              className={`text-white dark:text-(--neutral-700) ${selectedToppings.has(top.id) ? "w-full h-full " : "hidden"}`}
+                            />
                           </motion.div>
 
                           <p className="text-[12px] md:text-[16px] text-(--neutral-600) dark:text-(--neutral-200) font-100">
@@ -237,10 +248,14 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
                               : "cursor-pointer"
                           }
                         >
-                          <FaMinus className={`${topCount === 1 ? "text-(--neutral-200)" : "text-(--neutral-500) dark:text-(--neutral-100)"}`} />
+                          <FaMinus
+                            className={`${topCount === 1 ? "text-(--neutral-200)" : "text-(--neutral-500) dark:text-(--neutral-100)"}`}
+                          />
                         </button>
 
-                        <p className="text-[14px] dark:text-white text-(--neutral-500) font-semibold">{topCount}</p>
+                        <p className="text-[14px] dark:text-white text-(--neutral-500) font-semibold">
+                          {topCount}
+                        </p>
 
                         {/* add top */}
                         <button
@@ -282,10 +297,14 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
               disabled={count === 1}
               className={count === 1 ? "cursor-not-allowed" : "cursor-pointer"}
             >
-              <FaMinus className={`${count === 1 ? "text-(--neutral-200)" : "text-(--neutral-500) dark:text-(--neutral-100)"}`} />
+              <FaMinus
+                className={`${count === 1 ? "text-(--neutral-200)" : "text-(--neutral-500) dark:text-(--neutral-100)"}`}
+              />
             </button>
 
-            <p className="text-center dark:text-white text-(--neutral-500) text-[14px]">{count}</p>
+            <p className="text-center dark:text-white text-(--neutral-500) text-[14px]">
+              {count}
+            </p>
 
             {/* increment button */}
             <button onClick={Increment} type="button" className="">

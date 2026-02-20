@@ -209,7 +209,11 @@ const Sidebar: React.FC = () => {
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="border-l-2 border-(--yellow-2) ml-[25px] space-y-4 pl-[33px] overflow-hidden flex flex-col"
+                        className={`border-l-2 border-(--yellow-2) ml-[25px] space-y-4 pl-[33px] overflow-hidden ${
+                          activeMenu === 1
+                            ? "max-h-[300px] overflow-y-auto scrollbar-hidden"
+                            : ""
+                        }`}
                       >
                         <NavLink to="/recommended">
                           <motion.div
@@ -360,7 +364,10 @@ const Sidebar: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer border-none bg-transparent outline-none"
                 >
-                  <div className="p-3 rounded-2xl bg-white/15 cursor-pointer">
+                  <div
+                    onClick={toggleTheme}
+                    className="p-3 rounded-2xl bg-white/15 cursor-pointer"
+                  >
                     <ThemeSwitchButton />
                   </div>
                   <p

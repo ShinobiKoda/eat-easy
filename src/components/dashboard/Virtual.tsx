@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import AI from "/images/AI-image.png";
 import { NavLink } from "react-router-dom";
 import Header from "../layout/Header";
 import Loader from "../Loader";
 
-
 const Virtual: React.FC = () => {
   const [showLoader, setShowLoader] = useState(() => {
-    return !sessionStorage.getItem('hasShownLoader_Virtual');
+    return !sessionStorage.getItem("hasShownLoader_Virtual");
   });
   useEffect(() => {
     if (showLoader) {
       const t = setTimeout(() => {
         setShowLoader(false);
-        sessionStorage.setItem('hasShownLoader_Virtual', 'true');
+        sessionStorage.setItem("hasShownLoader_Virtual", "true");
       }, 3000);
       return () => clearTimeout(t);
     }
@@ -36,7 +35,7 @@ const Virtual: React.FC = () => {
           showBack={true}
         />
 
-        <div className='pt-20 md:py-30 lg:pt-50 lg:pb-20 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5'>
+        <div className="pt-20 md:py-30 lg:pt-50 lg:pb-20 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5">
           <div className="lg:max-w-1/2">
             <div>
               <img src={AI} alt="" />
@@ -54,7 +53,7 @@ const Virtual: React.FC = () => {
           </div>
 
           <div className="text-[16px] lg:text-[20px] font-600 w-full lg:w-xl flex flex-col-reverse items-center gap-4">
-            <NavLink to="/welcome" className="w-[100%] md:w-[480px]">
+            <NavLink to="/welcome" className="w-full md:w-[480px]">
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 className="p-4 cursor-pointer text-white w-full hover:bg-gray-600 rounded-2xl"
@@ -62,7 +61,7 @@ const Virtual: React.FC = () => {
                 Take me to the menu
               </motion.button>
             </NavLink>
-            <NavLink to="/recommend" className="w-[100%] md:w-[480px]">
+            <NavLink to="/recommend" className="w-full md:w-[480px]">
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 className="rounded-2xl bg-(--purple-2) text-white p-4 cursor-pointer w-full"
