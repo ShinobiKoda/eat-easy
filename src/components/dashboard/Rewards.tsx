@@ -62,19 +62,19 @@ const Rewards: React.FC = () => {
 
         <div className="w-full pt-[60px] lg:pt-[120px] px-6 lg:px-[42px] pb-10">
           {/* ─── Top Section: Hero + Points ─── */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-5">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-5 max-h-[350px]">
             {/* Hero Banner */}
             <FadeIn>
-              <div className="relative overflow-hidden rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between min-h-[350px] max-w-[800px]">
+              <div className="relative overflow-hidden rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between h-full w-[2/3]">
                 {/* Text */}
-                <div className="relative z-10 max-w-[260px] space-y-4">
+                <div className="relative px-10 space-y-4">
                   <p className="text-(--neutral-400) dark:text-(--neutral-600) text-sm font-medium">
                     New client
                   </p>
-                  <h2 className="heading-font text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[32px] leading-tight">
+                  <h2 className="heading-font text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[32px] leading-tight max-w-[263px]">
                     30% Discount for all the menu
                   </h2>
-                  <ScaleButton className="bg-(--orange-1) text-white font-semibold text-sm px-6 py-2.5 rounded-xl cursor-pointer">
+                  <ScaleButton className="bg-(--orange-1) text-white font-semibold text-sm px-6 py-4 rounded-2xl cursor-pointer">
                     Claim reward
                   </ScaleButton>
                 </div>
@@ -90,35 +90,37 @@ const Rewards: React.FC = () => {
             </FadeIn>
 
             {/* Right Column: Points + 2x */}
-            <div className="flex flex-col gap-5 lg:w-[280px]">
+            <div className="flex flex-col gap-5 w-[1/3]">
               {/* Points Card */}
               <PopIn>
                 <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between">
                   <div>
-                    <p className="text-(--neutral-400) dark:text-(--neutral-300) text-sm font-medium">
+                    <p className="text-(--neutral-400) dark:text-(--neutral-800) text-sm font-medium">
                       Your points
                     </p>
-                    <p className="heading-font text-(--orange-1) font-bold text-[48px] leading-none mt-1">
+                    <p className="text-(--orange-1) font-bold text-[40px] lg:text-[48px] leading-none mt-1">
                       300
                     </p>
                   </div>
-                  <img
-                    src="/images/reward-star.png"
-                    alt="Star"
-                    className="w-[56px] h-[56px] object-contain"
-                  />
+                  <div className="w-[110.94px] h-[110.94px]">
+                    <img
+                      src="/images/reward-star.png"
+                      alt="Star"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
                 </div>
               </PopIn>
 
               {/* 2x More Points */}
               <PopIn>
-                <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex">
-                  <div className="">
-                    <h3 className="text-white font-bold text-base heading-font">
+                <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between">
+                  <div className="max-w-[211px] flex flex-col justify-center">
+                    <h3 className="text-(--neutral-400) dark:text-(--neutral-800) font-bold text-base heading-font">
                       2x more points
                     </h3>
-                    <p className="text-(--neutral-400) dark:text-(--neutral-300) text-xs font-medium mt-1">
-                      Your next 5 orders will double your credit points
+                    <p className="text-(--neutral-400) dark:text-(--neutral-600) text-[16px] font-medium mt-1">
+                      Your next <b> 5 orders will double</b> your credit points
                     </p>
                   </div>
                   {/* Mini chart line */}
@@ -141,10 +143,10 @@ const Rewards: React.FC = () => {
                 Get new rewards
               </h3>
             </FadeIn>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-stretch gap-4">
               {newRewards.map((reward, index) => (
                 <FadeIn key={index}>
-                  <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-700) p-5 flex items-center justify-between cursor-pointer group hover:bg-(--neutral-800) dark:hover:bg-(--neutral-600) transition-colors duration-200">
+                  <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-700) p-5 flex items-center justify-between cursor-pointer group hover:bg-(--neutral-800) dark:hover:bg-(--neutral-600) transition-colors duration-200 h-full">
                     <div className="space-y-1 max-w-[200px]">
                       <h4 className="text-white font-semibold text-sm heading-font">
                         {reward.title}
