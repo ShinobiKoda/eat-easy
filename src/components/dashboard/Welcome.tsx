@@ -27,7 +27,7 @@ const options = [
 
 const Welcome: React.FC = () => {
   return (
-    <div className="w-full min-h-screen mb-10">
+    <div className="w-full min-h-screen">
       <MotionContainer className={`transition-all duration-300`}>
         <Header description="Browse Our Food Menu" navbarTitle="Gbam Gbistro" />
         <div className="w-full pt-[60px] lg:pt-[120px] px-6 lg:px-[42px]">
@@ -35,9 +35,7 @@ const Welcome: React.FC = () => {
             Let's find the perfect dish for you
           </PopIn>
 
-          <div
-            className="w-full hidden md:flex md:items-stretch md:justify-between bg-(--neutral-900) dark:bg-(--neutral-150) rounded-[28.67px] px-[50px] "
-          >
+          <div className="w-full hidden md:flex md:items-stretch md:justify-between bg-(--neutral-900) dark:bg-(--neutral-150) rounded-[28.67px] px-[50px] ">
             {/* Text */}
             <FadeIn className="space-y-6 py-[50px]">
               <h1 className="text-[32px]">
