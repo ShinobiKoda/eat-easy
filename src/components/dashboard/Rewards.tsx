@@ -65,13 +65,13 @@ const Rewards: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-5">
             {/* Hero Banner */}
             <FadeIn>
-              <div className="relative overflow-hidden rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-700) p-8 flex items-center justify-between min-h-[200px]">
+              <div className="relative overflow-hidden rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between min-h-[350px] max-w-[800px]">
                 {/* Text */}
                 <div className="relative z-10 max-w-[260px] space-y-4">
-                  <p className="text-(--neutral-400) dark:text-(--neutral-300) text-sm font-medium">
+                  <p className="text-(--neutral-400) dark:text-(--neutral-600) text-sm font-medium">
                     New client
                   </p>
-                  <h2 className="heading-font text-white font-bold text-[28px] leading-tight">
+                  <h2 className="heading-font text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[32px] leading-tight">
                     30% Discount for all the menu
                   </h2>
                   <ScaleButton className="bg-(--orange-1) text-white font-semibold text-sm px-6 py-2.5 rounded-xl cursor-pointer">
@@ -79,11 +79,11 @@ const Rewards: React.FC = () => {
                   </ScaleButton>
                 </div>
                 {/* Badge Image */}
-                <div className="hidden sm:flex items-center justify-center">
+                <div className="max-w-[335px] hidden sm:flex items-center justify-center">
                   <img
                     src="/images/reward.png"
                     alt="Reward Badge"
-                    className="w-[180px] h-[180px] object-contain"
+                    className="w-full h-full object-contain"
                   />
                 </div>
               </div>
@@ -93,7 +93,7 @@ const Rewards: React.FC = () => {
             <div className="flex flex-col gap-5 lg:w-[280px]">
               {/* Points Card */}
               <PopIn>
-                <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-700) p-5 flex items-center justify-between">
+                <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between">
                   <div>
                     <p className="text-(--neutral-400) dark:text-(--neutral-300) text-sm font-medium">
                       Your points
@@ -112,29 +112,22 @@ const Rewards: React.FC = () => {
 
               {/* 2x More Points */}
               <PopIn>
-                <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-700) p-5">
-                  <h3 className="text-white font-bold text-base heading-font">
-                    2x more points
-                  </h3>
-                  <p className="text-(--neutral-400) dark:text-(--neutral-300) text-xs font-medium mt-1">
-                    Your next 5 orders will double your credit points
-                  </p>
+                <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex">
+                  <div className="">
+                    <h3 className="text-white font-bold text-base heading-font">
+                      2x more points
+                    </h3>
+                    <p className="text-(--neutral-400) dark:text-(--neutral-300) text-xs font-medium mt-1">
+                      Your next 5 orders will double your credit points
+                    </p>
+                  </div>
                   {/* Mini chart line */}
-                  <div className="mt-4 flex items-end gap-1 h-[32px]">
-                    <svg
-                      viewBox="0 0 200 40"
-                      className="w-full h-full"
-                      fill="none"
-                    >
-                      <path
-                        d="M0 35 Q30 30, 50 28 T100 20 T150 10 T200 5"
-                        stroke="var(--orange-1)"
-                        strokeWidth="2.5"
-                        fill="none"
-                        strokeLinecap="round"
-                      />
-                      <circle cx="200" cy="5" r="4" fill="var(--orange-1)" />
-                    </svg>
+                  <div className="flex items-center justify-between w-[50%]">
+                    <img
+                      src="/images/double-credit.png"
+                      alt="Star"
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                 </div>
               </PopIn>
