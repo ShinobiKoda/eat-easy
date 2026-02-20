@@ -304,29 +304,31 @@ const Sidebar: React.FC = () => {
               </h1>
               <div className="mt-4 space-y-4">
                 <div className="space-y-4">
-                  <motion.button
-                    onClick={() => setSelectedItem(4)}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
-                  >
-                    <div
-                      className={`p-3 rounded-2xl ${
-                        selectedItem === 4 ? "bg-(--yellow-1)" : "bg-white/15"
-                      }`}
+                  <NavLink to="/rewards">
+                    <motion.button
+                      onClick={() => setSelectedItem(4)}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
-                      <PiMedalThin className="text-white" size={24} />
-                    </div>
+                      <div
+                        className={`p-3 rounded-2xl ${
+                          selectedItem === 4 ? "bg-(--yellow-1)" : "bg-white/15"
+                        }`}
+                      >
+                        <PiMedalThin className="text-white" size={24} />
+                      </div>
 
-                    <p
-                      className={`${
-                        selectedItem === 4
-                          ? "text-(--yellow-1) font-bold"
-                          : "text-white"
-                      } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
-                    >
-                      My Rewards
-                    </p>
-                  </motion.button>
+                      <p
+                        className={`${
+                          selectedItem === 4
+                            ? "text-(--yellow-1) font-bold"
+                            : "text-white"
+                        } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
+                      >
+                        My Rewards
+                      </p>
+                    </motion.button>
+                  </NavLink>
                 </div>
 
                 <div className="space-y-4">
