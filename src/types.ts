@@ -80,7 +80,6 @@ export type PropType = {
   image: string;
   name: string;
   rating: number;
-  star: string;
   reviews: number;
   price: number;
   text?: string;

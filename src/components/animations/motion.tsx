@@ -31,10 +31,12 @@ export const ScaleButton = ({
   children,
   className,
   style,
+  onClick,
 }: {
   children: ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  onClick?: () => void;
 }) => (
   <motion.button
     className={className}
@@ -44,6 +46,7 @@ export const ScaleButton = ({
     whileHover="hover"
     whileTap="tap"
     type="button"
+    onClick={onClick}
   >
     {children}
   </motion.button>

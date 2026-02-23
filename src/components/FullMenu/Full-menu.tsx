@@ -14,6 +14,8 @@ import { productGridStagger, productCardFade } from "../animations/motion";
 import { useOrder } from "../../hooks/useOrder";
 import { getMenuItems } from "../../services/menuService";
 import type { PropType } from "../../types";
+import StarHalf from "/images/star-half-icon.png";
+import StarFull from "/images/star.svg";
 
 const FullMenu: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -129,9 +131,7 @@ const FullMenu: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen">
-      <div
-        className={``}
-      >
+      <div className={``}>
         <Header
           title="Full Menu"
           description="See All Our Dishes"
@@ -236,9 +236,13 @@ const FullMenu: React.FC = () => {
                       </p>
 
                       <div className="space-x-1 py-1 px-1.5 flex items-center absolute top-2 right-2 bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
-                        <img src={dish.star} className="w-4 h-4" alt="" />
+                        {dish.rating < 4.5 ? (
+                          <img src={StarHalf} className="w-4 h-4" alt="" />
+                        ) : (
+                          <img src={StarFull} className="w-4 h-4" alt="" />
+                        )}
                         <p className="text-[11px] md:text-[14px]">
-                          {dish.rating}
+                          {dish.rating.toFixed(1)}
                         </p>
                       </div>
 

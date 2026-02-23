@@ -7,6 +7,8 @@ import { FaPlus, FaArrowRight } from "react-icons/fa6";
 import { LiaTimesSolid } from "react-icons/lia";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import Navbar from "../layout/Navbar";
+import StarHalf from "/images/star-half-icon.png";
+import StarFull from "/images/star.svg";
 
 export type ViewOrderProps = {
   items: PropType[];
@@ -21,8 +23,6 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
   removeOrder,
   onSend,
 }) => {
-
-
   // subtotal: sum of item prices (you can expand to include toppings/counts)
   const orderTotal = items.reduce((sum, t) => sum + (t.price || 0), 0);
 
@@ -108,9 +108,13 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
 
                       <div className=" text-[14px] text-[#C0C0CF] font-semibold mb-2 flex space-x-1 flex-wrap items-center">
                         <div className="space-x-1 flex items-center">
-                          <img src={order.star} className="w-4 h-4" alt="" />
+                          {order.rating < 4.5 ? (
+                            <img src={StarHalf} className="w-4 h-4" alt="" />
+                          ) : (
+                            <img src={StarFull} className="w-4 h-4" alt="" />
+                          )}
                           <p className="text-(--neutral-500) dark:text-(--neutral-200)">
-                            {order.rating}
+                            {order.rating.toFixed(1)}
                           </p>
                         </div>
                         <span className="text-(--neutral-300) dark:text-(--neutral-500)">
