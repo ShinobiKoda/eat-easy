@@ -138,7 +138,7 @@ const Rewards: React.FC = () => {
       <MotionContainer className="transition-all duration-300">
         <Header description="My Rewards" navbarTitle="My Rewards" />
 
-        <div className="w-full pt-[60px] md:pt-[120px] md:px-6 lg:px-[42px]">
+        <div className="w-full pt-[60px] md:pt-[120px] md:px-6 lg:px-[42px] md:pb-10">
           {/* ─── Top Section: Hero + Points ─── */}
           {/* Mobile-only heading */}
           <h2 className="md:hidden text-(--neutral-400) dark:text-white font-bold text-[20px] heading-font mb-3 px-6">
@@ -221,9 +221,9 @@ const Rewards: React.FC = () => {
           </div>
 
           {/* ─── Desktop: Original flex layout ─── */}
-          <div className="hidden lg:flex gap-5 max-h-[350px] h-full">
+          <div className="hidden lg:grid grid-cols-[2fr_1fr] gap-5 max-h-[350px] h-full">
             {/* Hero Banner */}
-            <FadeIn className="relative h-full w-[65%] shrink-0">
+            <FadeIn className="relative h-full w-full shrink-0 items-stretch">
               <div className="overflow-hidden rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between w-full">
                 <div className="relative px-10 space-y-4">
                   <p className="text-(--neutral-400) dark:text-(--neutral-600) text-sm font-medium">
@@ -303,12 +303,12 @@ const Rewards: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-stretch gap-4">
               {newRewards.map((reward, index) => (
                 <FadeIn key={index}>
-                  <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-700) p-5 flex items-center justify-between cursor-pointer h-full">
+                  <div className="rounded-2xl shadow-md bg-(--neutral-100) dark:bg-(--neutral-700) p-5 flex items-center justify-between cursor-pointer h-full">
                     <div className="space-y-4 max-w-[272px]">
-                      <h4 className="text-white font-semibold text-[18px] heading-font">
+                      <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[18px] heading-font">
                         {reward.title}
                       </h4>
-                      <p className="text-(--neutral-400) dark:text-(--neutral-300) text-[16px] font-medium">
+                      <p className="text-(--neutral-500) dark:text-(--neutral-300) text-[16px] font-medium">
                         {reward.description}
                       </p>
                     </div>
@@ -365,20 +365,20 @@ const Rewards: React.FC = () => {
                 {rewardsHistory.map((item, index) => (
                   <div key={index} className="px-2 h-full!">
                     <FadeIn className="h-full block">
-                      <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-700) p-5 space-y-4 cursor-pointer h-full flex flex-col justify-between">
-                        <div className="w-[80px] h-[80px] shrink-0">
+                      <div className="rounded-2xl bg-(--neutral-100) shadow-md dark:bg-(--neutral-700) p-5 space-y-4 cursor-pointer h-full flex flex-col justify-between">
+                        <div className="w-[80px] h-[80px] rounded-full shrink-0 bg-pink-200">
                           <img
                             src={item.image}
                             alt={item.title}
                             className="w-full h-full object-contain"
                           />
                         </div>
-                        <h4 className="text-white font-semibold text-[18px] font-mullish line-clamp-2">
+                        <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[18px] font-mullish line-clamp-2">
                           {item.title}
                         </h4>
                         <div className="flex items-center gap-1.5 shrink-0 mt-auto">
                           <HiOutlineCalendar className="text-(--orange-1) text-[16px]" />
-                          <span className="text-(--neutral-400) dark:text-(--neutral-300) text-[16px] font-medium">
+                          <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[16px] font-medium">
                             {item.date}
                           </span>
                         </div>
