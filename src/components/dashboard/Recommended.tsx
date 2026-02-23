@@ -14,7 +14,8 @@ import { AnimatePresence } from "motion/react";
 // ...existing code...
 import { useOrder } from "../../hooks/useOrder";
 import { getMenuItems } from "../../services/menuService";
-import StarIcon from "/images/star-half-icon.png";
+import StarHalf from "/images/star-half-icon.png";
+import StarFull from "/images/star.svg";
 
 type RecommendedProps = {
   items?: PropType[];
@@ -201,9 +202,21 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
 
                           <div className=" text-[14px] font-semibold mb-2">
                             <div className="space-x-1 flex items-center">
-                              <img src={StarIcon} className="w-4 h-4" alt="" />
+                              {eat.rating < 4.5 ? (
+                                <img
+                                  src={StarHalf}
+                                  className="w-4 h-4"
+                                  alt=""
+                                />
+                              ) : (
+                                <img
+                                  src={StarFull}
+                                  className="w-4 h-4"
+                                  alt=""
+                                />
+                              )}
                               <p className="text-(--neutral-500) dark:text-(--neutral-200)">
-                                {eat.rating}
+                                {eat.rating.toFixed(1)}
                               </p>
                             </div>
                             <span className="text-(--neutral-300) dark:text-(--neutral-500)">

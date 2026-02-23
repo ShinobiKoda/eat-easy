@@ -5,7 +5,8 @@ import { useState, type MouseEvent } from "react";
 import useIsDesktop from "../../hooks/useIsDesktop";
 import { FaPlus, FaMinus, FaCheck } from "react-icons/fa6";
 import { LiaTimesSolid } from "react-icons/lia";
-import StarIcon from "/images/star-half-icon.png";
+import StarHalf from "/images/star-half-icon.png";
+import StarFull from "/images/star.svg";
 
 export type ViewDishProps = {
   item: PropType | null;
@@ -139,8 +140,12 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
             />
 
             <div className="text-[14px] text-[#C0C0CF] space-x-1 shadow-[0_4px_12px_rgba(0,0,0,0.50)] font-semibold rounded-xl py-1 px-2 bg-[#F7F7F7] ml-auto mr-3 mt-3 sm:mr-auto sm:ml-3 sm:mt-0 relative flex items-center">
-              <img src={StarIcon} className="w-4 h-4" alt="" />
-              <p>{item.rating}</p>
+              {item.rating < 4.5 ? (
+                <img src={StarHalf} className="w-4 h-4" alt="" />
+              ) : (
+                <img src={StarFull} className="w-4 h-4" alt="" />
+              )}
+              <p>{item.rating.toFixed(1)}</p>
             </div>
           </div>
 
