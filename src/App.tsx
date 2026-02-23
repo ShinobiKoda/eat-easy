@@ -25,6 +25,7 @@ import PublicRoute from "./components/auth/PublicRoute";
 import SetCustomLocation from "./components/onboarding/SetCustomLocation";
 import Checkout1 from "./components/Checkout/Checkout1";
 import Rewards from "./components/dashboard/Rewards";
+import History from "./History";
 
 function App() {
   const location = useLocation();
@@ -230,6 +231,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Rewards />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="history"
+            element={
+              <ProtectedRoute>
+                <History />
               </ProtectedRoute>
             }
           />

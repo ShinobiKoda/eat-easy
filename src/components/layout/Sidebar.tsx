@@ -238,28 +238,30 @@ const Sidebar: React.FC = () => {
                 </div>
 
                 <div className="space-y-4">
-                  <motion.button
-                    onClick={() => setSelectedItem(2)}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
-                  >
-                    <div
-                      className={`p-3 rounded-2xl ${
-                        selectedItem === 2 ? "bg-(--yellow-1)" : "bg-white/15"
-                      }`}
+                  <NavLink to="/history">
+                    <motion.button
+                      onClick={() => setSelectedItem(2)}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
-                      <MdOutlineHistory className="text-white" size={24} />
-                    </div>
-                    <p
-                      className={`${
-                        selectedItem === 2
-                          ? "text-(--yellow-1) font-bold"
-                          : "text-white"
-                      } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
-                    >
-                      Order History
-                    </p>
-                  </motion.button>
+                      <div
+                        className={`p-3 rounded-2xl ${
+                          selectedItem === 2 ? "bg-(--yellow-1)" : "bg-white/15"
+                        }`}
+                      >
+                        <MdOutlineHistory className="text-white" size={24} />
+                      </div>
+                      <p
+                        className={`${
+                          selectedItem === 2
+                            ? "text-(--yellow-1) font-bold"
+                            : "text-white"
+                        } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
+                      >
+                        Order History
+                      </p>
+                    </motion.button>
+                  </NavLink>
                 </div>
 
                 <div className="space-y-4">
