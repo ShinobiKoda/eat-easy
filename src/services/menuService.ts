@@ -1,11 +1,8 @@
 import { supabase } from "../config/supabaseClient";
 import type { PropType } from "../types";
-import StarHalf from "/images/star-half-icon.png";
 
 export async function getMenuItems() {
-  const { data, error } = await supabase
-    .from("menu_items")
-    .select("*");
+  const { data, error } = await supabase.from("menu_items").select("*");
 
   if (error) {
     console.error("Error fetching menu items:", error);
@@ -13,7 +10,6 @@ export async function getMenuItems() {
   }
 
   // Map the database structure back to the PropType structure
-  // The 'star' icon is static for now as it's a local import in the original data.ts
   return (data || []).map((item) => ({
     id: Number(item.id),
     category: item.category,
@@ -27,6 +23,5 @@ export async function getMenuItems() {
     ingredients: item.ingredients || [],
     toppings: item.toppings || [],
     tag: item.tag || [],
-    star: StarHalf, // Default star icon from the project
   })) as (PropType & { category: string })[];
 }
