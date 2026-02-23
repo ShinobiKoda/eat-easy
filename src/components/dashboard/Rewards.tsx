@@ -68,6 +68,7 @@ const newRewards = [
 
 const Rewards: React.FC = () => {
   const sliderRef = useRef<Slider>(null);
+  const heroSliderRef = useRef<Slider>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slidesToShow, setSlidesToShow] = useState(4);
 
@@ -104,7 +105,7 @@ const Rewards: React.FC = () => {
     slidesToShow: 4,
     slidesToScroll: 1,
     arrows: false,
-    beforeChange: (current: number, next: number) => setCurrentSlide(next),
+    beforeChange: (_current: number, next: number) => setCurrentSlide(next),
     responsive: [
       {
         breakpoint: 1024,
@@ -121,18 +122,109 @@ const Rewards: React.FC = () => {
     ],
   };
 
+  const heroSliderSettings = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    centerMode: true,
+    centerPadding: "24px",
+  };
+
   return (
     <div className="w-full min-h-screen">
       <MotionContainer className="transition-all duration-300">
         <Header description="My Rewards" navbarTitle="My Rewards" />
 
-        <div className="w-full pt-[60px] lg:pt-[120px] px-6 lg:px-[42px] pb-10">
+        <div className="w-full pt-[60px] md:pt-[120px] md:px-6 lg:px-[42px]">
           {/* ─── Top Section: Hero + Points ─── */}
-          <div className="flex flex-col md:flex-row gap-5 w-full max-h-[350px] h-full">
+          {/* Mobile-only heading */}
+          <h2 className="md:hidden text-(--neutral-400) dark:text-white font-bold text-[20px] heading-font mb-3 px-6">
+            Use your rewards or new ones
+          </h2>
+
+          {/* ─── Mobile: Center-mode Hero Carousel ─── */}
+          <div className="lg:hidden w-full overflow-x-hidden max-h-[220px]">
+            <Slider
+              ref={heroSliderRef}
+              {...heroSliderSettings}
+              className="[&_.slick-track]:flex! [&_.slick-slide]:h-auto! [&_.slick-slide]:flex! [&_.slick-slide>div]:w-full! [&_.slick-slide>div]:h-full!"
+            >
+              {/* Hero Banner Slide */}
+              <div className="px-2 h-full">
+                <div className="overflow-hidden rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between w-full  max-h-[220px]">
+                  <div className="relative pl-6 min-w-[148px]">
+                    <p className="text-(--neutral-400) dark:text-(--neutral-600) text-xs font-medium">
+                      New client
+                    </p>
+                    <h2 className="heading-font text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[20px] leading-tight max-w-[180px]">
+                      30% Discount for all the menu
+                    </h2>
+                    <ScaleButton className="bg-(--orange-1) text-white font-semibold text-xs px-4 py-3 rounded-2xl cursor-pointer">
+                      Claim reward
+                    </ScaleButton>
+                  </div>
+                  <div className="w-[420px] h-auto relative -right-14 flex items-center justify-center">
+                    <img
+                      src="/images/reward.png"
+                      alt="Reward Badge"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Points Card Slide */}
+              <div className="px-2 h-full">
+                <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between overflow-hidden w-full  max-h-[220px]">
+                  <div className="">
+                    <p className="text-(--neutral-400) dark:text-(--neutral-800) text-[16px] font-semibold">
+                      Your points
+                    </p>
+                    <p className="text-(--orange-1) font-bold text-[40px] leading-none mt-1">
+                      300
+                    </p>
+                  </div>
+                  <div className="w-[200px] h-auto -right-10 relative">
+                    <img
+                      src="/images/reward-star.png"
+                      alt="Star"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 2x More Points Slide */}
+              <div className="px-2 h-full">
+                <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between overflow-clip w-full  max-h-[220px]">
+                  <div className="max-w-[200px] flex flex-col justify-center">
+                    <h3 className="text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[20px] heading-font">
+                      2x more points
+                    </h3>
+                    <p className="text-(--neutral-400) dark:text-(--neutral-600) text-[14px] font-medium mt-1">
+                      Your next <b>5 orders will double</b> your credit points
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-center w-[200px] h-auto -right-10 relative">
+                    <img
+                      src="/images/double-credit.png"
+                      alt="Star"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                </div>
+              </div>
+            </Slider>
+          </div>
+
+          {/* ─── Desktop: Original flex layout ─── */}
+          <div className="hidden lg:flex gap-5 max-h-[350px] h-full">
             {/* Hero Banner */}
-            <FadeIn className="relative h-full w-full md:w-[65%] shrink-0">
+            <FadeIn className="relative h-full w-[65%] shrink-0">
               <div className="overflow-hidden rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between w-full">
-                {/* Text */}
                 <div className="relative px-10 space-y-4">
                   <p className="text-(--neutral-400) dark:text-(--neutral-600) text-sm font-medium">
                     New client
@@ -144,8 +236,7 @@ const Rewards: React.FC = () => {
                     Claim reward
                   </ScaleButton>
                 </div>
-                {/* Badge Image */}
-                <div className="max-w-[335px] hidden sm:flex items-center justify-center">
+                <div className="max-w-[335px] flex items-center justify-center">
                   <img
                     src="/images/reward.png"
                     alt="Reward Badge"
@@ -156,7 +247,7 @@ const Rewards: React.FC = () => {
             </FadeIn>
 
             {/* Right Column: Points + 2x */}
-            <div className="flex flex-col gap-5 justify-between w-full h-full md:flex-1">
+            <div className="flex flex-col gap-5 justify-between w-full h-full flex-1">
               {/* Points Card */}
               <PopIn>
                 <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between">
@@ -203,7 +294,7 @@ const Rewards: React.FC = () => {
           </div>
 
           {/* ─── Get New Rewards ─── */}
-          <div className="mt-8">
+          <div className="px-6 md:px-0 mt-8">
             <FadeIn>
               <h3 className="heading-font font-semibold text-base text-(--neutral-800) dark:text-white mb-4">
                 Get new rewards
@@ -236,7 +327,7 @@ const Rewards: React.FC = () => {
           {/* ─── Rewards History ─── */}
           <div className="mt-8">
             <FadeIn>
-              <div className="flex items-center justify-between mb-4">
+              <div className="px-6 md:px-0 flex items-center justify-between mb-4">
                 <h3 className="heading-font font-semibold text-base text-(--neutral-800) dark:text-white">
                   Rewards History
                 </h3>
@@ -269,12 +360,12 @@ const Rewards: React.FC = () => {
               <Slider
                 ref={sliderRef}
                 {...sliderSettings}
-                className="[&_.slick-track]:!flex! [&_.slick-slide]:!h-auto! [&_.slick-slide]:!flex! [&_.slick-slide>div]:!w-full! [&_.slick-slide>div]:!h-full!"
+                className="flex w-full h-full items-stretch"
               >
                 {rewardsHistory.map((item, index) => (
-                  <div key={index} className="px-2 h-full">
+                  <div key={index} className="px-2 h-full!">
                     <FadeIn className="h-full block">
-                      <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-700) p-5 space-y-4 cursor-pointer h-full min-h-[220px] flex flex-col justify-between">
+                      <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-700) p-5 space-y-4 cursor-pointer h-full flex flex-col justify-between">
                         <div className="w-[80px] h-[80px] shrink-0">
                           <img
                             src={item.image}
