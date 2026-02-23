@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Header from "../layout/Header";
 import { FaArrowRight, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { HiOutlineCalendar } from "react-icons/hi";
@@ -9,12 +9,30 @@ import {
   ScaleButton,
 } from "../animations/motion";
 import { motion } from "framer-motion";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const rewardsHistory = [
   {
     image: "/images/discount-drink.png",
     title: "Free drink",
     date: "06/02/2023",
+  },
+  {
+    image: "/images/discount-menu.png",
+    title: "5% Discount for all the menu",
+    date: "06/02/2023",
+  },
+  {
+    image: "/images/discount-desert.png",
+    title: "15% Discount for Dessert",
+    date: "13/03/2023",
+  },
+  {
+    image: "/images/easter-discount.png",
+    title: "10% Easter Discount",
+    date: "14/04/2023",
   },
   {
     image: "/images/discount-menu.png",
@@ -49,21 +67,68 @@ const newRewards = [
 ];
 
 const Rewards: React.FC = () => {
-  const [historyStart, setHistoryStart] = useState(0);
-  const visibleCount = 4;
-  const maxStart = Math.max(0, rewardsHistory.length - visibleCount);
+  const sliderRef = useRef<Slider>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [slidesToShow, setSlidesToShow] = useState(4);
 
-  const handlePrev = () => setHistoryStart((s) => Math.max(0, s - 1));
-  const handleNext = () => setHistoryStart((s) => Math.min(maxStart, s + 1));
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setSlidesToShow(1);
+      } else if (window.innerWidth < 1024) {
+        setSlidesToShow(2);
+      } else {
+        setSlidesToShow(4);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const maxStart = Math.max(0, rewardsHistory.length - slidesToShow);
+
+  const handlePrev = () => {
+    sliderRef.current?.slickPrev();
+  };
+
+  const handleNext = () => {
+    sliderRef.current?.slickNext();
+  };
+
+  const sliderSettings = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    arrows: false,
+    beforeChange: (current: number, next: number) => setCurrentSlide(next),
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
 
   return (
     <div className="w-full min-h-screen">
       <MotionContainer className="transition-all duration-300">
-        <Header description="My Rewards" navbarTitle="Gram Bistro" />
+        <Header description="My Rewards" navbarTitle="My Rewards" />
 
         <div className="w-full pt-[60px] lg:pt-[120px] px-6 lg:px-[42px] pb-10">
           {/* ─── Top Section: Hero + Points ─── */}
-          <div className="flex flex-col md:flex-row gap-5 w-full max-h-[350px]">
+          <div className="flex flex-col md:flex-row gap-5 w-full max-h-[350px] h-full">
             {/* Hero Banner */}
             <FadeIn className="relative h-full w-full md:w-[65%] shrink-0">
               <div className="overflow-hidden rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between w-full">
@@ -177,52 +242,60 @@ const Rewards: React.FC = () => {
                 </h3>
                 <div className="flex gap-2">
                   <ScaleButton
+                    onClick={handlePrev}
                     className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200 ${
-                      historyStart === 0
+                      currentSlide === 0
                         ? "bg-(--neutral-200) dark:bg-(--neutral-700) text-(--neutral-400)"
-                        : "bg-(--neutral-900) dark:bg-(--neutral-700) text-white hover:bg-(--neutral-800)"
+                        : "text-white bg-(--yellow-2)"
                     }`}
                   >
-                    <FaChevronLeft className="text-xs" onClick={handlePrev} />
+                    <FaChevronLeft className="text-xs" />
                   </ScaleButton>
                   <ScaleButton
+                    onClick={handleNext}
                     className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200 ${
-                      historyStart >= maxStart
+                      currentSlide >= maxStart
                         ? "bg-(--neutral-200) dark:bg-(--neutral-700) text-(--neutral-400)"
-                        : "bg-(--orange-1) text-white hover:bg-(--yellow-2)"
+                        : " text-white bg-(--yellow-2)"
                     }`}
                   >
-                    <FaChevronRight className="text-xs" onClick={handleNext} />
+                    <FaChevronRight className="text-xs" />
                   </ScaleButton>
                 </div>
               </div>
             </FadeIn>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {rewardsHistory
-                .slice(historyStart, historyStart + visibleCount)
-                .map((item, index) => (
-                  <FadeIn key={`${historyStart}-${index}`}>
-                    <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-700) p-5 space-y-4 cursor-pointer">
-                      <div className="w-[64px] h-[64px] rounded-full bg-(--neutral-800) dark:bg-(--neutral-600) flex items-center justify-center overflow-hidden">
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          className="w-[48px] h-[48px] object-contain"
-                        />
+            <div className="w-full mx-[-8px] px-2 mb-8">
+              <Slider
+                ref={sliderRef}
+                {...sliderSettings}
+                className="[&_.slick-track]:!flex! [&_.slick-slide]:!h-auto! [&_.slick-slide]:!flex! [&_.slick-slide>div]:!w-full! [&_.slick-slide>div]:!h-full!"
+              >
+                {rewardsHistory.map((item, index) => (
+                  <div key={index} className="px-2 h-full">
+                    <FadeIn className="h-full block">
+                      <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-700) p-5 space-y-4 cursor-pointer h-full min-h-[220px] flex flex-col justify-between">
+                        <div className="w-[80px] h-[80px] shrink-0">
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <h4 className="text-white font-semibold text-[18px] font-mullish line-clamp-2">
+                          {item.title}
+                        </h4>
+                        <div className="flex items-center gap-1.5 shrink-0 mt-auto">
+                          <HiOutlineCalendar className="text-(--orange-1) text-[16px]" />
+                          <span className="text-(--neutral-400) dark:text-(--neutral-300) text-[16px] font-medium">
+                            {item.date}
+                          </span>
+                        </div>
                       </div>
-                      <h4 className="text-white font-semibold text-sm heading-font">
-                        {item.title}
-                      </h4>
-                      <div className="flex items-center gap-1.5">
-                        <HiOutlineCalendar className="text-(--orange-1) text-sm" />
-                        <span className="text-(--neutral-400) dark:text-(--neutral-300) text-xs font-medium">
-                          {item.date}
-                        </span>
-                      </div>
-                    </div>
-                  </FadeIn>
+                    </FadeIn>
+                  </div>
                 ))}
+              </Slider>
             </div>
           </div>
         </div>
