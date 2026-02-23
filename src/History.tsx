@@ -2,9 +2,7 @@ import { useState } from "react";
 import Header from "./components/layout/Header";
 import { FaArrowRight } from "react-icons/fa";
 import { HiOutlineCalendar } from "react-icons/hi";
-import { HiMagnifyingGlass } from "react-icons/hi2";
 import { BsThreeDots } from "react-icons/bs";
-import { RiEqualizerLine } from "react-icons/ri";
 import { MdAttachMoney } from "react-icons/md";
 import {
   MotionContainer,
@@ -13,6 +11,7 @@ import {
   ScaleButton,
 } from "./components/animations/motion";
 import { motion } from "framer-motion";
+import Choice from "/images/choiceimg.svg";
 
 const orderHistory = [
   {
@@ -68,11 +67,8 @@ const filterTabs = [
 
 const History: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState("All your orders");
-  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredOrders = orderHistory.filter((order) =>
-    order.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const filteredOrders = orderHistory;
 
   return (
     <div className="w-full min-h-screen">
@@ -82,18 +78,18 @@ const History: React.FC = () => {
         <div className="w-full pt-[60px] md:pt-[120px] px-4 md:px-6 lg:px-[42px] pb-10">
           {/* ─── Active Order Card ─── */}
           <FadeIn>
-            <div className="rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-700) p-6 md:p-8 flex items-center justify-between mb-8 overflow-hidden">
+            <div className="rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-700) flex items-center justify-between mb-8 overflow-hidden">
               <div className="flex items-center gap-5 md:gap-8">
                 {/* Food image */}
-                <div className="w-[80px] h-[80px] md:w-[110px] md:h-[110px] rounded-full overflow-hidden shrink-0 border-3 border-(--neutral-600)">
+                <div className="h-full -ml-9 sm:mr-0 max-w-[141px] sm:max-w-[200px] md:max-w-[50%]">
                   <img
-                    src="/images/food-1.jpg"
-                    alt="Active Order"
-                    className="w-full h-full object-cover"
+                    src={Choice}
+                    alt="Avocado Chicken Salad"
+                    className="h-full w-full object-cover"
                   />
                 </div>
                 {/* Order info */}
-                <div className="space-y-2">
+                <div className="space-y-2 p-6 md:p-8">
                   <span className="inline-block text-xs font-semibold text-(--orange-1) bg-(--orange-1)/15 px-3 py-1 rounded-full">
                     Active Order
                   </span>
@@ -107,7 +103,7 @@ const History: React.FC = () => {
                 </div>
               </div>
               {/* Arrow button */}
-              <ScaleButton className="w-[44px] h-[44px] rounded-full bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0 ml-4">
+              <ScaleButton className="w-[44px] h-[44px] rounded-full bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0 mr-4">
                 <FaArrowRight className="text-sm" />
               </ScaleButton>
             </div>
