@@ -18,6 +18,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { FcSimCardChip } from "react-icons/fc";
 import { SiVisa, SiMastercard } from "react-icons/si";
 import { cardService } from "../../services/cardService";
+import { orderService } from "../../services/orderService";
 import { useTheme } from "../../hooks/useTheme";
 import Success from "./Success";
 
@@ -57,13 +58,36 @@ const Checkout1: React.FC = () => {
     setShowCvvModal(false);
   };
 
-  const handlePay = () => {
+  const handlePay = async () => {
     const cvv = sessionStorage.getItem("checkout_cvv");
     if (!cvv) return;
     // Use CVV for payment processing here
     console.log("Processing payment with CVV:", cvv);
     sessionStorage.removeItem("checkout_cvv");
     setCvvConfirmed(false);
+
+    // Save order to database
+    try {
+      const orderItems = groupedItems.map(({ item, qty }) => ({
+        id: item.id,
+        name: item.name,
+        image: item.image,
+        price: item.price,
+        qty,
+      }));
+
+      await orderService.saveOrder({
+        restaurantName: "Gram Bistro",
+        items: orderItems,
+        subtotal: orderTotal,
+        tax,
+        tip,
+        total,
+      });
+    } catch (error) {
+      console.error("Failed to save order:", error);
+    }
+
     setShowSuccessModal(true);
   };
 

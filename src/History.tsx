@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/layout/Header";
 import { FaArrowRight } from "react-icons/fa";
 import { HiOutlineCalendar } from "react-icons/hi";
@@ -12,51 +12,7 @@ import {
 } from "./components/animations/motion";
 import { motion } from "framer-motion";
 import Choice from "/images/choiceimg.svg";
-
-const orderHistory = [
-  {
-    id: 1,
-    image: "/images/food-1.jpg",
-    name: "Bin 71",
-    amount: 367.1,
-    date: "05/01/2023",
-  },
-  {
-    id: 2,
-    image: "/images/food-2.jpg",
-    name: "Sushi Bar",
-    amount: 134.6,
-    date: "12/02/2023",
-  },
-  {
-    id: 3,
-    image: "/images/food-3.jpg",
-    name: "Gram Bistro",
-    amount: 84.2,
-    date: "16/02/2023",
-  },
-  {
-    id: 4,
-    image: "/images/food-4.jpg",
-    name: "Coffee and More",
-    amount: 24.2,
-    date: "23/02/2023",
-  },
-  {
-    id: 5,
-    image: "/images/food-5.jpg",
-    name: "Pizza Place",
-    amount: 52.0,
-    date: "01/03/2023",
-  },
-  {
-    id: 6,
-    image: "/images/food-6.jpg",
-    name: "Taco Bell",
-    amount: 18.5,
-    date: "05/03/2023",
-  },
-];
+import { orderService, type OrderRecord } from "./services/orderService";
 
 const filterTabs = [
   "All your orders",
@@ -67,8 +23,48 @@ const filterTabs = [
 
 const History: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState("All your orders");
+  const [orders, setOrders] = useState<OrderRecord[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredOrders = orderHistory;
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const data = await orderService.getUserOrders();
+        setOrders(data);
+      } catch (error) {
+        console.error("Failed to fetch orders:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
+  }, []);
+
+  // Filter orders by date range
+  const filteredOrders = orders.filter((order) => {
+    if (activeFilter === "All your orders") return true;
+
+    const orderDate = new Date(order.createdAt);
+    const now = new Date();
+    const diffDays = Math.floor(
+      (now.getTime() - orderDate.getTime()) / (1000 * 60 * 60 * 24),
+    );
+
+    if (activeFilter === "Last 7 days") return diffDays <= 7;
+    if (activeFilter === "Last 14 days") return diffDays <= 14;
+    if (activeFilter === "Last 30 days") return diffDays <= 30;
+    return true;
+  });
+
+  // Format date to DD/MM/YYYY
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
 
   return (
     <div className="w-full min-h-screen">
@@ -130,48 +126,66 @@ const History: React.FC = () => {
           </FadeIn>
 
           {/* ─── Order History Grid ─── */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredOrders.map((order) => (
-              <PopIn key={order.id}>
-                <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) p-4 md:p-5 flex items-center justify-between cursor-pointer h-full group shadow-sm hover:shadow-md transition-shadow duration-200">
-                  <div className="flex items-center gap-4">
-                    {/* Restaurant image */}
-                    <div className="w-[56px] h-[56px] md:w-[64px] md:h-[64px] rounded-full overflow-hidden shrink-0 border-2 border-(--neutral-200) dark:border-(--neutral-500)">
-                      <img
-                        src={order.image}
-                        alt={order.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    {/* Order details */}
-                    <div className="space-y-2">
-                      <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[16px] md:text-[18px]">
-                        {order.name}
-                      </h4>
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-1">
-                          <MdAttachMoney className="text-(--orange-1) text-[16px]" />
-                          <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] font-medium">
-                            $ {order.amount.toFixed(2)}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <HiOutlineCalendar className="text-(--orange-1) text-[16px]" />
-                          <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] font-medium">
-                            {order.date}
-                          </span>
+          {loading ? (
+            <FadeIn>
+              <div className="flex items-center justify-center py-16">
+                <div className="w-8 h-8 border-3 border-(--orange-1) border-t-transparent rounded-full animate-spin" />
+              </div>
+            </FadeIn>
+          ) : filteredOrders.length === 0 ? (
+            <FadeIn>
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <p className="text-(--neutral-500) dark:text-(--neutral-300) text-[16px] font-medium">
+                  {activeFilter === "All your orders"
+                    ? "No orders yet. Place your first order!"
+                    : `No orders in the ${activeFilter.toLowerCase()}.`}
+                </p>
+              </div>
+            </FadeIn>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {filteredOrders.map((order) => (
+                <PopIn key={order.id}>
+                  <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) p-4 md:p-5 flex items-center justify-between cursor-pointer h-full group shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <div className="flex items-center gap-4">
+                      {/* First item image */}
+                      <div className="w-[56px] h-[56px] md:w-[64px] md:h-[64px] rounded-full overflow-hidden shrink-0 border-2 border-(--neutral-200) dark:border-(--neutral-500)">
+                        <img
+                          src={order.items[0]?.image || "/images/food-1.jpg"}
+                          alt={order.restaurantName}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      {/* Order details */}
+                      <div className="space-y-2">
+                        <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[16px] md:text-[18px]">
+                          {order.restaurantName}
+                        </h4>
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-1">
+                            <MdAttachMoney className="text-(--orange-1) text-[16px]" />
+                            <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] font-medium">
+                              $ {order.total.toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <HiOutlineCalendar className="text-(--orange-1) text-[16px]" />
+                            <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] font-medium">
+                              {formatDate(order.createdAt)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    {/* More options */}
+                    <ScaleButton className="w-[36px] h-[36px] rounded-full bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0">
+                      <BsThreeDots className="text-sm" />
+                    </ScaleButton>
                   </div>
-                  {/* More options */}
-                  <ScaleButton className="w-[36px] h-[36px] rounded-full bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0">
-                    <BsThreeDots className="text-sm" />
-                  </ScaleButton>
-                </div>
-              </PopIn>
-            ))}
-          </div>
+                </PopIn>
+              ))}
+            </div>
+          )}
         </div>
       </MotionContainer>
     </div>
