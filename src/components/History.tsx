@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Header from "./components/layout/Header";
+import Header from "./layout/Header";
 import { FaArrowRight } from "react-icons/fa";
 import { HiOutlineCalendar } from "react-icons/hi";
 import { BsThreeDots } from "react-icons/bs";
@@ -9,10 +9,10 @@ import {
   FadeIn,
   PopIn,
   ScaleButton,
-} from "./components/animations/motion";
+} from "./animations/motion";
 import { motion } from "framer-motion";
 import Choice from "/images/choiceimg.svg";
-import { orderService, type OrderRecord } from "./services/orderService";
+import { orderService, type OrderRecord } from "../services/orderService";
 
 const filterTabs = [
   "All your orders",
@@ -92,7 +92,7 @@ const History: React.FC = () => {
                   <h3 className="text-white dark:text-white font-bold text-[20px] md:text-[24px] heading-font">
                     Gram Bistro
                   </h3>
-                  <p className="text-(--neutral-400) dark:text-(--neutral-300) text-[13px] md:text-[14px] font-medium max-w-[320px]">
+                  <p className="hidden md:block text-(--neutral-400) dark:text-(--neutral-300) text-[13px] md:text-[14px] font-medium max-w-[320px]">
                     From tracking its progress to making changes to the order,
                     you can view real-time updates on your current order.
                   </p>
@@ -113,9 +113,9 @@ const History: React.FC = () => {
                   key={tab}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setActiveFilter(tab)}
-                  className={`px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap cursor-pointer transition-colors duration-200 ${
+                  className={`md:px-4 md:py-2.5 px-3 py-2 rounded-[16px] text-[12px] md:text-sm lg:text-[16px] font-semibold whitespace-nowrap cursor-pointer transition-colors duration-200 ${
                     activeFilter === tab
-                      ? "bg-(--orange-1) text-white"
+                      ? "bg-(--yellow-1) text-(--neutral-800) font-bold"
                       : "text-(--neutral-500) dark:text-(--neutral-300) hover:bg-(--neutral-100) dark:hover:bg-(--neutral-600)"
                   }`}
                 >
