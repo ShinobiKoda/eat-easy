@@ -25,7 +25,7 @@ import PublicRoute from "./components/auth/PublicRoute";
 import SetCustomLocation from "./components/onboarding/SetCustomLocation";
 import Checkout1 from "./components/Checkout/Checkout1";
 import Rewards from "./components/dashboard/Rewards";
-import History from "./History";
+import History from "./components/History";
 
 function App() {
   const location = useLocation();

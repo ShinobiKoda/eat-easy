@@ -146,27 +146,27 @@ const Rewards: React.FC = () => {
           </h2>
 
           {/* ─── Mobile: Center-mode Hero Carousel ─── */}
-          <div className="lg:hidden w-full overflow-x-hidden max-h-[220px]">
+          <div className="lg:hidden w-full max-h-[220px]">
             <Slider
               ref={heroSliderRef}
               {...heroSliderSettings}
-              className="[&_.slick-track]:flex! [&_.slick-slide]:h-auto! [&_.slick-slide]:flex! [&_.slick-slide>div]:w-full! [&_.slick-slide>div]:h-full!"
+              className="flex items-center justify-center bg-red-800"
             >
               {/* Hero Banner Slide */}
-              <div className="px-2 h-full">
-                <div className="overflow-hidden rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between w-full  max-h-[220px]">
-                  <div className="relative pl-6 min-w-[148px]">
+              <div className="px- max-h-full">
+                <div className="overflow-hidden rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between w-full max-h-[220px]">
+                  <div className="relative pl-6 min-w-[148px] space-y-1.5">
                     <p className="text-(--neutral-400) dark:text-(--neutral-600) text-xs font-medium">
                       New client
                     </p>
                     <h2 className="heading-font text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[20px] leading-tight max-w-[180px]">
                       30% Discount for all the menu
                     </h2>
-                    <ScaleButton className="bg-(--orange-1) text-white font-semibold text-xs px-4 py-3 rounded-2xl cursor-pointer">
+                    <ScaleButton className="bg-(--orange-1) text-white font-semibold text-xs px-3 py-2 rounded-2xl cursor-pointer">
                       Claim reward
                     </ScaleButton>
                   </div>
-                  <div className="w-[420px] h-auto relative -right-14 flex items-center justify-center">
+                  <div className="w-[420px] h-auto relative -right-14 sm:-right-10 flex items-center justify-center">
                     <img
                       src="/images/reward.png"
                       alt="Reward Badge"
@@ -198,8 +198,8 @@ const Rewards: React.FC = () => {
               </div>
 
               {/* 2x More Points Slide */}
-              <div className="px-2 h-full">
-                <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between overflow-clip w-full  max-h-[220px]">
+              <div className="px- h-full">
+                <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between overflow-clip w-full max-h-full">
                   <div className="max-w-[200px] flex flex-col justify-center">
                     <h3 className="text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[20px] heading-font">
                       2x more points
@@ -208,7 +208,7 @@ const Rewards: React.FC = () => {
                       Your next <b>5 orders will double</b> your credit points
                     </p>
                   </div>
-                  <div className="flex items-center justify-center w-[200px] h-auto -right-10 relative">
+                  <div className="flex items-center justify-center w-[200px] h-auto -right-10 sm:-right-8 relative">
                     <img
                       src="/images/double-credit.png"
                       alt="Star"
