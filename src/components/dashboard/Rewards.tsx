@@ -71,8 +71,10 @@ const Rewards: React.FC = () => {
   const heroSliderRef = useRef<Slider>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slidesToShow, setSlidesToShow] = useState(4);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     const handleResize = () => {
       if (window.innerWidth < 640) {
         setSlidesToShow(1);
@@ -85,7 +87,16 @@ const Rewards: React.FC = () => {
 
     handleResize();
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+
+    // Force a resize event after a short delay to fix react-slick width calculation issues
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 100);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timer);
+    };
   }, []);
 
   const maxStart = Math.max(0, rewardsHistory.length - slidesToShow);
@@ -102,21 +113,21 @@ const Rewards: React.FC = () => {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 1, // Default to 1 for mobile (mobile-first)
     slidesToScroll: 1,
     arrows: false,
     beforeChange: (_current: number, next: number) => setCurrentSlide(next),
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 768, // Tablet
         settings: {
           slidesToShow: 2,
         },
       },
       {
-        breakpoint: 640,
+        breakpoint: 1024, // Desktop
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 4,
         },
       },
     ],
@@ -356,37 +367,35 @@ const Rewards: React.FC = () => {
               </div>
             </FadeIn>
 
-            <div className="w-full mx-[8px] px-2 mb-8">
-              <Slider
-                ref={sliderRef}
-                {...sliderSettings}
-                className="flex w-full pr-4 items-stretch"
-              >
-                {rewardsHistory.map((item, index) => (
-                  <div key={index} className="px-2 h-full! shadow-lg">
-                    <FadeIn className="h-full block">
-                      <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) p-5 space-y-4 cursor-pointer h-full flex flex-col justify-between">
-                        <div className="w-[80px] h-[80px] rounded-full shrink-0 bg-pink-200">
-                          <img
-                            src={item.image}
-                            alt={item.title}
-                            className="w-full h-full object-contain"
-                          />
+            <div className="w-full px-2 mb-8 block">
+              {isMounted && (
+                <Slider ref={sliderRef} {...sliderSettings}>
+                  {rewardsHistory.map((item, index) => (
+                    <div key={index} className="px-2 h-full outline-none">
+                      <FadeIn className="h-full block">
+                        <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) p-5 space-y-4 cursor-pointer h-full flex flex-col justify-between shadow-lg">
+                          <div className="w-[80px] h-[80px] rounded-full shrink-0 bg-pink-200">
+                            <img
+                              src={item.image}
+                              alt={item.title}
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
+                          <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[18px] font-mullish line-clamp-2">
+                            {item.title}
+                          </h4>
+                          <div className="flex items-center gap-1.5 shrink-0 mt-auto">
+                            <HiOutlineCalendar className="text-(--orange-1) text-[16px]" />
+                            <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[16px] font-medium">
+                              {item.date}
+                            </span>
+                          </div>
                         </div>
-                        <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[18px] font-mullish line-clamp-2">
-                          {item.title}
-                        </h4>
-                        <div className="flex items-center gap-1.5 shrink-0 mt-auto">
-                          <HiOutlineCalendar className="text-(--orange-1) text-[16px]" />
-                          <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[16px] font-medium">
-                            {item.date}
-                          </span>
-                        </div>
-                      </div>
-                    </FadeIn>
-                  </div>
-                ))}
-              </Slider>
+                      </FadeIn>
+                    </div>
+                  ))}
+                </Slider>
+              )}
             </div>
           </div>
         </div>
