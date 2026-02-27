@@ -119,6 +119,12 @@ const Rewards: React.FC = () => {
     beforeChange: (_current: number, next: number) => setCurrentSlide(next),
     responsive: [
       {
+        breakpoint: 440, // Tablet
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+      {
         breakpoint: 768, // Tablet
         settings: {
           slidesToShow: 2,
@@ -371,20 +377,22 @@ const Rewards: React.FC = () => {
               {isMounted && (
                 <Slider ref={sliderRef} {...sliderSettings}>
                   {rewardsHistory.map((item, index) => (
-                    <div key={index} className="px-2 h-full outline-none">
-                      <FadeIn className="h-full block">
-                        <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) p-5 space-y-4 cursor-pointer h-full flex flex-col justify-between shadow-lg">
-                          <div className="w-[80px] h-[80px] rounded-full shrink-0 bg-pink-200">
-                            <img
-                              src={item.image}
-                              alt={item.title}
-                              className="w-full h-full object-contain"
-                            />
+                    <div key={index} className="px-2 outline-none">
+                      <FadeIn className="block h-full">
+                        <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) p-5 cursor-pointer h-[210px] flex flex-col justify-between shadow-lg">
+                          <div className="space-y-4">
+                            <div className="w-[80px] h-[80px] rounded-full shrink-0 bg-pink-200">
+                              <img
+                                src={item.image}
+                                alt={item.title}
+                                className="w-full h-full object-contain"
+                              />
+                            </div>
+                            <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[18px] font-mullish line-clamp-2">
+                              {item.title}
+                            </h4>
                           </div>
-                          <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[18px] font-mullish line-clamp-2">
-                            {item.title}
-                          </h4>
-                          <div className="flex items-center gap-1.5 shrink-0 mt-auto">
+                          <div className="flex items-center gap-1.5 shrink-0">
                             <HiOutlineCalendar className="text-(--orange-1) text-[16px]" />
                             <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[16px] font-medium">
                               {item.date}
