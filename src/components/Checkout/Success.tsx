@@ -19,7 +19,7 @@ const Success: React.FC<SuccessProps> = ({ isOpen }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="hidden sm:fixed inset-0 bg-black/60 z-100 backdrop-blur-md min-h-screen"
+            className="hidden md:flex sm:fixed inset-0 bg-black/60 z-100 backdrop-blur-md min-h-screen"
           />
           <Header navbarTitle="Gram Bistro" showBack={false} />
           {/* Modal */}
