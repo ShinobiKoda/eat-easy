@@ -98,7 +98,7 @@ const Sidebar: React.FC = () => {
   return (
     <>
       <aside
-        className={`aside h-screen transition-all duration-300 ease-in-out rounded-r-3xl fixed left-0 top-0 z-50 w-[260px] ${effectiveIsOpen ? "translate-x-0 md:w-[260px]" : "-translate-x-full md:w-36"} md:translate-x-0 `}
+        className={`aside h-screen transition-all duration-300 ease-in-out rounded-r-3xl fixed left-0 top-0 z-10 w-[260px] ${effectiveIsOpen ? "translate-x-0 md:w-[260px]" : "-translate-x-full md:w-36"} md:translate-x-0 `}
       >
         <motion.div
           onClick={handleToggle}
