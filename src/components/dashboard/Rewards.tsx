@@ -134,7 +134,7 @@ const Rewards: React.FC = () => {
       <MotionContainer className="transition-all duration-300">
         <Header description="My Rewards" navbarTitle="My Rewards" />
 
-        <div className="w-full pt-[60px] md:pt-[120px] pb-10 overflow-hidden">
+        <div className="w-full pt-18 md:pt-30 pb-7 overflow-hidden max-w-[1440px] mx-auto">
           <div className="md:px-6 lg:px-[42px]">
             {/* ─── Top Section: Hero + Points ─── */}
             {/* Mobile-only heading */}
@@ -220,7 +220,7 @@ const Rewards: React.FC = () => {
             {/* ─── Desktop: Original flex layout ─── */}
             <div className="hidden lg:grid grid-cols-[2fr_1fr] gap-5 max-h-[350px] h-full">
               {/* Hero Banner */}
-              <FadeIn className="relative h-full w-full shrink-0 items-stretch">
+              <FadeIn className="h-full w-full shrink-0 items-stretch">
                 <div className="overflow-hidden rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between w-full">
                   <div className="relative px-10 space-y-4">
                     <p className="text-(--neutral-400) dark:text-(--neutral-600) text-sm font-medium">
@@ -367,12 +367,12 @@ const Rewards: React.FC = () => {
                   >
                     {rewardsHistory.map((item, index) => (
                       <div key={index} className="px-2 py-4">
-                        {" "}
+                        {/* {" "} */}
                         {/* horizontal gap (2*8px = 16px) + vertical shadow space */}
                         <FadeIn className="h-full shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl">
                           <div className="bg-(--neutral-100) dark:bg-(--neutral-700) p-5 cursor-pointer h-[210px] flex flex-col justify-between rounded-2xl">
                             <div className="space-y-4">
-                              <div className="w-[80px] h-[80px] rounded-full shrink-0 bg-pink-200">
+                              <div className="w-[80px] h-[80px] rounded-full shrink-0 bg-[#50506F]">
                                 <img
                                   src={item.image}
                                   alt={item.title}

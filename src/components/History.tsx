@@ -71,7 +71,7 @@ const History: React.FC = () => {
       <MotionContainer className="transition-all duration-300">
         <Header description="Order History" navbarTitle="Order History" />
 
-        <div className="w-full pt-[60px] md:pt-[120px] px-4 md:px-6 lg:px-[42px] pb-10">
+        <div className="w-full pt-18 md:pt-30 px-4 md:px-6 lg:px-[42px] pb-10 max-w-[1440px] mx-auto">
           {/* ─── Active Order Card ─── */}
           <FadeIn>
             <div className="rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-700) flex items-center justify-between mb-8 overflow-hidden">
