@@ -355,10 +355,9 @@ const Rewards: React.FC = () => {
               </div>
             </FadeIn>
 
-            <div className="w-full md:pl-6 lg:pl-[42px] mb-8">
+            <div className="w-full mb-8">
               {isMounted && (
-                <div className="mx-[-8px]">
-                  {" "}
+                <div className="">
                   {/* Negative margin to offset item padding */}
                   <Slider
                     ref={sliderRef}
@@ -366,8 +365,7 @@ const Rewards: React.FC = () => {
                     slidesToShow={slidesToShow}
                   >
                     {rewardsHistory.map((item, index) => (
-                      <div key={index} className="px-2 py-4">
-                        {/* {" "} */}
+                      <div key={index} className="px-6 sm:px-0 sm:pl-6 py-4">
                         {/* horizontal gap (2*8px = 16px) + vertical shadow space */}
                         <FadeIn className="h-full shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl">
                           <div className="bg-(--neutral-100) dark:bg-(--neutral-700) p-5 cursor-pointer h-[210px] flex flex-col justify-between rounded-2xl">
