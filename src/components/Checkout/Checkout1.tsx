@@ -89,6 +89,14 @@ const Checkout1: React.FC = () => {
     }
 
     setShowSuccessModal(true);
+
+    // Clear order from localStorage after payment
+    localStorage.removeItem("eat-easy-last-order");
+    localStorage.removeItem("countdown_start");
+    localStorage.removeItem("eat-easy-cart");
+
+    // Also clear the React state so the useOrder hook doesn't re-persist the cart
+    setOrderItems([]);
   };
 
   const getCardTypeIcon = (number: string) => {
@@ -120,7 +128,7 @@ const Checkout1: React.FC = () => {
     return () => clearTimeout(t);
   }, []);
 
-  const { orderItems: cartItems } = useOrder();
+  const { orderItems: cartItems, setOrderItems } = useOrder();
   const location = useLocation();
   const orderFromState = location.state?.order;
 
