@@ -4,6 +4,7 @@ import { FaArrowRight } from "react-icons/fa";
 import { HiOutlineCalendar } from "react-icons/hi";
 import { BsThreeDots } from "react-icons/bs";
 import { MdAttachMoney } from "react-icons/md";
+import { BiWallet } from "react-icons/bi";
 import {
   MotionContainer,
   FadeIn,
@@ -74,10 +75,10 @@ const History: React.FC = () => {
         <div className="w-full pt-18 md:pt-30 px-4 md:px-6 lg:px-[42px] pb-10 max-w-[1440px] mx-auto">
           {/* ─── Active Order Card ─── */}
           <FadeIn>
-            <div className="rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between mb-8 overflow-hidden">
+            <div className="rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between mb-8 overflow-hidden max-h-[240px]">
               <div className="flex items-center gap-5 md:gap-8">
                 {/* Food image */}
-                <div className="relative -ml-9 sm:mr-0 bg-green-600 flex items-center justify-center">
+                <div className="relative -ml-9 sm:mr-0 flex items-center justify-center">
                   <img
                     src="/images/active-bg.png"
                     alt=""
@@ -151,14 +152,19 @@ const History: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredOrders.map((order) => (
                 <PopIn key={order.id}>
-                  <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) p-4 md:p-5 flex items-center justify-between cursor-pointer h-full group shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) pr-4 flex items-center justify-between cursor-pointer h-full group shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
                     <div className="flex items-center gap-4">
                       {/* First item image */}
-                      <div className="w-[56px] h-[56px] md:w-[64px] md:h-[64px] rounded-full overflow-hidden shrink-0 border-2 border-(--neutral-200) dark:border-(--neutral-500)">
+                      <div className="relative flex items-center justify-center">
+                        <img
+                          src="/images/food-bg.png"
+                          alt=""
+                          className="w-full h-full block z-20"
+                        />
                         <img
                           src={order.items[0]?.image || "/images/food-1.jpg"}
                           alt={order.restaurantName}
-                          className="w-full h-full object-cover"
+                          className="absolute top-1/2 -left-1/10 -translate-y-1/2 w-[56px] h-[56px] md:w-[64px] md:h-[64px] lg:w-[95px] lg:h-[95px] rounded-full overflow-hidden shrink-0 border-2 border-(--neutral-200) dark:border-(--neutral-500) object-cover z-10"
                         />
                       </div>
                       {/* Order details */}
@@ -168,7 +174,7 @@ const History: React.FC = () => {
                         </h4>
                         <div className="flex items-center gap-4">
                           <div className="flex items-center gap-1">
-                            <MdAttachMoney className="text-(--orange-1) text-[16px]" />
+                            <BiWallet className="text-(--orange-1) text-[16px]" />
                             <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] font-medium">
                               $ {order.total.toFixed(2)}
                             </span>
@@ -183,9 +189,11 @@ const History: React.FC = () => {
                       </div>
                     </div>
                     {/* More options */}
-                    <ScaleButton className="w-[36px] h-[36px] rounded-full bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0">
-                      <BsThreeDots className="text-sm" />
-                    </ScaleButton>
+                    <div className="h-full pt-4">
+                      <ScaleButton className="py-[12px] px-[12px] rounded-[12px] bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0">
+                        <BsThreeDots className="text-sm" />
+                      </ScaleButton>
+                    </div>
                   </div>
                 </PopIn>
               ))}
