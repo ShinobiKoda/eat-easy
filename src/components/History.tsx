@@ -74,25 +74,30 @@ const History: React.FC = () => {
         <div className="w-full pt-18 md:pt-30 px-4 md:px-6 lg:px-[42px] pb-10 max-w-[1440px] mx-auto">
           {/* ─── Active Order Card ─── */}
           <FadeIn>
-            <div className="rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-700) flex items-center justify-between mb-8 overflow-hidden">
+            <div className="rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between mb-8 overflow-hidden">
               <div className="flex items-center gap-5 md:gap-8">
                 {/* Food image */}
-                <div className="h-full -ml-9 sm:mr-0 max-w-[141px] sm:max-w-[200px] md:max-w-[50%]">
+                <div className="relative -ml-9 sm:mr-0 bg-green-600 flex items-center justify-center">
                   <img
-                    src={Choice}
-                    alt="Avocado Chicken Salad"
-                    className="h-full w-full object-cover"
+                    src="/images/active-bg.png"
+                    alt=""
+                    className="w-full h-full block"
+                  />
+                  <img
+                    src="/images/active.png"
+                    alt=""
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[192px] h-[192px] object-contain z-10"
                   />
                 </div>
                 {/* Order info */}
                 <div className="space-y-2 p-6 md:p-8">
-                  <span className="inline-block text-xs font-semibold text-(--orange-1) bg-(--orange-1)/15 px-3 py-1 rounded-full">
+                  <span className="inline-block text-xs md:text-sm lg:text-base font-medium text-(--orange-1) bg-(--orange-1)/15 px-3 py-1 rounded-full">
                     Active Order
                   </span>
-                  <h3 className="text-white dark:text-white font-bold text-[20px] md:text-[24px] heading-font">
+                  <h3 className="text-white dark:text-(--neutral-800) font-bold text-[20px] md:text-[24px] lg:text-[32px] heading-font">
                     Gram Bistro
                   </h3>
-                  <p className="hidden md:block text-(--neutral-400) dark:text-(--neutral-300) text-[13px] md:text-[14px] font-medium max-w-[320px]">
+                  <p className="hidden md:block text-(--neutral-400) dark:text-(--neutral-800) text-[13px] md:text-[14px] lg:text-[16px] font-medium max-w-[457px]">
                     From tracking its progress to making changes to the order,
                     you can view real-time updates on your current order.
                   </p>
