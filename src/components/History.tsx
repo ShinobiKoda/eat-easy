@@ -149,7 +149,7 @@ const History: React.FC = () => {
               </div>
             </FadeIn>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {filteredOrders.map((order) => (
                 <PopIn key={order.id}>
                   <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) pr-4 flex items-center justify-between cursor-pointer h-full group shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
@@ -164,7 +164,7 @@ const History: React.FC = () => {
                         <img
                           src={order.items[0]?.image || "/images/food-1.jpg"}
                           alt={order.restaurantName}
-                          className="absolute top-1/2 -left-1/10 -translate-y-1/2 w-[56px] h-[56px] md:w-[64px] md:h-[64px] lg:w-[95px] lg:h-[95px] rounded-full overflow-hidden shrink-0 border-2 border-(--neutral-200) dark:border-(--neutral-500) object-cover z-10"
+                          className="absolute top-1/2 -left-1/10 -translate-y-1/2 max-w-[95px] max-h-[95px] rounded-full overflow-hidden object-cover z-10"
                         />
                       </div>
                       {/* Order details */}
@@ -174,14 +174,14 @@ const History: React.FC = () => {
                         </h4>
                         <div className="flex items-center gap-4">
                           <div className="flex items-center gap-1">
-                            <BiWallet className="text-(--orange-1) text-[16px]" />
-                            <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] font-medium">
+                            <BiWallet className="text-(--yellow-2) text-[24px]" />
+                            <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] lg:text-[16px] font-medium">
                               $ {order.total.toFixed(2)}
                             </span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <HiOutlineCalendar className="text-(--orange-1) text-[16px]" />
-                            <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] font-medium">
+                            <HiOutlineCalendar className="text-(--orange-1) text-[24px]" />
+                            <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] lg:text-[16px] font-medium">
                               {formatDate(order.createdAt)}
                             </span>
                           </div>
