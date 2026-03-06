@@ -11,7 +11,7 @@ import Filters from "../Filters";
 import Header from "../layout/Header";
 import SkeletonCard from "../SkeletonCard";
 import { AnimatePresence } from "motion/react";
-// ...existing code...
+
 import { useOrder } from "../../hooks/useOrder";
 import { getMenuItems } from "../../services/menuService";
 import StarHalf from "/images/star-half-icon.png";

@@ -3,7 +3,6 @@ import Header from "./layout/Header";
 import { FaArrowRight } from "react-icons/fa";
 import { HiOutlineCalendar } from "react-icons/hi";
 import { BsThreeDots } from "react-icons/bs";
-import { MdAttachMoney } from "react-icons/md";
 import { BiWallet } from "react-icons/bi";
 import {
   MotionContainer,
@@ -12,7 +11,6 @@ import {
   ScaleButton,
 } from "./animations/motion";
 import { motion } from "framer-motion";
-import Choice from "/images/choiceimg.svg";
 import { orderService, type OrderRecord } from "../services/orderService";
 
 const filterTabs = [

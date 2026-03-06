@@ -1,5 +1,4 @@
 import { motion } from "motion/react";
-// import { MotionContainer, PopIn, FadeIn, SlideIn } from "../animations/motion";
 import type { PropType } from "../../types";
 import { type MouseEvent } from "react";
 import { RiDeleteBinLine, RiShoppingBag3Line } from "react-icons/ri";
