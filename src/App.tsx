@@ -76,7 +76,8 @@ function App() {
     <div className="w-full min-h-screen" style={{ backgroundImage }}>
       {showSidebar && <Sidebar />}
       <div
-        className={`transition-all duration-300 ${
+        style={{ willChange: "margin-left" }}
+        className={`transition-[margin-left] duration-300 ease-in-out ${
           showSidebar ? (sidebarOpen ? "md:ml-[260px]" : "md:ml-36") : ""
         }`}
       >

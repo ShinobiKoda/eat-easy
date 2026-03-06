@@ -97,8 +97,8 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <div
-      style={{ backgroundImage }}
-      className={`fixed top-0 right-0 z-30 transition-all duration-300 left-0 ${
+      style={{ backgroundImage, willChange: "left" }}
+      className={`fixed top-0 right-0 z-30 transition-[left] duration-300 ease-in-out left-0 ${
         sidebarOpen ? "md:left-[260px]" : "md:left-36"
       }`}
     >
