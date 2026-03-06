@@ -103,8 +103,13 @@ const Sidebar: React.FC = () => {
   return (
     <>
       <aside
-        style={{ willChange: "width, transform" }}
-        className={`aside h-screen transition-[width,transform] duration-300 ease-in-out rounded-r-3xl fixed left-0 top-0 z-50 w-[260px] ${effectiveIsOpen ? "translate-x-0 md:w-[260px]" : "-translate-x-full md:w-36"} md:translate-x-0`}
+        style={{
+          willChange: "width, transform",
+          transitionProperty: "width, transform",
+          transitionDuration: "300ms",
+          transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+        className={`aside h-screen rounded-r-3xl fixed left-0 top-0 z-50 w-[260px] ${effectiveIsOpen ? "translate-x-0 md:w-[260px]" : "-translate-x-full md:w-36"} md:translate-x-0`}
       >
         <motion.div
           onClick={handleToggle}
