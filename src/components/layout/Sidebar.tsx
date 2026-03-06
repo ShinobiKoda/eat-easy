@@ -226,7 +226,7 @@ const Sidebar: React.FC = () => {
                             : ""
                         }`}
                       >
-                        <NavLink to="/recommended">
+                        <NavLink to="/smart-assistant">
                           <motion.div
                             whileTap={{ scale: 0.95 }}
                             className="cursor-pointer font-medium text-base text-white"

@@ -10,9 +10,14 @@ import Welcome from "./components/dashboard/Welcome";
 import Virtual from "./components/dashboard/Virtual";
 import Recommend from "./components/dashboard/Recommend";
 import Recommended from "./components/dashboard/Recommended";
+import SmartAssistant from "./components/dashboard/SmartAssistant";
 import FullMenu from "./components/FullMenu/Full-menu";
 import OrderStatus from "./components/dashboard/OrderStatus";
 import Step1 from "./components/dashboard/Step1";
+import Step2Budget from "./components/dashboard/Step2Budget";
+import Step3Party from "./components/dashboard/Step3Party";
+import Step4FoodType from "./components/dashboard/Step4FoodType";
+import Generating from "./components/dashboard/Generating";
 import { useTheme } from "./hooks/useTheme";
 import ConfirmLink from "./components/auth/ConfirmLink";
 import ResetEmailSent from "./components/auth/ResetEmailSent";
@@ -190,6 +195,38 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/step2-budget"
+            element={
+              <ProtectedRoute>
+                <Step2Budget />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/step3-party"
+            element={
+              <ProtectedRoute>
+                <Step3Party />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/step4-food-type"
+            element={
+              <ProtectedRoute>
+                <Step4FoodType />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/generating"
+            element={
+              <ProtectedRoute>
+                <Generating />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="*"
@@ -204,6 +241,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Recommended />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/smart-assistant"
+            element={
+              <ProtectedRoute>
+                <SmartAssistant />
               </ProtectedRoute>
             }
           />

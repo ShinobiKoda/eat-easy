@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Angry from "/images/angry-img.png";
 import Bored from "/images/bored-img.png";
 import Hungry from "/images/hungry-img.png";
@@ -13,6 +13,7 @@ import Loader from "../Loader";
 const Step1: React.FC = () => {
   // allow multiple feelings to be selected; store selected indices
   const [selectedFeelings, setSelectedFeelings] = useState<number[]>([]);
+  const navigate = useNavigate();
 
   const toggleFeeling = (index: number) => {
     setSelectedFeelings((prev) =>
@@ -28,7 +29,7 @@ const Step1: React.FC = () => {
     { name: "Bored", image: Bored },
     { name: "Sick", image: Sick },
     { name: "Energized", image: Thirsty },
-    { name: "Thirsty", image: Thirsty },
+    { name: "Happy", image: Thirsty },
     { name: "Other", image: Sick },
   ];
 
@@ -44,6 +45,12 @@ const Step1: React.FC = () => {
       return () => clearTimeout(t);
     }
   }, [showLoader]);
+
+  const handleContinue = () => {
+    const moodNames = selectedFeelings.map((idx) => Feelings[idx].name);
+    console.debug("[Step1] Selected moods:", moodNames);
+    navigate("/step2-budget", { state: { moods: moodNames } });
+  };
 
   return (
     <div className="w-full min-h-screen">
@@ -90,28 +97,25 @@ const Step1: React.FC = () => {
           </div>
 
           <div className="text-[16px] lg:text-[20px] font-600 text-(--neutral-600) space-y-4 w-full lg:w-xl flex flex-col justify-center items-center">
-            <NavLink
-              to="/recommended"
-              className="w-full md:w-[480px] flex justify-center"
+            <motion.button
+              onClick={handleContinue}
+              disabled={selectedFeelings.length === 0}
+              whileTap={{ scale: selectedFeelings.length > 0 ? 0.98 : 1 }}
+              className={`rounded-2xl text-white p-4 cursor-pointer w-full md:w-[480px] mx-auto ${
+                selectedFeelings.length > 0
+                  ? "bg-(--purple-2) dark:bg-[#615793]"
+                  : "bg-(--neutral-400) cursor-not-allowed opacity-50"
+              }`}
             >
-              <motion.button
-                whileTap={{ scale: 0.98 }}
-                className="rounded-2xl bg-(--purple-2) dark:bg-[#615793] text-white dark:text-[#FFFFFF] p-4 cursor-pointer w-full mx-auto"
-              >
-                Continue
-              </motion.button>
-            </NavLink>
-            <NavLink
-              to="/welcome"
-              className="w-full md:w-[480px] flex justify-center"
+              Continue
+            </motion.button>
+            <motion.button
+              onClick={() => navigate("/welcome")}
+              whileTap={{ scale: 0.98 }}
+              className="p-4 cursor-pointer w-full md:w-[480px] mx-auto text-(--purple-3) dark:text-[#EBEAF2] rounded-2xl"
             >
-              <motion.button
-                whileTap={{ scale: 0.98 }}
-                className="p-4 cursor-pointer w-full mx-auto text-(--purple-3) dark:text-[#EBEAF2] rounded-2xl"
-              >
-                Take me to the menu
-              </motion.button>
-            </NavLink>
+              Take me to the menu
+            </motion.button>
           </div>
         </div>
       </div>
