@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus, FaChevronDown } from "react-icons/fa6";
+import { IoCartOutline } from "react-icons/io5";
 import { OrderStatusSchema } from "../../schemas/OrderStatusSchema";
 import Loader from "../Loader";
 import Header from "../layout/Header";
@@ -48,20 +49,50 @@ const OrderStatus: React.FC = () => {
         />
 
         <div className="pt-25 md:pt-30 max-w-[1440px] mx-auto flex flex-col items-center py-6 px-6 space-y-10">
-
           <div className="flex flex-col sm:flex-row gap-2 lg:gap-8 w-full items-center sm:items-start">
-
             <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl pt-[30px] max-w-[340px] sm:max-w-full sm:w-[60%] h-auto sm:h-fit overflow-clip gap-[21px] lg:gap-[60px] flex flex-col items-center">
-              <h1 className="text-[16px] lg:text-[24px] text-[#8E8EA9] font-semibold dark:text-(--neutral-200)">
-                {currentStatus.text} <br />{" "}
-                <b className="text-[18px] lg:text-[24px] text-(--yellow-1) font-extrabold">
-                  {currentStatus.time}
-                </b>
-              </h1>
+              {order ? (
+                <>
+                  <h1 className="text-[16px] lg:text-[24px] text-[#8E8EA9] font-semibold dark:text-(--neutral-200)">
+                    {currentStatus.text} <br />{" "}
+                    <b className="text-[18px] lg:text-[24px] text-(--yellow-1) font-extrabold">
+                      {currentStatus.time}
+                    </b>
+                  </h1>
 
-              <div className="lg:max-w-full">
-                <img src={currentStatus.img} alt="" />
-              </div>
+                  <div className="lg:max-w-full">
+                    <img src={currentStatus.img} alt="" />
+                  </div>
+                </>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="flex flex-col items-center justify-center py-10 lg:py-16 px-6 gap-6"
+                >
+                  <motion.div
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <IoCartOutline className="w-28 h-28 lg:w-36 lg:h-36 text-(--yellow-1)" />
+                  </motion.div>
+
+                  <div className="space-y-2">
+                    <h2 className="text-[18px] lg:text-[24px] font-bold text-[#32324D] dark:text-white">
+                      No active orders
+                    </h2>
+                    <p className="text-[14px] lg:text-[16px] text-[#8E8EA9] dark:text-[#c0c0cf] max-w-xs mx-auto">
+                      Your order status will appear here once you place an
+                      order.
+                    </p>
+                  </div>
+                </motion.div>
+              )}
             </div>
 
             <div className="bg-[#FFFFFF] dark:bg-(--neutral-700) text-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl p-5 lg:p-[30px] space-y-4 max-w-[340px] sm:max-w-full w-full sm:w-[40%] h-fit">
@@ -106,12 +137,16 @@ const OrderStatus: React.FC = () => {
                             </div>
                             <p className="text-[14px]">
                               <span>{sent.qty}</span>x ${" "}
-                              <b className="text-(--yellow-1)">{(sent.price ?? 0).toFixed(2)}</b>
+                              <b className="text-(--yellow-1)">
+                                {(sent.price ?? 0).toFixed(2)}
+                              </b>
                             </p>
                           </div>
                         ))
                       ) : (
-                        <p className="text-[14px] text-[#8E8EA9]">No order found.</p>
+                        <p className="text-[14px] text-[#8E8EA9]">
+                          No order found.
+                        </p>
                       )}
                     </div>
                   </motion.div>
@@ -123,35 +158,40 @@ const OrderStatus: React.FC = () => {
                 className="flex mx-auto items-center cursor-pointer space-x-2 w-fit"
               >
                 <FaPlus size={20} className="text-(--yellow-1)" />
-                <p className="text-(--yellow-1) text-[16px] font-semibold">Add more food to order</p>
+                <p className="text-(--yellow-1) text-[16px] font-semibold">
+                  Add more food to order
+                </p>
               </motion.div>
             </div>
           </div>
 
-          <div className="max-w-[340px] w-full sm:max-w-full flex flex-col space-y-5 sm:flex-row justify-between items-center rounded-2xl px-5 py-4 text-[#8E8EA9] font-semibold dark:text-(--neutral-200) bg-[#FFFFFF] dark:bg-(--neutral-700) shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
+          {order && (
+            <div className="max-w-[340px] w-full sm:max-w-full flex flex-col space-y-5 sm:flex-row justify-between sm:items-center rounded-2xl px-5 py-4 text-[#8E8EA9] font-semibold dark:text-(--neutral-200) bg-[#FFFFFF] dark:bg-(--neutral-700) shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
+              <p className="text-[14px] font-600">{currentStatus.action}</p>
 
-            <p className="text-[14px] sm:text-[16px] lg:text-[18px] font-600">{currentStatus.action}</p>
+              {showRecommend && order && (
+                <motion.div
+                  whileTap={{ scale: 0.96 }}
+                  className="p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[12px] text-white text-center cursor-pointer"
+                >
+                  Ask for Recommendations
+                </motion.div>
+              )}
 
-            {showRecommend && (
-              <motion.div
-                whileTap={{ scale: 0.96 }}
-                className="p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[12px] sm:text-[16px] text-white text-center cursor-pointer"
-              >
-                Ask for Recommendations
-              </motion.div>
-            )}
-
-            {showSubmit && (
-              <motion.div
-                whileTap={{ scale: 0.96 }}
-                onClick={() => navigate("/Checkout", { state: { order } })}
-                className="w-full text-center sm:w-fit lg:w-[375px] p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[16px] lg:text-[16px] text-white cursor-pointer gap-2 flex justify-center"
-              >
-                <span>Pay</span>
-                <span><b>${(order.total ?? 0).toFixed(2)}</b></span>
-              </motion.div>
-            )}
-          </div>
+              {showSubmit && order && (
+                <motion.div
+                  whileTap={{ scale: 0.96 }}
+                  onClick={() => navigate("/Checkout", { state: { order } })}
+                  className="w-full text-center sm:w-fit lg:w-[375px] p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[16px] lg:text-[16px] text-white cursor-pointer gap-2 flex justify-center"
+                >
+                  <span>Pay</span>
+                  <span>
+                    <b>${(order.total ?? 0).toFixed(2)}</b>
+                  </span>
+                </motion.div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -243,7 +243,7 @@ const Header: React.FC<HeaderProps> = ({
                     {/* Order Link */}
                     <motion.div variants={dropdownItem}>
                       <Link
-                        to="/order"
+                        to="/OrderStatus"
                         onClick={() => setTabletMenuOpen(false)}
                         className="block"
                       >
