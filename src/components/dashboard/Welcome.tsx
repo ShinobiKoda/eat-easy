@@ -9,25 +9,30 @@ import {
   FadeIn,
   ScaleButton,
 } from "../animations/motion";
+import SEO from "../SEO";
 
 const options = [
   {
     icon: "/images/bulb-icon.svg",
     title: "Choose Virtual Assistant",
     description: "Simplify your decisions through our Smart Menu",
-    link: "/virtual"
+    link: "/virtual",
   },
   {
     icon: "/images/menu-icon.svg",
     title: "Go to the menu",
     description: "If you already know what to order, this is the best choice",
-    link: "/FullMenu"
+    link: "/FullMenu",
   },
 ];
 
 const Welcome: React.FC = () => {
   return (
     <div className="w-full min-h-screen">
+      <SEO
+        title="Dashboard | EatEasy"
+        description="Welcome to Gram Bistro Restaurant. Find your flavor and browse our menu."
+      />
       <MotionContainer className={`transition-all duration-300`}>
         <Header description="Browse Our Food Menu" navbarTitle="Gbam Gbistro" />
         <div className="w-full pt-[60px] lg:pt-[120px] px-6 lg:px-[42px]">

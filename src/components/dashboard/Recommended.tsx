@@ -13,6 +13,7 @@ import { getLatestRecommendation } from "../../services/recommendationHistorySer
 import { useLocation, useNavigate } from "react-router-dom";
 import StarHalf from "/images/star-half-icon.png";
 import StarFull from "/images/star.svg";
+import SEO from "../SEO";
 
 const Recommended: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -107,6 +108,10 @@ const Recommended: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen">
+      <SEO
+        title="Your Recommendations | EatEasy"
+        description="View the dishes specially selected for you by EatEasy's smart assistant."
+      />
       <div>
         <Header
           title="Smart Assistant"

@@ -4,6 +4,7 @@ import AI from "/images/AI-image.png";
 import { NavLink } from "react-router-dom";
 import Header from "../layout/Header";
 import Loader from "../Loader";
+import SEO from "../SEO";
 
 const Virtual: React.FC = () => {
   const [showLoader, setShowLoader] = useState(() => {
@@ -21,6 +22,10 @@ const Virtual: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen">
+      <SEO
+        title="Virtual Assistant | EatEasy"
+        description="Let our smart virtual assistant help you find the perfect dish."
+      />
       {showLoader && <Loader />}
 
       <div

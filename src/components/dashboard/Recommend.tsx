@@ -8,6 +8,7 @@ import {
   getLatestRecommendation,
   type Recommendation,
 } from "../../services/recommendationHistoryService";
+import SEO from "../SEO";
 
 const Recommend: React.FC = () => {
   const navigate = useNavigate();
@@ -41,6 +42,10 @@ const Recommend: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen">
+      <SEO
+        title="Get Recommendations | EatEasy"
+        description="Configure your food preferences and get personalized recommendations from EatEasy."
+      />
       <div>
         <Header
           title="Food Menu"

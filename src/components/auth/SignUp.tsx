@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import AsideCard from "../onboarding/AsideCard";
 import ThemeSwitchButton from "../ThemeSwitchButton";
 import { Link } from "react-router-dom";
+import SEO from "../SEO";
 
 function SignUp() {
   const {
@@ -66,6 +67,10 @@ function SignUp() {
 
   return (
     <div className="w-full">
+      <SEO
+        title="Sign Up | EatEasy"
+        description="Create an EatEasy account for a complete digital restaurant experience."
+      />
       <div className="absolute top-2 right-2 z-50">
         <ThemeSwitchButton />
       </div>
