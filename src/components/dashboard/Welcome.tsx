@@ -35,12 +35,12 @@ const Welcome: React.FC = () => {
       />
       <MotionContainer className={`transition-all duration-300`}>
         <Header description="Browse Our Food Menu" navbarTitle="Gbam Gbistro" />
-        <div className="w-full pt-[60px] lg:pt-[120px] px-6 lg:px-[42px]">
-          <PopIn className="heading-font text-(--neutral-800) font-medium text-[22px] text-center dark:text-white lg:hidden">
+        <div className="w-full pt-[60px] md:pt-30 md:pb-10 lg:pt-[120px] px-6 lg:px-[42px]">
+          <PopIn className="heading-font text-(--neutral-800) font-medium text-[22px] text-center dark:text-white md:hidden">
             Let's find the perfect dish for you
           </PopIn>
 
-          <div className="w-full hidden md:flex md:items-stretch md:justify-between bg-(--neutral-900) dark:bg-(--neutral-150) rounded-[28.67px] px-[50px] ">
+          <div className="w-full hidden md:flex md:items-stretch md:justify-between bg-(--neutral-900) dark:bg-(--neutral-150) rounded-[28.67px] px-[50px]">
             {/* Text */}
             <FadeIn className="space-y-6 py-[50px]">
               <h1 className="text-[32px]">

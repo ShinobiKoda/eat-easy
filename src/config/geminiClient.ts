@@ -12,16 +12,13 @@ const genAI = new GoogleGenerativeAI(apiKey || "");
 
 /**
  * Shared Gemini model instance.
- * Using gemini-2.0-flash for fast, cost-effective responses.
+ * Using gemini-2.5-flash for fast, cost-effective responses.
  */
 export const geminiModel = genAI.getGenerativeModel({
-  model: "gemini-2.0-flash",
+  model: "gemini-2.5-flash",
   generationConfig: {
     temperature: 0.7,
-    topP: 0.9,
-    maxOutputTokens: 1024,
+    maxOutputTokens: 4096, // Give it plenty of room for both thoughts and text
     responseMimeType: "application/json",
   },
 });
-
-export default genAI;
