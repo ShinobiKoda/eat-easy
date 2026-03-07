@@ -218,35 +218,33 @@ const Rewards: React.FC = () => {
             </div>
 
             {/* ─── Desktop: Original flex layout ─── */}
-            <div className="hidden lg:grid grid-cols-[2fr_1fr] gap-5 max-h-[350px] h-full">
+            <div className="hidden lg:grid grid-cols-[2fr_1fr] gap-5 h-full items-stretch">
               {/* Hero Banner */}
-              <FadeIn className="h-full w-full shrink-0 items-stretch">
-                <div className="overflow-hidden rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between w-full">
-                  <div className="relative px-10 space-y-4">
-                    <p className="text-(--neutral-400) dark:text-(--neutral-600) text-sm font-medium">
-                      New client
-                    </p>
-                    <h2 className="heading-font text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[32px] leading-tight max-w-[263px]">
-                      30% Discount for all the menu
-                    </h2>
-                    <ScaleButton className="bg-(--orange-1) text-white font-semibold text-sm px-6 py-4 rounded-2xl cursor-pointer">
-                      Claim reward
-                    </ScaleButton>
-                  </div>
-                  <div className="max-w-[335px] flex items-center justify-center">
-                    <img
-                      src="/images/reward.png"
-                      alt="Reward Badge"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
+              <FadeIn className="h-full bg-(--neutral-900) dark:bg-(--neutral-150) rounded-3xl flex items-center justify-between w-full">
+                <div className="relative px-10 space-y-4">
+                  <p className="text-(--neutral-400) dark:text-(--neutral-600) text-sm font-medium">
+                    New client
+                  </p>
+                  <h2 className="heading-font text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[32px] leading-tight max-w-[263px]">
+                    30% Discount for all the menu
+                  </h2>
+                  <ScaleButton className="bg-(--orange-1) text-white font-semibold text-sm px-6 py-4 rounded-2xl cursor-pointer">
+                    Claim reward
+                  </ScaleButton>
+                </div>
+                <div className="max-w-[335px] flex items-center justify-center">
+                  <img
+                    src="/images/reward.png"
+                    alt="Reward Badge"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
               </FadeIn>
 
               {/* Right Column: Points + 2x */}
-              <div className="flex flex-col gap-5 justify-between w-full h-full flex-1">
+              <div className="flex flex-col gap-5 justify-between w-full h-full">
                 {/* Points Card */}
-                <PopIn>
+                <PopIn className="flex-1">
                   <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between">
                     <div>
                       <p className="text-(--neutral-400) dark:text-(--neutral-800) text-[16px] font-semibold">
@@ -267,7 +265,7 @@ const Rewards: React.FC = () => {
                 </PopIn>
 
                 {/* 2x More Points */}
-                <PopIn>
+                <PopIn className="flex-1">
                   <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between">
                     <div className="max-w-[211px] flex flex-col justify-center">
                       <h3 className="text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[22px] heading-font">

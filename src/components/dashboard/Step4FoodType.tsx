@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../layout/Header";
-import Loader from "../Loader";
 
 // Food types sourced from the FoodTag union in types.ts — a curated subset users would care about
 const foodTypeOptions = [
@@ -40,20 +39,6 @@ const Step4FoodType: React.FC = () => {
     );
   };
 
-  const [showLoader, setShowLoader] = useState(() => {
-    return !sessionStorage.getItem("hasShownLoader_Step4FoodType");
-  });
-
-  useEffect(() => {
-    if (showLoader) {
-      const t = setTimeout(() => {
-        setShowLoader(false);
-        sessionStorage.setItem("hasShownLoader_Step4FoodType", "true");
-      }, 3000);
-      return () => clearTimeout(t);
-    }
-  }, [showLoader]);
-
   const handleContinue = () => {
     console.debug("[Step4FoodType] Selections:", {
       moods,
@@ -73,11 +58,7 @@ const Step4FoodType: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen">
-      {showLoader && <Loader />}
-
-      <div
-        className={`${showLoader ? "pointer-events-none overflow-hidden" : ""}`}
-      >
+      <div>
         <Header
           title="Food Menu"
           description="Virtual Assistant"

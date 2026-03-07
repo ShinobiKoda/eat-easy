@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Angry from "/images/angry-img.png";
@@ -8,7 +8,6 @@ import Sick from "/images/sick-img.png";
 import Thirsty from "/images/thirsty-img.png";
 import Tired from "/images/tired-img.png";
 import Header from "../layout/Header";
-import Loader from "../Loader";
 
 const Step1: React.FC = () => {
   // allow multiple feelings to be selected; store selected indices
@@ -33,19 +32,6 @@ const Step1: React.FC = () => {
     { name: "Other", image: Sick },
   ];
 
-  const [showLoader, setShowLoader] = useState(() => {
-    return !sessionStorage.getItem("hasShownLoader_Step1");
-  });
-  useEffect(() => {
-    if (showLoader) {
-      const t = setTimeout(() => {
-        setShowLoader(false);
-        sessionStorage.setItem("hasShownLoader_Step1", "true");
-      }, 3000);
-      return () => clearTimeout(t);
-    }
-  }, [showLoader]);
-
   const handleContinue = () => {
     const moodNames = selectedFeelings.map((idx) => Feelings[idx].name);
     console.debug("[Step1] Selected moods:", moodNames);
@@ -54,13 +40,7 @@ const Step1: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen">
-      {showLoader && <Loader />}
-
-      <div
-        className={` ${
-          showLoader ? "pointer-events-none overflow-hidden" : ""
-        }`}
-      >
+      <div>
         <Header
           title="Food Menu"
           description="Virtual Assistant"

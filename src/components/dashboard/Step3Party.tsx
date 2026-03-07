@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../layout/Header";
-import Loader from "../Loader";
 
 const partyOptions = [
   { id: "solo", label: "Just Me", emoji: "🧑", description: "Table for one" },
@@ -35,20 +34,6 @@ const Step3Party: React.FC = () => {
   const moods: string[] = location.state?.moods || [];
   const budgetRange: string = location.state?.budgetRange || "any";
 
-  const [showLoader, setShowLoader] = useState(() => {
-    return !sessionStorage.getItem("hasShownLoader_Step3Party");
-  });
-
-  useEffect(() => {
-    if (showLoader) {
-      const t = setTimeout(() => {
-        setShowLoader(false);
-        sessionStorage.setItem("hasShownLoader_Step3Party", "true");
-      }, 3000);
-      return () => clearTimeout(t);
-    }
-  }, [showLoader]);
-
   const handleContinue = () => {
     if (!selectedParty) return;
     console.debug(
@@ -66,11 +51,7 @@ const Step3Party: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen">
-      {showLoader && <Loader />}
-
-      <div
-        className={`${showLoader ? "pointer-events-none overflow-hidden" : ""}`}
-      >
+      <div>
         <Header
           title="Food Menu"
           description="Virtual Assistant"

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../layout/Header";
-import Loader from "../Loader";
 
 const budgetOptions = [
   {
@@ -39,20 +38,6 @@ const Step2Budget: React.FC = () => {
   // Get moods from previous step
   const moods: string[] = location.state?.moods || [];
 
-  const [showLoader, setShowLoader] = useState(() => {
-    return !sessionStorage.getItem("hasShownLoader_Step2Budget");
-  });
-
-  useEffect(() => {
-    if (showLoader) {
-      const t = setTimeout(() => {
-        setShowLoader(false);
-        sessionStorage.setItem("hasShownLoader_Step2Budget", "true");
-      }, 3000);
-      return () => clearTimeout(t);
-    }
-  }, [showLoader]);
-
   const handleContinue = () => {
     if (!selectedBudget) return;
     console.debug(
@@ -68,11 +53,7 @@ const Step2Budget: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen">
-      {showLoader && <Loader />}
-
-      <div
-        className={`${showLoader ? "pointer-events-none overflow-hidden" : ""}`}
-      >
+      <div>
         <Header
           title="Food Menu"
           description="Virtual Assistant"
