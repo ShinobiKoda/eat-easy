@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Profile from "/images/profile-img.png";
 import { IoIosLogOut } from "react-icons/io";
@@ -56,6 +56,7 @@ const Sidebar: React.FC = () => {
 
   const effectiveIsOpen = isOpen;
   const activeMenu = openMenuId;
+  const isSelfDispatch = useRef(false);
 
   const handleToggle = () => setIsOpen((v) => !v);
 
@@ -70,9 +71,10 @@ const Sidebar: React.FC = () => {
     return () => window.removeEventListener("toggle-sidebar", onGlobalToggle);
   }, []);
 
-  // Listen to explicit open/close states
+  // Listen to explicit open/close states from other components
   useEffect(() => {
     const handler = (e: Event) => {
+      if (isSelfDispatch.current) return;
       const detail = (e as CustomEvent<{ open: boolean }>).detail;
       if (detail && typeof detail.open === "boolean") {
         setIsOpen(detail.open);
@@ -83,11 +85,14 @@ const Sidebar: React.FC = () => {
       window.removeEventListener("sidebar-state", handler as EventListener);
   }, []);
 
-  // Sync sidebar-state for components like Header
-  useEffect(() => {
+  // Sync sidebar state to Header & App — useLayoutEffect fires before paint
+  // so all elements start their CSS transitions in the same frame
+  useLayoutEffect(() => {
+    isSelfDispatch.current = true;
     window.dispatchEvent(
       new CustomEvent("sidebar-state", { detail: { open: isOpen } }),
     );
+    isSelfDispatch.current = false;
   }, [isOpen]);
 
   // Auto-close on navigation
@@ -98,7 +103,13 @@ const Sidebar: React.FC = () => {
   return (
     <>
       <aside
-        className={`aside h-screen transition-all duration-300 ease-in-out rounded-r-3xl fixed left-0 top-0 z-50 w-[260px] ${effectiveIsOpen ? "translate-x-0 md:w-[260px]" : "-translate-x-full md:w-36"} md:translate-x-0 `}
+        style={{
+          willChange: "width, transform",
+          transitionProperty: "width, transform",
+          transitionDuration: "300ms",
+          transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+        className={`aside h-screen rounded-r-3xl fixed left-0 top-0 z-50 w-[260px] ${effectiveIsOpen ? "translate-x-0 md:w-[260px]" : "-translate-x-full md:w-36"} md:translate-x-0`}
       >
         <motion.div
           onClick={handleToggle}
@@ -116,9 +127,9 @@ const Sidebar: React.FC = () => {
           </button>
         </motion.div>
 
-        <div className={`flex flex-col h-full transition-all duration-300`}>
+        <div className={`flex flex-col h-full`}>
           <div
-            className={`py-[28.4px] flex justify-center items-center text-center transition-all duration-300 text-[24px] border-b border-b-(--neutral-150) dark:border-b-(--neutral-700)`}
+            className={`py-[28.4px] flex justify-center items-center text-center text-[24px] border-b border-b-(--neutral-150) dark:border-b-(--neutral-700)`}
           >
             <span className="font-medium text-(--neutral-100)">Eat</span>
             <span className="font-bold text-(--orange-1)">Easy</span>
@@ -146,7 +157,7 @@ const Sidebar: React.FC = () => {
 
               <div className="text-white space-y-1.5 w-full">
                 <p
-                  className={`font-semibold text-base max-w-[120px] md:max-w-full transition-all duration-300 ${
+                  className={`font-semibold text-base max-w-[120px] md:max-w-full ${
                     effectiveIsOpen
                       ? "truncate md:whitespace-normal md:overflow-visible"
                       : "truncate"
@@ -215,7 +226,7 @@ const Sidebar: React.FC = () => {
                             : ""
                         }`}
                       >
-                        <NavLink to="/recommended">
+                        <NavLink to="/smart-assistant">
                           <motion.div
                             whileTap={{ scale: 0.95 }}
                             className="cursor-pointer font-medium text-base text-white"

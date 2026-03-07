@@ -12,6 +12,7 @@ import ThemeSwitchButton from "../ThemeSwitchButton";
 import AsideCard from "../onboarding/AsideCard";
 import { MotionContainer, fadeIn, popIn } from "../animations/motion";
 import { supabase } from "../../config/supabaseClient";
+import SEO from "../SEO";
 
 function Login() {
   const {
@@ -47,6 +48,10 @@ function Login() {
 
   return (
     <div className="w-full">
+      <SEO
+        title="Log In | EatEasy"
+        description="Sign in to EatEasy to continue your delicious journey."
+      />
       <div className="absolute top-2 right-2 z-50">
         <ThemeSwitchButton />
       </div>

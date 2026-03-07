@@ -196,7 +196,7 @@ const FullMenu: React.FC = () => {
 
             <AnimatePresence mode="wait">
               {loading ? (
-                <div className="items-center gap-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                <div className="items-center gap-[30px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
                   {Array.from({ length: 15 }).map((_, index) => (
                     <div
                       key={index}
@@ -209,7 +209,7 @@ const FullMenu: React.FC = () => {
               ) : (
                 <motion.div
                   key={`${mainCategory}-${debouncedSearch}-${JSON.stringify(appliedFilters)}-${allItems.length}`}
-                  className="items-center gap-[30px] grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+                  className="items-center gap-[30px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5"
                   variants={productGridStagger}
                   initial="hidden"
                   animate="show"

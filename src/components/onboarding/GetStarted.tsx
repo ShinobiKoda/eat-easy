@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import ThemeSwitchButton from "../ThemeSwitchButton";
 import AsideCard from "./AsideCard";
+import SEO from "../SEO";
 
 function GetStarted() {
   const [animateBar, setAnimateBar] = useState(false);
@@ -13,6 +14,10 @@ function GetStarted() {
 
   return (
     <MotionContainer className="relative w-full min-h-screen">
+      <SEO
+        title="Get Started | EatEasy"
+        description="Join EatEasy to have a full digital experience in our restaurant."
+      />
       <div className="absolute top-2 right-2 z-50">
         <ThemeSwitchButton />
       </div>

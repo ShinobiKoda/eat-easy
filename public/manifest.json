@@ -1,0 +1,21 @@
+{
+  "name": "EatEasy | Divine Palate",
+  "short_name": "EatEasy",
+  "description": "Discover and recommend dishes and nearby locations.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#615793",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

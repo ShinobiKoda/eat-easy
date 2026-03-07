@@ -1,38 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Burger from "/images/burger-icon.png";
-import GridIcon from "/images/grid-icon.png";
-import ListIcon from "/images/list-icon.png";
 import { AiOutlinePlus } from "react-icons/ai";
 import type { PropType } from "../../types";
 import ViewDish from "./ViewDish";
 import ViewOrder from "./ViewOrder";
-import Filters from "../Filters";
 import Header from "../layout/Header";
 import SkeletonCard from "../SkeletonCard";
 import { AnimatePresence } from "motion/react";
-
 import { useOrder } from "../../hooks/useOrder";
 import { getMenuItems } from "../../services/menuService";
+import { getLatestRecommendation } from "../../services/recommendationHistoryService";
+import { useLocation, useNavigate } from "react-router-dom";
 import StarHalf from "/images/star-half-icon.png";
 import StarFull from "/images/star.svg";
+import SEO from "../SEO";
 
-type RecommendedProps = {
-  items?: PropType[];
-  showSelected?: (item: PropType) => void;
-  onClose?: () => void;
-};
-
-const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
-  // Loading state for menu items
+const Recommended: React.FC = () => {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [recommendedItems, setRecommendedItems] = useState<PropType[]>([]);
+  const locationState = useLocation();
+  const navigate = useNavigate();
 
-  // Use shared order logic
   const {
     selectedItem,
     setSelectedItem,
     orderItems,
-    // setOrderItems,
     showOrder,
     setShowOrder,
     addToOrder,
@@ -40,212 +33,213 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
     handleSend,
   } = useOrder();
 
-  // usestate for the mode
-  const [click, setClick] = useState(0);
-
-  const [filter, setFilter] = useState(false);
-
-  // usestate for the categories
-  const [menu, setMenu] = useState(0);
-
-  // Helper to get 9 random items from an array
-  function getRandomItems<T>(arr: T[], n: number): T[] {
-    const shuffled = arr.slice().sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, n);
-  }
-
-  // For Eat: show 9 random, for Drink: show all, for Dessert: show all from Dessert array
-  // All menu items from Supabase
-  const [allItems, setAllItems] = useState<(PropType & { category: string })[]>(
-    [],
-  );
-
-  useEffect(() => {
-    async function fetchMenu() {
-      try {
-        setLoading(true);
-        const items = await getMenuItems();
-        setAllItems(items);
-      } catch (error) {
-        console.error("Failed to fetch menu items", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchMenu();
-  }, []);
-
-  let datum: PropType[] = [];
-  const categoryName = (["Eat", "Drink", "Dessert"] as const)[menu];
-  const itemsInCategory = allItems.filter(
-    (item) => item.category === categoryName,
-  );
-
-  if (menu === 0) {
-    datum = getRandomItems(itemsInCategory, 9);
-  } else {
-    datum = itemsInCategory;
-  }
-
-  // stop background scroll effect when any of this is open
-  const isModalOpen = Boolean(selectedItem || showOrder || filter);
+  // stop background scroll when modals are open
+  const isModalOpen = Boolean(selectedItem || showOrder);
   useEffect(() => {
     if (isModalOpen) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
-  }, [selectedItem, showOrder, filter]);
+  }, [selectedItem, showOrder]);
+
+  // Load recommended items either from route state or from latest DB recommendation
+  useEffect(() => {
+    async function loadRecommendations() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Get item IDs from route state (fresh generation) or fetch from DB
+        let itemIds: number[] | undefined = locationState.state?.itemIds;
+
+        if (!itemIds || itemIds.length === 0) {
+          console.debug(
+            "[Recommended] No itemIds in state, fetching from DB...",
+          );
+          const latestRec = await getLatestRecommendation();
+          if (latestRec) {
+            itemIds = latestRec.item_ids;
+            console.debug("[Recommended] Loaded from DB, IDs:", itemIds);
+          } else {
+            console.debug("[Recommended] No recommendations found");
+            setError("No recommendations yet. Start by telling us your mood!");
+            setLoading(false);
+            return;
+          }
+        } else {
+          console.debug(
+            "[Recommended] Using itemIds from route state:",
+            itemIds,
+          );
+        }
+
+        // Fetch all menu items and filter by recommended IDs
+        const allItems = await getMenuItems();
+        const idSet = new Set(itemIds);
+        const filtered = allItems.filter((item) => idSet.has(item.id));
+
+        if (filtered.length === 0) {
+          console.error(
+            "[Recommended] No matching items found for IDs:",
+            itemIds,
+          );
+          setError(
+            "Couldn't load recommended items. Please try generating new ones.",
+          );
+        } else {
+          console.debug(
+            "[Recommended] Showing",
+            filtered.length,
+            "recommended items",
+          );
+          setRecommendedItems(filtered);
+        }
+      } catch (err) {
+        console.error("[Recommended] Error loading recommendations:", err);
+        setError("Failed to load recommendations. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadRecommendations();
+  }, [locationState.state?.itemIds]);
 
   return (
     <div className="w-full min-h-screen">
-      <div className={``}>
+      <SEO
+        title="Your Recommendations | EatEasy"
+        description="View the dishes specially selected for you by EatEasy's smart assistant."
+      />
+      <div>
         <Header
-          title="Full Menu"
-          description="See All Our Dishes"
+          title="Smart Assistant"
+          description="Your Recommendations"
           navbarTitle="Gram Bistro"
           showBack={true}
         />
 
-        <div className={`pt-15 md:pt-20 lg:pt-25 transition-all duration-300`}>
+        <div className="pt-15 md:pt-20 lg:pt-25">
           <div className="max-w-6xl mx-auto flex flex-col p-6 space-y-5">
-            <div className="md:hidden flex justify-between items-center">
+            <div className="flex justify-between items-center">
               <h1 className="text-[22px] lg:text-[32px] text-[#32324D] dark:text-[#FFFFFF] font-bold">
                 We think you might enjoy these specially selected dishes
               </h1>
             </div>
 
+            {/* Action bar */}
             <div className="md:p-4 md:rounded-2xl md:shadow-[0_4px_12px_rgba(0,0,0,0.10)] md:bg-white md:dark:bg-(--neutral-700) flex justify-between items-center mb-10">
-              <div
-                className={`flex md:w-fit h-fit md:mx-0 md:justify-items-normal mx-auto w-full justify-between space-x-4 md:space-x-0 lg:space-x-2 text-[15px]`}
-              >
-                {["Eat", "Drink", "Dessert"].map((cat, idx) => (
-                  <div
-                    key={cat}
-                    onClick={() => setMenu(idx)}
-                    className={`relative h-fit text-center py-2 px-4 w-20 text-[16px] font-medium text-(--neutral-600) dark:text-(--neutral-100) rounded-2xl cursor-pointer transition-colors duration-300 ${menu === idx ? "bg-(--yellow-1) text-white dark:text-(--neutral-800)" : "bg-none"}`}
-                  >
-                    {cat}
-                  </div>
-                ))}
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🤖</span>
+                <p className="text-sm font-semibold text-(--neutral-600) dark:text-(--neutral-200)">
+                  AI-picked just for you
+                </p>
+              </div>
 
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={() => navigate("/step1")}
+                className="p-3 rounded-2xl bg-[#32324D] dark:bg-[#615793] text-[12px] lg:text-[16px] text-white cursor-pointer"
+              >
+                New recommendation
+              </motion.button>
+            </div>
+
+            {/* Error State */}
+            {error && (
+              <div className="flex flex-col items-center text-center py-20 space-y-6">
+                <div className="w-24 h-24 rounded-full bg-(--yellow-1)/10 flex items-center justify-center">
+                  <span className="text-4xl">🍽️</span>
+                </div>
+                <h2 className="text-xl font-semibold text-(--neutral-800) dark:text-white">
+                  {error}
+                </h2>
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.96 }}
-                  onClick={() => setFilter(!filter)}
-                  className="cursor-pointer bg-white rounded-2xl p-3 md:hidden"
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate("/step1")}
+                  className="rounded-2xl bg-(--purple-2) text-white px-8 py-3 cursor-pointer font-semibold"
                 >
-                  <img src={Burger} className="w-4 h-3" alt="" />
+                  Get Recommendations
                 </motion.button>
               </div>
+            )}
 
-              {/* Desktop */}
-              <div className="hidden md:flex items-center space-x-4 text-[15px]">
-                {/* <div className='cursor-pointer'>View mode</div> */}
-                <div
-                  className={`rounded-2xl border border-[#32324D] flex w-fit h-fit transition-all duration-300`}
-                >
-                  <div
-                    onClick={() => setClick(0)}
-                    className={`relative w-fit h-fit p-3 rounded-2xl cursor-pointer transition-colors duration-300 ${click === 0 ? "bg-[#32324D] text-white" : "bg-none"}`}
-                  >
-                    <img src={ListIcon} className="w-3 h-3" alt="" />
-                  </div>
+            {/* Food Grid */}
+            {!error && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                {loading
+                  ? Array.from({ length: 6 }).map((_, index) => (
+                      <div
+                        key={index}
+                        className="rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)] bg-white dark:bg-(--neutral-700) p-3"
+                      >
+                        <SkeletonCard variant="horizontal" />
+                      </div>
+                    ))
+                  : recommendedItems.map((eat) => (
+                      <div
+                        key={eat.id}
+                        className="rounded-2xl items-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] bg-white dark:bg-(--neutral-700) p-3 group"
+                      >
+                        <div className="flex space-x-3 items-center relative">
+                          <div className="rounded-[50%] max-w-[100px] h-[100px]">
+                            <img
+                              src={eat.image}
+                              className="rounded-[50%] w-full h-full object-cover"
+                              alt={eat.name}
+                            />
+                          </div>
+                          <div>
+                            <p className="text-[15px] lg:text-[18px] dark:text-[#FFFFFF] font-semibold">
+                              {eat.name}
+                            </p>
 
-                  <div
-                    onClick={() => setClick(1)}
-                    className={`relative w-fit h-fit p-3 rounded-2xl cursor-pointer transition-colors duration-300 ${click === 1 ? "bg-[#32324D] text-white" : "bg-none"}`}
-                  >
-                    <img src={GridIcon} className="w-3 h-3" alt="" />
-                  </div>
-                </div>
-
-                <div className="border border-gray-400 my-auto h-4"></div>
-
-                <motion.div
-                  whileTap={{ scale: 0.96 }}
-                  onClick={() => setFilter(!filter)}
-                  className="p-3 rounded-2xl bg-[#32324D] dark:bg-[#615793] text-[12px] lg:text-[16px] text-white cursor-pointer"
-                >
-                  Ask for new proposal
-                </motion.div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              {loading
-                ? Array.from({ length: 9 }).map((_, index) => (
-                    <div
-                      key={index}
-                      className="rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)] bg-white dark:bg-(--neutral-700) p-3"
-                    >
-                      <SkeletonCard variant="horizontal" />
-                    </div>
-                  ))
-                : datum.map((eat) => (
-                    <div
-                      key={`${menu}-${eat.id}`}
-                      className="rounded-2xl items-center shadow-[0_4px_12px_rgba(0,0,0,0.10)] bg-white dark:bg-(--neutral-700) p-3 group"
-                    >
-                      <div className="flex space-x-3 items-center relative">
-                        <div className="rounded-[50%] max-w-[100px] h-[100px]">
-                          <img
-                            src={eat.image}
-                            className="rounded-[50%] w-full h-full object-cover"
-                            alt=""
-                          />
-                        </div>
-                        <div className="">
-                          <p className="text-[15px] lg:text-[18px] dark:text-[#FFFFFF] font-semibold">
-                            {eat.name}
-                          </p>
-
-                          <div className=" text-[14px] font-semibold mb-2">
-                            <div className="space-x-1 flex items-center">
-                              {eat.rating < 4.5 ? (
-                                <img
-                                  src={StarHalf}
-                                  className="w-4 h-4"
-                                  alt=""
-                                />
-                              ) : (
-                                <img
-                                  src={StarFull}
-                                  className="w-4 h-4"
-                                  alt=""
-                                />
-                              )}
-                              <p className="text-(--neutral-500) dark:text-(--neutral-200)">
-                                {eat.rating.toFixed(1)}
-                              </p>
+                            <div className="text-[14px] font-semibold mb-2">
+                              <div className="space-x-1 flex items-center">
+                                {eat.rating < 4.5 ? (
+                                  <img
+                                    src={StarHalf}
+                                    className="w-4 h-4"
+                                    alt=""
+                                  />
+                                ) : (
+                                  <img
+                                    src={StarFull}
+                                    className="w-4 h-4"
+                                    alt=""
+                                  />
+                                )}
+                                <p className="text-(--neutral-500) dark:text-(--neutral-200)">
+                                  {eat.rating.toFixed(1)}
+                                </p>
+                              </div>
+                              <span className="text-(--neutral-300) dark:text-(--neutral-500)">
+                                ({eat.reviews} reviews)
+                              </span>
                             </div>
-                            <span className="text-(--neutral-300) dark:text-(--neutral-500)">
-                              ({eat.reviews} reviews)
-                            </span>
+
+                            <p className="text-(--orange-1) text-[15px] lg:text-[18px] font-extrabold">
+                              ${eat.price.toFixed(2)}
+                            </p>
                           </div>
 
-                          <p className="text-(--orange-1) text-[15px] lg:text-[18px] font-extrabold">
-                            ${eat.price.toFixed(2)}
-                          </p>
+                          <motion.div
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => setSelectedItem(eat)}
+                            className="flex justify-self-end absolute right-0 bottom-0 cursor-pointer rounded-xl p-2 bg-[#FFF2EA] dark:bg-(--orange-1)"
+                          >
+                            <AiOutlinePlus className="w-fit h-fit text-(--orange-1) dark:text-[#FFF2EA]" />
+                          </motion.div>
                         </div>
-
-                        <motion.div
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => {
-                            (setSelectedItem(eat), showSelected?.(eat));
-                          }}
-                          className="flex justify-self-end absolute right-0 bottom-0 cursor-pointer rounded-xl p-2 bg-[#FFF2EA] dark:bg-(--orange-1)"
-                        >
-                          <AiOutlinePlus className="w-fit h-fit text-(--orange-1) dark:text-[#FFF2EA]" />
-                        </motion.div>
                       </div>
-                    </div>
-                  ))}
-            </div>
+                    ))}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* floating cart button */}
+        {/* Floating cart */}
         <motion.div drag className="fixed right-6 bottom-6 z-50">
           <button
             onClick={() => setShowOrder((v) => !v)}
@@ -255,7 +249,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
           </button>
         </motion.div>
 
-        {/* viewdish component */}
+        {/* ViewDish modal */}
         <AnimatePresence>
           {selectedItem && (
             <motion.div
@@ -273,7 +267,7 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
           )}
         </AnimatePresence>
 
-        {/* vieworder component */}
+        {/* ViewOrder modal */}
         <AnimatePresence>
           {showOrder && (
             <motion.div
@@ -287,23 +281,6 @@ const Recommended: React.FC<RecommendedProps> = ({ showSelected }) => {
                 onClose={() => setShowOrder(false)}
                 removeOrder={removeOrder}
                 onSend={handleSend}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* filter component */}
-        <AnimatePresence>
-          {filter && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
-            >
-              <Filters
-                onClose={() => setFilter(false)}
-                mainCategory={(["Eat", "Drink", "Dessert"] as const)[menu]}
               />
             </motion.div>
           )}
