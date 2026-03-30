@@ -239,16 +239,6 @@ const Recommended: React.FC = () => {
           </div>
         </div>
 
-        {/* Floating cart */}
-        <motion.div drag className="fixed right-6 bottom-6 z-50">
-          <button
-            onClick={() => setShowOrder((v) => !v)}
-            className="bg-amber-500 text-white rounded-full px-4 py-3 shadow-lg"
-          >
-            Cart ({orderItems.length})
-          </button>
-        </motion.div>
-
         {/* ViewDish modal */}
         <AnimatePresence>
           {selectedItem && (
