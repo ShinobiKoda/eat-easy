@@ -101,7 +101,7 @@ const Generating: React.FC = () => {
 
       <div className="pt-20 md:py-30 lg:pt-50 lg:pb-20 max-w-[1440px] mx-auto flex flex-col items-center p-6">
         {error ? (
-          // ─── Error State ─────────────────────────────────────────
+          // ─── Error State ───
           <div className="flex flex-col items-center text-center mt-20 space-y-6">
             <div className="w-24 h-24 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
               <span className="text-4xl">😞</span>
@@ -133,7 +133,7 @@ const Generating: React.FC = () => {
             </div>
           </div>
         ) : (
-          // ─── Loading Animation ───────────────────────────────────
+          // ─── Loading Animation ───
           <div className="flex flex-col items-center text-center mt-20 space-y-10">
             {/* Pulsing circles animation */}
             <div className="relative w-40 h-40 flex items-center justify-center">
