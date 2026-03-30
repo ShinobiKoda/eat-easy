@@ -1,0 +1,15 @@
+name: Keep Supabase Awake
+
+on:
+  schedule:
+    # This runs at midnight and noon (UTC) every single day.
+    - cron: '0 */12 * * *' 
+  workflow_dispatch: # This adds a "Run Workflow" button in the Actions tab.
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Site
+        # Replace the URL below with your actual site URL or API route
+        run: curl -LsI https://axmldlvejcfbopctqkrw.supabase.co/functions/v1/keep-alive
