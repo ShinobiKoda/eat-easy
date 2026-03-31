@@ -4,9 +4,7 @@ import { useState, type MouseEvent } from "react"
 import useIsDesktop from "../hooks/useIsDesktop"
 import { LiaTimesSolid } from "react-icons/lia";
 import Star from "/images/star.svg";
-import MultiRangeSlider from "multi-range-slider-react";
-import "multi-range-slider-react/lib/multirangeslider.css";
-
+import { PriceSelector, type PriceOption } from "./PriceSelector";
 export type FiltersProps = {
   onClose: () => void;
   onApply?: (filters: {
@@ -80,6 +78,33 @@ const Ratings = [
   { id: 5, name: "5" },
 ];
 
+const priceOptions: PriceOption[] = [
+  {
+    id: "10",
+    label: "$10",
+    value: 10,
+    color: "#facc15",
+    gradientFrom: "#facc15",
+    gradientTo: "#fbbf24",
+  },
+  {
+    id: "20",
+    label: "$20",
+    value: 20,
+    color: "#fbbf24",
+    gradientFrom: "#fbbf24",
+    gradientTo: "#f59e0b",
+  },
+  {
+    id: "30",
+    label: "$30+",
+    value: 30,
+    color: "#f59e0b",
+    gradientFrom: "#f59e0b",
+    gradientTo: "#ea580c",
+  }
+];
+
 const Filters: React.FC<FiltersProps> = ({
   onClose,
   onApply,
@@ -117,9 +142,10 @@ const Filters: React.FC<FiltersProps> = ({
   };
 
   // slider state management
-  const handleInput = (e: { minValue: number; maxValue: number }) => {
-    setPendingMinValue(e.minValue);
-    setPendingMaxValue(e.maxValue);
+  const handlePriceChange = (value: number) => {
+    // If we only have max values driving this, min value is always 0
+    setPendingMinValue(0);
+    setPendingMaxValue(value);
   };
 
   const handleApply = () => {
@@ -206,32 +232,15 @@ const Filters: React.FC<FiltersProps> = ({
 
           <div className="space-y-[15px]">
             <h1 className="text-[#666687] dark:text-[#DCDCE4] text-4 font-600">
-              Price Range
+              Maximum Price
             </h1>
 
-            <div className="space-y-10">
-              <div className="App">
-                <MultiRangeSlider
-                  min={0}
-                  max={30}
-                  step={1}
-                  minValue={pendingMinValue}
-                  maxValue={pendingMaxValue}
-                  onInput={(e) => handleInput(e)}
-                />
-              </div>
-              <div className="flex gap-4 items-center justify-center">
-                <div className="text-[14px] text-center font-600 text-[#8E8EA9] rounded-2xl px-4 py-3 flex items-center bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500">
-                  Minimum price: ${pendingMinValue.toFixed(2)}
-                </div>
-
-                <div className="w-4 border border-[#DCDCE4]"></div>
-
-                <div className="text-[14px] text-center font-600 text-[#8E8EA9] rounded-2xl px-4 py-3 flex items-center bg-[#FFFFFF] dark:bg-[#32324D] dark:text-[#EAEAEF] border border-gray-500">
-                  Maximum price: ${pendingMaxValue.toFixed(2)}
-                </div>
-              </div>
-            </div>
+            <PriceSelector
+              options={priceOptions}
+              selectedValue={pendingMaxValue}
+              onSelectionChange={handlePriceChange}
+              className="w-full max-w-sm mx-auto"
+            />
           </div>
         </div>
         <div className="flex bottom-0">
