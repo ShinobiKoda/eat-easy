@@ -29,7 +29,12 @@ const OrderStatus: React.FC = () => {
     }
   }, []);
 
-  const { currentStatus, showRecommend, showSubmit } = OrderStatusSchema();
+  const { currentStatus, showRecommend, showSubmit, timeLeft, batches } =
+    OrderStatusSchema();
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  const formattedTime = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 
   return (
     <div className="w-full min-h-screen">
@@ -56,7 +61,8 @@ const OrderStatus: React.FC = () => {
                   <h1 className="text-[16px] lg:text-[24px] text-[#8E8EA9] font-semibold dark:text-(--neutral-200)">
                     {currentStatus.text} <br />{" "}
                     <b className="text-[18px] lg:text-[24px] text-(--yellow-1) font-extrabold">
-                      {currentStatus.time}
+                      {currentStatus.time}{" "}
+                      {timeLeft > 0 && `(${formattedTime})`}
                     </b>
                   </h1>
 
@@ -119,30 +125,51 @@ const OrderStatus: React.FC = () => {
                     className="overflow-hidden"
                   >
                     <div className="space-y-3 pt-4">
-                      {order?.items ? (
-                        order.items.map((sent: any) => (
-                          <div
-                            key={sent.id}
-                            className="dark:text-[#FFFFFF] flex justify-between items-center gap-5"
-                          >
-                            <div className="flex items-center gap-2">
-                              <img
-                                src={sent.image}
-                                className="w-[50px] h-[50px] rounded-full"
-                                alt=""
-                              />
-                              <p className="text-left text-[14px] font-semibold">
-                                {sent.name}
+                      {batches.length > 0 ? (
+                        batches.flatMap((batch: any) =>
+                          batch.items.map((item: any) => (
+                            <div
+                              key={`${batch.id}-${item.id}`}
+                              className={`dark:text-[#FFFFFF] flex justify-between items-center gap-5 ${batch.status === "pending" ? "opacity-45" : ""}`}
+                            >
+                              <div className="flex items-center gap-2">
+                                <div className="relative">
+                                  <img
+                                    src={item.image}
+                                    className="w-[50px] h-[50px] rounded-full object-cover"
+                                    alt=""
+                                  />
+                                </div>
+                                <div className="flex flex-col">
+                                  <p className="text-left text-[14px] font-semibold">
+                                    {item.name}
+                                  </p>
+                                  <span
+                                    className={`text-[10px] text-left font-semibold ${
+                                      batch.status === "ready"
+                                        ? "text-green-500"
+                                        : batch.status === "preparing"
+                                          ? "text-(--yellow-1)"
+                                          : "text-gray-400"
+                                    }`}
+                                  >
+                                    {batch.status === "ready"
+                                      ? "Ready"
+                                      : batch.status === "preparing"
+                                        ? "Preparing..."
+                                        : "Pending"}
+                                  </span>
+                                </div>
+                              </div>
+                              <p className="text-[14px]">
+                                <span>{item.qty}</span>x ${" "}
+                                <b className="text-(--yellow-1)">
+                                  {(item.price ?? 0).toFixed(2)}
+                                </b>
                               </p>
                             </div>
-                            <p className="text-[14px]">
-                              <span>{sent.qty}</span>x ${" "}
-                              <b className="text-(--yellow-1)">
-                                {(sent.price ?? 0).toFixed(2)}
-                              </b>
-                            </p>
-                          </div>
-                        ))
+                          )),
+                        )
                       ) : (
                         <p className="text-[14px] text-[#8E8EA9]">
                           No order found.
@@ -155,6 +182,7 @@ const OrderStatus: React.FC = () => {
 
               <motion.div
                 whileTap={{ scale: 0.96 }}
+                onClick={() => navigate("/FullMenu")}
                 className="flex mx-auto items-center cursor-pointer space-x-2 w-fit"
               >
                 <FaPlus size={20} className="text-(--yellow-1)" />
