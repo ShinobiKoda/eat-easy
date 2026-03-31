@@ -155,6 +155,7 @@ const OrderStatus: React.FC = () => {
 
               <motion.div
                 whileTap={{ scale: 0.96 }}
+                onClick={() => navigate("/FullMenu")}
                 className="flex mx-auto items-center cursor-pointer space-x-2 w-fit"
               >
                 <FaPlus size={20} className="text-(--yellow-1)" />
