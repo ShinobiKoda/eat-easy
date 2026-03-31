@@ -17,6 +17,7 @@ import {
 } from "../services/orderService";
 import { useTheme } from "../hooks/useTheme";
 import { motion, AnimatePresence } from "motion/react";
+import { IoClose } from "react-icons/io5";
 
 const filterTabs = [
   "All your orders",
@@ -61,20 +62,8 @@ const History: React.FC = () => {
     if (activeFilter === "Last 30 days") return diffDays <= 30;
     return true;
   });
-  // Flatten orders into individual dish entries
-  const flattenedHistory = filteredOrders.flatMap((order) =>
-    order.items.map((item, idx) => ({
-      uniqueId: `${order.id}-${idx}-${item.id}`,
-      dishName: item.name,
-      dishImage: item.image,
-      dishPrice: (item.price || 0) * (item.qty || 1),
-      qty: item.qty || 1,
-      orderDate: order.createdAt,
-      restaurantName: order.restaurantName,
-    })),
-  );
 
-  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderRecord | null>(null);
 
   // Format date to DD/MM/YYYY
   const formatDate = (dateStr: string) => {
@@ -157,7 +146,7 @@ const History: React.FC = () => {
                 <div className="w-8 h-8 border-3 border-(--orange-1) border-t-transparent rounded-full animate-spin" />
               </div>
             </FadeIn>
-          ) : flattenedHistory.length === 0 ? (
+          ) : filteredOrders.length === 0 ? (
             <FadeIn>
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <p className="text-(--neutral-500) dark:text-(--neutral-300) text-[16px] font-medium">
@@ -169,46 +158,46 @@ const History: React.FC = () => {
             </FadeIn>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {flattenedHistory.map((dish) => (
-                <PopIn key={dish.uniqueId}>
+              {filteredOrders.map((order) => (
+                <PopIn key={order.id}>
                   <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) pr-4 flex items-center justify-between cursor-pointer h-full group shadow-sm hover:shadow-md transition-shadow duration-200">
                     <div className="flex items-center gap-4">
-                      {/* Dish image */}
+                      {/* Order image (first item) */}
                       <div className="relative flex items-center justify-center w-[50%] overflow-hidden">
                         <img
                           src={
                             isDark
-                              ? "/images/food-bg.png"
-                              : "/images/dark-food-bg.png"
+                              ? "/images/dark-food-bg.png"
+                              : "/images/food-bg.png"
                           }
                           alt=""
                           className="w-full h-full block z-20"
                         />
                         <img
-                          src={dish.dishImage || "/images/food-1.jpg"}
-                          alt={dish.dishName}
+                          src={order.items[0]?.image || "/images/food-1.jpg"}
+                          alt={order.restaurantName}
                           className="absolute top-1/2 -left-1/10 -translate-y-1/2 w-[65%] h-[60%] rounded-full overflow-hidden object-cover z-10"
                         />
                       </div>
 
-                      {/* Dish details */}
+                      {/* Order details */}
                       <div className="space-y-2">
                         <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[16px] md:text-[18px]">
-                          {dish.dishName}
+                          {order.restaurantName}
                         </h4>
 
                         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                           <div className="flex items-center gap-1">
                             <BiWallet className="text-(--yellow-2) text-[18px] md:text-[24px]" />
                             <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] xl:text-[16px] font-medium whitespace-nowrap">
-                              $ {dish.dishPrice.toFixed(2)}
+                              $ {order.total.toFixed(2)}
                             </span>
                           </div>
 
                           <div className="flex items-center gap-1">
                             <HiOutlineCalendar className="text-(--orange-1) text-[18px] md:text-[24px]" />
                             <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] xl:text-[16px] font-medium">
-                              {formatDate(dish.orderDate)}
+                              {formatDate(order.createdAt)}
                             </span>
                           </div>
                         </div>
@@ -217,47 +206,16 @@ const History: React.FC = () => {
                     {/* More options */}
                     <div className="h-full pt-4 relative">
                       <motion.button
+                        whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          console.log(
-                            "Options clicked for dish:",
-                            dish.uniqueId,
-                          );
-                          setOpenDropdownId(
-                            openDropdownId === dish.uniqueId
-                              ? null
-                              : dish.uniqueId,
-                          );
+                          setSelectedOrder(order);
                         }}
-                        className="py-3 px-3 rounded-xl bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0 relative"
+                        className="py-3 px-3 rounded-xl bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0 relative z-50"
                       >
                         <BsThreeDots className="text-sm" />
                       </motion.button>
-
-                      <AnimatePresence>
-                        {openDropdownId === dish.uniqueId && (
-                          <>
-                            <div
-                              className="fixed inset-0 z-40"
-                              onClick={() => setOpenDropdownId(null)}
-                            />
-                            <motion.div
-                              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                              animate={{ opacity: 1, y: 0, scale: 1 }}
-                              exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                              className="absolute right-0 top-full mt-2 z-50 min-w-[200px] bg-white dark:bg-(--neutral-600) shadow-xl rounded-xl p-4 border border-(--neutral-100) dark:border-(--neutral-500)"
-                            >
-                              <p className="text-[12px] text-(--neutral-400) dark:text-(--neutral-300) font-medium mb-1">
-                                Restaurant
-                              </p>
-                              <p className="text-[14px] text-(--neutral-900) dark:text-white font-bold whitespace-nowrap">
-                                {dish.restaurantName}
-                              </p>
-                            </motion.div>
-                          </>
-                        )}
-                      </AnimatePresence>
                     </div>
                   </div>
                 </PopIn>
@@ -266,6 +224,86 @@ const History: React.FC = () => {
           )}
         </div>
       </MotionContainer>
+
+      {/* ─── Order Details Modal ─── */}
+      <AnimatePresence>
+        {selectedOrder && (
+          <div className="fixed inset-0 z-100 flex items-center justify-center px-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              onClick={() => setSelectedOrder(null)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-lg bg-white dark:bg-(--neutral-700) rounded-[32px] overflow-hidden shadow-2xl"
+            >
+              <div className="p-6 md:p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h3 className="text-2xl font-bold dark:text-white">
+                      Order Details
+                    </h3>
+                    <p className="text-(--neutral-500) dark:text-(--neutral-300)">
+                      {selectedOrder.restaurantName} •{" "}
+                      {formatDate(selectedOrder.createdAt)}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setSelectedOrder(null)}
+                    className="w-10 h-10 rounded-full bg-(--neutral-100) dark:bg-(--neutral-600) flex items-center justify-center text-(--neutral-900) dark:text-white hover:bg-(--neutral-200) dark:hover:bg-(--neutral-500) transition-colors"
+                  >
+                    <IoClose size={24} />
+                  </button>
+                </div>
+
+                <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+                  {selectedOrder.items.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between p-4 rounded-2xl bg-(--neutral-100)/50 dark:bg-(--neutral-600)/50"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-full overflow-hidden shrink-0">
+                          <img
+                            src={item.image || "/images/food-1.jpg"}
+                            className="w-full h-full object-cover"
+                            alt={item.name}
+                          />
+                        </div>
+                        <div>
+                          <h4 className="font-bold dark:text-white">
+                            {item.name}
+                          </h4>
+                          <p className="text-sm text-(--neutral-500) dark:text-(--neutral-300)">
+                            {item.qty} x ${item.price.toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
+                      <p className="font-bold text-(--orange-1)">
+                        ${(item.qty * item.price).toFixed(2)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-(--neutral-100) dark:border-(--neutral-600)">
+                  <div className="flex items-center justify-between font-bold text-xl dark:text-white">
+                    <span>Total Amount</span>
+                    <span className="text-(--orange-1)">
+                      ${selectedOrder.total.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
