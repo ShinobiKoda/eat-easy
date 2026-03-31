@@ -19,7 +19,8 @@ import {
 } from "../animations/motion";
 import { motion, AnimatePresence } from "motion/react";
 import { useLocation } from "../../hooks/useLocation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import type { PropType } from "../../types";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../hooks/useTheme";
 import { closeSidebar } from "../../utils/sidebar";
@@ -52,6 +53,34 @@ const Header: React.FC<HeaderProps> = ({
   const tabletMenuRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
   const navigate = useNavigate();
+
+  // Read cart items from localStorage (same key as useOrder hook)
+  const readCart = useCallback((): PropType[] => {
+    try {
+      const saved = localStorage.getItem("eat-easy-cart");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  }, []);
+
+  const [cartItems, setCartItems] = useState<PropType[]>(readCart);
+
+  // Keep cart in sync: listen for storage events + poll for same-tab changes
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "eat-easy-cart") setCartItems(readCart());
+    };
+    window.addEventListener("storage", onStorage);
+
+    // Poll every second to catch same-tab localStorage writes
+    const interval = setInterval(() => setCartItems(readCart()), 1000);
+
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      clearInterval(interval);
+    };
+  }, [readCart]);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -500,27 +529,55 @@ const Header: React.FC<HeaderProps> = ({
                           Your Order
                         </p>
                         <span className="px-2 py-1 bg-(--purple-6) dark:bg-(--purple-3)/20 rounded-lg text-xs font-semibold text-(--purple-3)">
-                          0 items
+                          {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
                         </span>
                       </motion.div>
 
-                      <motion.div
-                        variants={dropdownItem}
-                        className="flex flex-col items-center justify-center py-8 text-center"
-                      >
-                        <div className="w-16 h-16 rounded-full bg-(--neutral-100) dark:bg-(--neutral-600) flex items-center justify-center mb-4">
-                          <RiShoppingBag3Line
-                            size={28}
-                            className="text-(--neutral-400) dark:text-(--neutral-300)"
-                          />
-                        </div>
-                        <p className="font-semibold text-sm text-(--neutral-800) dark:text-white mb-1">
-                          Your cart is empty
-                        </p>
-                        <p className="font-medium text-xs text-(--neutral-500) dark:text-(--neutral-300)">
-                          Add items to get started
-                        </p>
-                      </motion.div>
+                      {cartItems.length === 0 ? (
+                        <motion.div
+                          variants={dropdownItem}
+                          className="flex flex-col items-center justify-center py-8 text-center"
+                        >
+                          <div className="w-16 h-16 rounded-full bg-(--neutral-100) dark:bg-(--neutral-600) flex items-center justify-center mb-4">
+                            <RiShoppingBag3Line
+                              size={28}
+                              className="text-(--neutral-400) dark:text-(--neutral-300)"
+                            />
+                          </div>
+                          <p className="font-semibold text-sm text-(--neutral-800) dark:text-white mb-1">
+                            Your cart is empty
+                          </p>
+                          <p className="font-medium text-xs text-(--neutral-500) dark:text-(--neutral-300)">
+                            Add items to get started
+                          </p>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          variants={dropdownItem}
+                          className="flex flex-col gap-2 max-h-48 overflow-y-auto mb-4"
+                        >
+                          {cartItems.map((item, idx) => (
+                            <div
+                              key={`${item.id}-${idx}`}
+                              className="flex items-center gap-3 p-2 rounded-xl bg-(--neutral-50) dark:bg-(--neutral-600)"
+                            >
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                className="w-10 h-10 rounded-lg object-cover"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <p className="font-semibold text-sm text-(--neutral-800) dark:text-white truncate">
+                                  {item.name}
+                                </p>
+                                <p className="font-medium text-xs text-(--orange-1)">
+                                  ${item.price.toFixed(2)}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </motion.div>
+                      )}
 
                       <motion.div variants={dropdownItem}>
                         <motion.button
@@ -532,7 +589,7 @@ const Header: React.FC<HeaderProps> = ({
                             setOrderDropdownOpen(false);
                           }}
                         >
-                          OrderStatus
+                          Order Status
                         </motion.button>
                       </motion.div>
                     </div>
