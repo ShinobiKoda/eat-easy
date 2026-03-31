@@ -13,13 +13,16 @@ export const OrderStatusSchema = () => {
 
   const status: Record<string, ContentStatus> = {
     start: { text: "Your order will be ready in", time: "10 minutes", action: "Your order is being made. Would you like to order anything else?", img: "/images/thumbsup.svg" },
+
     mid:   { text: "Your order is", time: "almost ready", action: "Your order is being made. Would you like to order anything else?", img: "/images/almost.svg" },
+
     end:   { text: "Your order is ready,", time: "enjoy", action: "Pay for your order now", img: "/images/ready.svg" },
   };
 
   const [currentStatus, setCurrentStatus] = useState<ContentStatus>(status.start);
   const [showRecommend, setShowRecommend] = useState(true);
   const [showSubmit, setShowSubmit] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<number>(120);
 
   useEffect(() => {
     let startTime = localStorage.getItem("countdown_start");
@@ -34,6 +37,11 @@ export const OrderStatusSchema = () => {
 
     const interval = setInterval(() => {
       const elapsed = Date.now() - start;
+      const remainingSeconds = Math.max(
+        0,
+        Math.floor((TOTAL_TIME - elapsed) / 1000),
+      );
+      setTimeLeft(remainingSeconds);
 
       if (elapsed <= MID_TIME) {
         setCurrentStatus(status.start);
@@ -53,5 +61,5 @@ export const OrderStatusSchema = () => {
     return () => clearInterval(interval);
   }, []);
 
-  return { currentStatus, showRecommend, showSubmit };
+  return { currentStatus, showRecommend, showSubmit, timeLeft };
 };

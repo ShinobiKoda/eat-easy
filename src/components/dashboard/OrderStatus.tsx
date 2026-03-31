@@ -29,7 +29,11 @@ const OrderStatus: React.FC = () => {
     }
   }, []);
 
-  const { currentStatus, showRecommend, showSubmit } = OrderStatusSchema();
+  const { currentStatus, showRecommend, showSubmit, timeLeft } = OrderStatusSchema();
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  const formattedTime = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 
   return (
     <div className="w-full min-h-screen">
@@ -56,7 +60,8 @@ const OrderStatus: React.FC = () => {
                   <h1 className="text-[16px] lg:text-[24px] text-[#8E8EA9] font-semibold dark:text-(--neutral-200)">
                     {currentStatus.text} <br />{" "}
                     <b className="text-[18px] lg:text-[24px] text-(--yellow-1) font-extrabold">
-                      {currentStatus.time}
+                      {currentStatus.time}{" "}
+                      {timeLeft > 0 && `(${formattedTime})`}
                     </b>
                   </h1>
 
