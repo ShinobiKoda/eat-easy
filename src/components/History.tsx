@@ -10,9 +10,13 @@ import {
   PopIn,
   ScaleButton,
 } from "./animations/motion";
-import { motion } from "framer-motion";
-import { orderService, type OrderRecord } from "../services/orderService";
+import {
+  orderService,
+  type OrderRecord,
+  type OrderItem,
+} from "../services/orderService";
 import { useTheme } from "../hooks/useTheme";
+import { motion, AnimatePresence } from "motion/react";
 
 const filterTabs = [
   "All your orders",
@@ -57,6 +61,20 @@ const History: React.FC = () => {
     if (activeFilter === "Last 30 days") return diffDays <= 30;
     return true;
   });
+  // Flatten orders into individual dish entries
+  const flattenedHistory = filteredOrders.flatMap((order) =>
+    order.items.map((item, idx) => ({
+      uniqueId: `${order.id}-${idx}-${item.id}`,
+      dishName: item.name,
+      dishImage: item.image,
+      dishPrice: (item.price || 0) * (item.qty || 1),
+      qty: item.qty || 1,
+      orderDate: order.createdAt,
+      restaurantName: order.restaurantName,
+    })),
+  );
+
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
   // Format date to DD/MM/YYYY
   const formatDate = (dateStr: string) => {
@@ -139,7 +157,7 @@ const History: React.FC = () => {
                 <div className="w-8 h-8 border-3 border-(--orange-1) border-t-transparent rounded-full animate-spin" />
               </div>
             </FadeIn>
-          ) : filteredOrders.length === 0 ? (
+          ) : flattenedHistory.length === 0 ? (
             <FadeIn>
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <p className="text-(--neutral-500) dark:text-(--neutral-300) text-[16px] font-medium">
@@ -151,56 +169,95 @@ const History: React.FC = () => {
             </FadeIn>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {filteredOrders.map((order) => (
-                <PopIn key={order.id}>
-                  <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) pr-4 flex items-center justify-between cursor-pointer h-full group shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+              {flattenedHistory.map((dish) => (
+                <PopIn key={dish.uniqueId}>
+                  <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) pr-4 flex items-center justify-between cursor-pointer h-full group shadow-sm hover:shadow-md transition-shadow duration-200">
                     <div className="flex items-center gap-4">
-                      {/* First item image */}
-                      <div className="relative flex items-center justify-center w-[50%]">
+                      {/* Dish image */}
+                      <div className="relative flex items-center justify-center w-[50%] overflow-hidden">
                         <img
                           src={
-                            !isDark
-                              ? "/images/dark-food-bg.png"
-                              : "/images/food-bg.png"
+                            isDark
+                              ? "/images/food-bg.png"
+                              : "/images/dark-food-bg.png"
                           }
                           alt=""
                           className="w-full h-full block z-20"
                         />
                         <img
-                          src={order.items[0]?.image || "/images/food-1.jpg"}
-                          alt={order.restaurantName}
+                          src={dish.dishImage || "/images/food-1.jpg"}
+                          alt={dish.dishName}
                           className="absolute top-1/2 -left-1/10 -translate-y-1/2 w-[65%] h-[60%] rounded-full overflow-hidden object-cover z-10"
                         />
                       </div>
 
-                      {/* Order details */}
+                      {/* Dish details */}
                       <div className="space-y-2">
                         <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[16px] md:text-[18px]">
-                          {order.restaurantName}
+                          {dish.dishName}
                         </h4>
 
                         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                           <div className="flex items-center gap-1">
                             <BiWallet className="text-(--yellow-2) text-[18px] md:text-[24px]" />
                             <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] xl:text-[16px] font-medium whitespace-nowrap">
-                              $ {order.total.toFixed(2)}
+                              $ {dish.dishPrice.toFixed(2)}
                             </span>
                           </div>
 
                           <div className="flex items-center gap-1">
                             <HiOutlineCalendar className="text-(--orange-1) text-[18px] md:text-[24px]" />
                             <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] xl:text-[16px] font-medium">
-                              {formatDate(order.createdAt)}
+                              {formatDate(dish.orderDate)}
                             </span>
                           </div>
                         </div>
                       </div>
                     </div>
                     {/* More options */}
-                    <div className="h-full pt-4">
-                      <ScaleButton className="py-[12px] px-[12px] rounded-[12px] bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0">
+                    <div className="h-full pt-4 relative">
+                      <motion.button
+                        whileTap={{ scale: 0.9 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log(
+                            "Options clicked for dish:",
+                            dish.uniqueId,
+                          );
+                          setOpenDropdownId(
+                            openDropdownId === dish.uniqueId
+                              ? null
+                              : dish.uniqueId,
+                          );
+                        }}
+                        className="py-3 px-3 rounded-xl bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0 relative"
+                      >
                         <BsThreeDots className="text-sm" />
-                      </ScaleButton>
+                      </motion.button>
+
+                      <AnimatePresence>
+                        {openDropdownId === dish.uniqueId && (
+                          <>
+                            <div
+                              className="fixed inset-0 z-40"
+                              onClick={() => setOpenDropdownId(null)}
+                            />
+                            <motion.div
+                              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                              className="absolute right-0 top-full mt-2 z-50 min-w-[200px] bg-white dark:bg-(--neutral-600) shadow-xl rounded-xl p-4 border border-(--neutral-100) dark:border-(--neutral-500)"
+                            >
+                              <p className="text-[12px] text-(--neutral-400) dark:text-(--neutral-300) font-medium mb-1">
+                                Restaurant
+                              </p>
+                              <p className="text-[14px] text-(--neutral-900) dark:text-white font-bold whitespace-nowrap">
+                                {dish.restaurantName}
+                              </p>
+                            </motion.div>
+                          </>
+                        )}
+                      </AnimatePresence>
                     </div>
                   </div>
                 </PopIn>

@@ -36,7 +36,7 @@ export const ScaleButton = ({
   children: ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
 }) => (
   <motion.button
     className={className}
