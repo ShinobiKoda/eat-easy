@@ -12,6 +12,7 @@ import {
 } from "./animations/motion";
 import { motion } from "framer-motion";
 import { orderService, type OrderRecord } from "../services/orderService";
+import { useTheme } from "../hooks/useTheme";
 
 const filterTabs = [
   "All your orders",
@@ -24,6 +25,8 @@ const History: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState("All your orders");
   const [orders, setOrders] = useState<OrderRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -103,7 +106,7 @@ const History: React.FC = () => {
                 </div>
               </div>
               {/* Arrow button */}
-              <ScaleButton className="w-[44px] h-[44px] rounded-full bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0 mr-4">
+              <ScaleButton className="w-[44px] h-[44px] rounded-2xl bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0 mr-10">
                 <FaArrowRight className="text-sm" />
               </ScaleButton>
             </div>
@@ -153,33 +156,40 @@ const History: React.FC = () => {
                   <div className="rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-700) pr-4 flex items-center justify-between cursor-pointer h-full group shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
                     <div className="flex items-center gap-4">
                       {/* First item image */}
-                      <div className="relative flex items-center justify-center">
+                      <div className="relative flex items-center justify-center w-[50%]">
                         <img
-                          src="/images/food-bg.png"
+                          src={
+                            !isDark
+                              ? "/images/dark-food-bg.png"
+                              : "/images/food-bg.png"
+                          }
                           alt=""
                           className="w-full h-full block z-20"
                         />
                         <img
                           src={order.items[0]?.image || "/images/food-1.jpg"}
                           alt={order.restaurantName}
-                          className="absolute top-1/2 -left-1/10 -translate-y-1/2 max-w-[95px] max-h-[95px] rounded-full overflow-hidden object-cover z-10"
+                          className="absolute top-1/2 -left-1/10 -translate-y-1/2 w-[65%] h-[60%] rounded-full overflow-hidden object-cover z-10"
                         />
                       </div>
+
                       {/* Order details */}
                       <div className="space-y-2">
                         <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[16px] md:text-[18px]">
                           {order.restaurantName}
                         </h4>
-                        <div className="flex items-center gap-4">
+
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                           <div className="flex items-center gap-1">
-                            <BiWallet className="text-(--yellow-2) text-[24px]" />
-                            <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] lg:text-[16px] font-medium">
+                            <BiWallet className="text-(--yellow-2) text-[18px] md:text-[24px]" />
+                            <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] xl:text-[16px] font-medium whitespace-nowrap">
                               $ {order.total.toFixed(2)}
                             </span>
                           </div>
+
                           <div className="flex items-center gap-1">
-                            <HiOutlineCalendar className="text-(--orange-1) text-[24px]" />
-                            <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] lg:text-[16px] font-medium">
+                            <HiOutlineCalendar className="text-(--orange-1) text-[18px] md:text-[24px]" />
+                            <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[13px] md:text-[14px] xl:text-[16px] font-medium">
                               {formatDate(order.createdAt)}
                             </span>
                           </div>
