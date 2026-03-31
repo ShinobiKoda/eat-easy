@@ -22,6 +22,7 @@ import { orderService } from "../../services/orderService";
 import { couponService, type Coupon } from "../../services/couponService";
 import { useTheme } from "../../hooks/useTheme";
 import Success from "./Success";
+import ProcessingPayment from "./ProcessingPayment";
 
 const Checkout1: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
@@ -33,6 +34,7 @@ const Checkout1: React.FC = () => {
   const [cards, setCards] = useState<any[]>([]);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Coupon states
   const [couponCode, setCouponCode] = useState("");
@@ -89,10 +91,16 @@ const Checkout1: React.FC = () => {
   const handlePay = async () => {
     const cvv = sessionStorage.getItem("checkout_cvv");
     if (!cvv) return;
+    
+    setIsProcessing(true);
+    
     // Use CVV for payment processing here
     console.log("Processing payment with CVV:", cvv);
     sessionStorage.removeItem("checkout_cvv");
     setCvvConfirmed(false);
+
+    // Simulate processing delay
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     // Save order to database
     try {
@@ -120,6 +128,8 @@ const Checkout1: React.FC = () => {
       await couponService.evaluatePostOrderRewards();
     } catch (error) {
       console.error("Failed to process payment pipeline:", error);
+    } finally {
+      setIsProcessing(false);
     }
 
     setShowSuccessModal(true);
@@ -215,7 +225,7 @@ const Checkout1: React.FC = () => {
 
   // stop background scroll effect when any of this is open
   const isModalOpen =
-    Boolean(showNewCard) || Boolean(showCvvModal) || Boolean(showSuccessModal);
+    Boolean(showNewCard) || Boolean(showCvvModal) || Boolean(showSuccessModal) || Boolean(isProcessing);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -223,7 +233,7 @@ const Checkout1: React.FC = () => {
     } else {
       document.body.classList.remove("overflow-hidden");
     }
-  }, [showNewCard, showCvvModal, showSuccessModal]);
+  }, [showNewCard, showCvvModal, showSuccessModal, isProcessing]);
 
   return (
     <div className="w-full min-h-screen">
@@ -607,6 +617,7 @@ const Checkout1: React.FC = () => {
           </AnimatePresence>
 
           <Success isOpen={showSuccessModal} />
+          <ProcessingPayment isOpen={isProcessing} />
         </div>
       </div>
     </div>

@@ -12,11 +12,28 @@ export const OrderStatusSchema = () => {
   const MID_TIME = 1 * 60 * 1000; // 1 mins
 
   const status: Record<string, ContentStatus> = {
-    start: { text: "Your order will be ready in", time: "10 minutes", action: "Your order is being made. Would you like to order anything else?", img: "/images/thumbsup.svg" },
+    start: {
+      text: "Your order will be ready in",
+      time: "2 minutes",
+      action:
+        "Your order is being made. Would you like to order anything else?",
+      img: "/images/thumbsup.svg",
+    },
 
-    mid:   { text: "Your order is", time: "almost ready", action: "Your order is being made. Would you like to order anything else?", img: "/images/almost.svg" },
+    mid: {
+      text: "Your order is",
+      time: "almost ready",
+      action:
+        "Your order is being made. Would you like to order anything else?",
+      img: "/images/almost.svg",
+    },
 
-    end:   { text: "Your order is ready,", time: "enjoy", action: "Pay for your order now", img: "/images/ready.svg" },
+    end: {
+      text: "Your order is ready,",
+      time: "enjoy",
+      action: "Pay for your order now",
+      img: "/images/ready.svg",
+    },
   };
 
   const [batches, setBatches] = useState<any[]>([]);
