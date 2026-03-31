@@ -9,6 +9,7 @@ import { ClipLoader } from "react-spinners";
 import AsideCard from "../onboarding/AsideCard";
 import { supabase } from "../../config/supabaseClient";
 import { createProfile } from "../../services/userProfile";
+import { couponService } from "../../services/couponService";
 
 const ConfirmLink = () => {
   const { state } = useLocation();
@@ -126,6 +127,10 @@ const ConfirmLink = () => {
           },
           userId,
         );
+
+        // Grant welcome discount upon successful signup
+        await couponService.grantWelcomeCoupon(userId);
+        localStorage.setItem("eat-easy-show-welcome-discount", "true");
       }
 
       navigate("/set-location");

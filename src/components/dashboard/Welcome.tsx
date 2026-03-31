@@ -10,6 +10,8 @@ import {
   ScaleButton,
 } from "../animations/motion";
 import SEO from "../SEO";
+import { useState, useEffect } from "react";
+import WelcomeDiscountModal from "./WelcomeDiscountModal";
 
 const options = [
   {
@@ -27,8 +29,22 @@ const options = [
 ];
 
 const Welcome: React.FC = () => {
+  const [showWelcomeDiscount, setShowWelcomeDiscount] = useState(false);
+
+  useEffect(() => {
+    const shouldShow = localStorage.getItem("eat-easy-show-welcome-discount");
+    if (shouldShow === "true") {
+      setShowWelcomeDiscount(true);
+      localStorage.removeItem("eat-easy-show-welcome-discount");
+    }
+  }, []);
+
   return (
     <div className="w-full min-h-screen">
+      <WelcomeDiscountModal
+        isOpen={showWelcomeDiscount}
+        onClose={() => setShowWelcomeDiscount(false)}
+      />
       <SEO
         title="Dashboard | EatEasy"
         description="Welcome to Gram Bistro Restaurant. Find your flavor and browse our menu."

@@ -13,6 +13,8 @@ import ThemeSwitchButton from "../ThemeSwitchButton";
 import { useTheme } from "../../hooks/useTheme";
 import LogoutModal from "../LogoutModal";
 import { supabase } from "../../config/supabaseClient";
+import { adminService } from "../../services/adminService";
+import { LuShieldCheck } from "react-icons/lu";
 
 const Sidebar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -22,6 +24,7 @@ const Sidebar: React.FC = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [username, setUsername] = useState<string>("");
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -36,6 +39,14 @@ const Sidebar: React.FC = () => {
         const meta = data.user.user_metadata as any;
         let uname = meta?.username || data.user.email?.split("@")[0] || "User";
         setUsername(uname);
+
+        // Also check admin status
+        try {
+          const adminStatus = await adminService.isCurrentUserAdmin();
+          setIsAdmin(adminStatus);
+        } catch (e) {
+          console.error("Failed admin check in sidebar", e);
+        }
       }
     };
     fetchUser();
@@ -343,6 +354,37 @@ const Sidebar: React.FC = () => {
                     </motion.button>
                   </NavLink>
                 </div>
+
+                {isAdmin && (
+                  <div className="space-y-4">
+                    <NavLink to="/admin">
+                      <motion.button
+                        onClick={() => setSelectedItem(99)}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
+                      >
+                        <div
+                          className={`p-3 rounded-2xl ${
+                            selectedItem === 99
+                              ? "bg-(--yellow-1)"
+                              : "bg-white/15"
+                          }`}
+                        >
+                          <LuShieldCheck className="text-white" size={24} />
+                        </div>
+                        <p
+                          className={`${
+                            selectedItem === 99
+                              ? "text-(--yellow-1) font-bold"
+                              : "text-white"
+                          } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
+                        >
+                          Admin Panel
+                        </p>
+                      </motion.button>
+                    </NavLink>
+                  </div>
+                )}
 
                 <div className="space-y-4">
                   <motion.button

@@ -27,10 +27,12 @@ import Sidebar from "./components/layout/Sidebar";
 import SelectRestaurant from "./components/onboarding/SelectRestaurant";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import PublicRoute from "./components/auth/PublicRoute";
+import AdminRoute from "./components/auth/AdminRoute";
 import SetCustomLocation from "./components/onboarding/SetCustomLocation";
 import Checkout1 from "./components/Checkout/Checkout1";
 import Rewards from "./components/dashboard/Rewards";
 import History from "./components/History";
+import AdminDashboard from "./components/admin/AdminDashboard";
 
 function App() {
   const location = useLocation();
@@ -291,6 +293,14 @@ function App() {
               <ProtectedRoute>
                 <History />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="admin"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
             }
           />
         </Routes>

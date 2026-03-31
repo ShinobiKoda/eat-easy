@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import type { PropType } from "../../types";
@@ -19,6 +19,7 @@ import { FcSimCardChip } from "react-icons/fc";
 import { SiVisa, SiMastercard } from "react-icons/si";
 import { cardService } from "../../services/cardService";
 import { orderService } from "../../services/orderService";
+import { couponService, type Coupon } from "../../services/couponService";
 import { useTheme } from "../../hooks/useTheme";
 import Success from "./Success";
 
@@ -32,6 +33,13 @@ const Checkout1: React.FC = () => {
   const [cards, setCards] = useState<any[]>([]);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // Coupon states
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -58,6 +66,26 @@ const Checkout1: React.FC = () => {
     setShowCvvModal(false);
   };
 
+  const handleApplyCoupon = async () => {
+    if (!couponCode) return;
+    setIsApplyingCoupon(true);
+    setCouponError(null);
+    try {
+      const coupon = await couponService.validateCouponCode(couponCode);
+      setAppliedCoupon(coupon);
+      setCouponCode("");
+    } catch (err: any) {
+      setCouponError(err.message || "Invalid coupon");
+      setAppliedCoupon(null);
+    } finally {
+      setIsApplyingCoupon(false);
+    }
+  };
+
+  const currentOrderTotalRef = useRef(0);
+  const currentTotalRef = useRef(0);
+  const discountAmountRef = useRef(0);
+
   const handlePay = async () => {
     const cvv = sessionStorage.getItem("checkout_cvv");
     if (!cvv) return;
@@ -79,13 +107,19 @@ const Checkout1: React.FC = () => {
       await orderService.saveOrder({
         restaurantName: "Gram Bistro",
         items: orderItems,
-        subtotal: orderTotal,
-        tax,
+        subtotal: currentOrderTotalRef.current,
+        tax: currentOrderTotalRef.current * 0.11,
         tip,
-        total,
+        total: currentTotalRef.current,
       });
+
+      // Post-order logic for coupons
+      if (appliedCoupon) {
+        await couponService.redeemCoupon(appliedCoupon.id);
+      }
+      await couponService.evaluatePostOrderRewards();
     } catch (error) {
-      console.error("Failed to save order:", error);
+      console.error("Failed to process payment pipeline:", error);
     }
 
     setShowSuccessModal(true);
@@ -163,7 +197,20 @@ const Checkout1: React.FC = () => {
   }, [itemsToDisplay, orderFromState]);
 
   const tax = orderTotal * 0.11;
-  const total = orderTotal + tax + tip;
+  const discountAmount = appliedCoupon
+    ? appliedCoupon.isFreeItem
+      ? 5.0 // Example: flat $5 off for free item
+      : (orderTotal * appliedCoupon.discountPercent) / 100
+    : 0;
+
+  const total = Math.max(0, orderTotal + tax - discountAmount + tip);
+
+  // Sync refs for handlePay closure
+  useEffect(() => {
+    currentOrderTotalRef.current = orderTotal;
+    currentTotalRef.current = total;
+    discountAmountRef.current = discountAmount;
+  }, [orderTotal, total, discountAmount]);
 
   // stop background scroll effect when any of this is open
   const isModalOpen =
@@ -415,9 +462,6 @@ const Checkout1: React.FC = () => {
                       <p className="text-[#32324D] dark:text-white font-bold text-[18px]">
                         Add discount code/tips
                       </p>
-                      <div>
-                        <FaChevronDown className={`text-(--yellow-1)`} />
-                      </div>
                     </div>
 
                     <div className="mt-6 space-y-4">
@@ -426,10 +470,39 @@ const Checkout1: React.FC = () => {
                         <BsPercent className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8E8EA9] group-focus-within:text-(--yellow-1) transition-colors" />
                         <input
                           type="text"
+                          value={couponCode}
+                          onChange={(e) => setCouponCode(e.target.value)}
                           placeholder="Apply discount code"
-                          className="w-full bg-[#f6f6f9] dark:bg-[#32324D]/50 rounded-2xl py-4 pl-12 pr-4 outline-none text-[15px] dark:text-white border border-transparent focus:border-(--neutral-500) placeholder:text-[#8E8EA9] transition-all"
+                          className="w-full bg-[#f6f6f9] dark:bg-[#32324D]/50 rounded-2xl py-4 pl-12 pr-28 outline-none text-[15px] dark:text-white border border-transparent focus:border-(--neutral-500) placeholder:text-[#8E8EA9] transition-all"
                         />
+                        <button
+                          onClick={handleApplyCoupon}
+                          disabled={!couponCode || isApplyingCoupon}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-(--purple-2) text-white px-4 py-2 rounded-xl text-sm font-semibold disabled:opacity-50"
+                        >
+                          {isApplyingCoupon ? "..." : "Apply"}
+                        </button>
                       </div>
+
+                      {couponError && (
+                        <p className="text-red-500 text-sm font-semibold pl-2">
+                          {couponError}
+                        </p>
+                      )}
+                      {appliedCoupon && (
+                        <div className="flex items-center justify-between bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 p-3 rounded-xl border border-green-200 dark:border-green-800/50">
+                          <span className="font-semibold text-sm">
+                            ✓ {appliedCoupon.code} applied
+                          </span>
+                          <button
+                            onClick={() => setAppliedCoupon(null)}
+                            className="text-xs underline font-bold px-2 py-1"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      )}
+
                       {/* tip */}
                       <div className="relative group">
                         <MdOutlinePayments className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8E8EA9] group-focus-within:text-(--yellow-1) transition-colors" />
@@ -455,13 +528,25 @@ const Checkout1: React.FC = () => {
                   <div className="w-full h-px bg-(--neutral-150)"></div>
 
                   {/* Total Price Card */}
-                  <div className="flex justify-between items-center">
-                    <p className="text-[#32324D] dark:text-white font-bold text-[20px]">
-                      Total price
-                    </p>
-                    <p className="text-(--orange-1) font-extrabold text-[24px] tracking-tight">
-                      ${total.toFixed(2)}
-                    </p>
+                  <div className="space-y-4">
+                    {appliedCoupon && (
+                      <div className="flex justify-between items-center text-green-600 dark:text-green-400">
+                        <p className="font-bold text-[16px]">
+                          Discount ({appliedCoupon.code})
+                        </p>
+                        <p className="font-bold text-[16px]">
+                          -${discountAmount.toFixed(2)}
+                        </p>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center">
+                      <p className="text-[#32324D] dark:text-white font-bold text-[20px]">
+                        Total price
+                      </p>
+                      <p className="text-(--orange-1) font-extrabold text-[24px] tracking-tight">
+                        ${total.toFixed(2)}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>

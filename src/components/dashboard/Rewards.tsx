@@ -12,44 +12,10 @@ import { motion } from "framer-motion";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { couponService, type Coupon } from "../../services/couponService";
+import CouponDetailModal from "./CouponDetailModal";
 
-const rewardsHistory = [
-  {
-    image: "/images/discount-drink.png",
-    title: "Free drink",
-    date: "06/02/2023",
-  },
-  {
-    image: "/images/discount-menu.png",
-    title: "5% Discount for all the menu",
-    date: "06/02/2023",
-  },
-  {
-    image: "/images/discount-desert.png",
-    title: "15% Discount for Dessert",
-    date: "13/03/2023",
-  },
-  {
-    image: "/images/easter-discount.png",
-    title: "10% Easter Discount",
-    date: "14/04/2023",
-  },
-  {
-    image: "/images/discount-menu.png",
-    title: "5% Discount for all the menu",
-    date: "06/02/2023",
-  },
-  {
-    image: "/images/discount-desert.png",
-    title: "15% Discount for Dessert",
-    date: "13/03/2023",
-  },
-  {
-    image: "/images/easter-discount.png",
-    title: "10% Easter Discount",
-    date: "14/04/2023",
-  },
-];
+// We can keep the dummy newRewards but remove the hardcoded rewardsHistory
 
 const newRewards = [
   {
@@ -72,8 +38,21 @@ const Rewards: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slidesToShow, setSlidesToShow] = useState(4);
   const [isMounted, setIsMounted] = useState(false);
+  const [liveCoupons, setLiveCoupons] = useState<Coupon[]>([]);
+  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
+    const fetchCoupons = async () => {
+      try {
+        const coupons = await couponService.getUserCoupons();
+        setLiveCoupons(coupons);
+      } catch (err) {
+        console.error("Error fetching coupons", err);
+      }
+    };
+    fetchCoupons();
+
     setIsMounted(true);
     const handleResize = () => {
       if (window.innerWidth < 640) {
@@ -99,7 +78,7 @@ const Rewards: React.FC = () => {
     };
   }, []);
 
-  const maxStart = Math.max(0, rewardsHistory.length - slidesToShow);
+  const maxStart = Math.max(0, liveCoupons.length - slidesToShow);
 
   const handlePrev = () => {
     sliderRef.current?.slickPrev();
@@ -356,46 +335,94 @@ const Rewards: React.FC = () => {
             <div className="w-full mb-8">
               {isMounted && (
                 <div className="">
-                  {/* Negative margin to offset item padding */}
-                  <Slider
-                    ref={sliderRef}
-                    {...sliderSettings}
-                    slidesToShow={slidesToShow}
-                  >
-                    {rewardsHistory.map((item, index) => (
-                      <div key={index} className="px-6 sm:px-0 sm:pl-6 py-4">
-                        {/* horizontal gap (2*8px = 16px) + vertical shadow space */}
-                        <FadeIn className="h-full shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl">
-                          <div className="bg-(--neutral-100) dark:bg-(--neutral-700) p-5 cursor-pointer h-[210px] flex flex-col justify-between rounded-2xl">
-                            <div className="space-y-4">
-                              <div className="w-[80px] h-[80px] rounded-full shrink-0 bg-[#50506F]">
-                                <img
-                                  src={item.image}
-                                  alt={item.title}
-                                  className="w-full h-full object-contain"
-                                />
-                              </div>
-                              <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[18px] font-mullish line-clamp-2">
-                                {item.title}
-                              </h4>
-                            </div>
-                            <div className="flex items-center gap-1.5 shrink-0">
-                              <HiOutlineCalendar className="text-(--orange-1) text-[16px]" />
-                              <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[16px] font-medium">
-                                {item.date}
-                              </span>
-                            </div>
-                          </div>
-                        </FadeIn>
+                  {liveCoupons.length === 0 ? (
+                    <FadeIn className="flex flex-col items-center justify-center py-16 px-6 text-center bg-(--neutral-50) dark:bg-(--neutral-800)/50 rounded-3xl border border-(--neutral-200) dark:border-(--neutral-700) mx-6 sm:mx-0">
+                      <div className="w-20 h-20 bg-white dark:bg-(--neutral-700) rounded-full flex items-center justify-center mb-5 shadow-sm">
+                        <span className="text-3xl">🎁</span>
                       </div>
-                    ))}
-                  </Slider>
+                      <h3 className="text-[22px] font-bold text-(--neutral-900) dark:text-white mb-2 heading-font">
+                        No rewards just yet
+                      </h3>
+                      <p className="text-(--neutral-500) dark:text-(--neutral-400) text-base max-w-sm">
+                        Keep ordering your favorite meals to unlock special
+                        discounts and free treats!
+                      </p>
+                    </FadeIn>
+                  ) : (
+                    /* Negative margin to offset item padding */
+                    <Slider
+                      ref={sliderRef}
+                      {...sliderSettings}
+                      slidesToShow={slidesToShow}
+                    >
+                      {liveCoupons.map((coupon) => {
+                        let imgPath = "/images/easter-discount.png";
+                        if (coupon.type === "welcome")
+                          imgPath = "/images/discount-menu.png";
+                        if (coupon.type === "free_drink")
+                          imgPath = "/images/discount-drink.png";
+                        if (coupon.type === "milestone")
+                          imgPath = "/images/discount-desert.png";
+
+                        return (
+                          <div
+                            key={coupon.id}
+                            className="px-6 sm:px-0 sm:pl-6 py-4"
+                          >
+                            <FadeIn
+                              className={`h-full shadow-[0_4px_12px_rgba(0,0,0,0.10)] rounded-2xl ${coupon.isUsed ? "opacity-60" : ""}`}
+                            >
+                              <div
+                                onClick={() => {
+                                  setSelectedCoupon(coupon);
+                                  setIsModalOpen(true);
+                                }}
+                                className="bg-(--neutral-100) dark:bg-(--neutral-700) p-5 cursor-pointer h-[210px] flex flex-col justify-between rounded-2xl relative"
+                              >
+                                {coupon.isUsed && (
+                                  <div className="absolute top-2 right-2 px-2 py-0.5 bg-gray-200 dark:bg-gray-600 rounded text-[10px] font-bold uppercase text-gray-500">
+                                    Used
+                                  </div>
+                                )}
+                                <div className="space-y-4">
+                                  <div className="w-[80px] h-[80px] rounded-full shrink-0 bg-[#50506F]">
+                                    <img
+                                      src={imgPath}
+                                      alt={coupon.description}
+                                      className="w-full h-full object-contain p-2"
+                                    />
+                                  </div>
+                                  <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[18px] font-mullish line-clamp-2">
+                                    {coupon.description}
+                                  </h4>
+                                </div>
+                                <div className="flex items-center gap-1.5 shrink-0">
+                                  <HiOutlineCalendar className="text-(--orange-1) text-[16px]" />
+                                  <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[16px] font-medium">
+                                    {new Date(
+                                      coupon.expiresAt,
+                                    ).toLocaleDateString()}
+                                  </span>
+                                </div>
+                              </div>
+                            </FadeIn>
+                          </div>
+                        );
+                      })}
+                    </Slider>
+                  )}
                 </div>
               )}
             </div>
           </div>
         </div>
       </MotionContainer>
+
+      <CouponDetailModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        coupon={selectedCoupon}
+      />
     </div>
   );
 };
