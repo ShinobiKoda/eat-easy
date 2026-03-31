@@ -126,6 +126,7 @@ const Checkout1: React.FC = () => {
 
     // Clear order from localStorage after payment
     localStorage.removeItem("eat-easy-last-order");
+    localStorage.removeItem("eat-easy-order-batches");
     localStorage.removeItem("countdown_start");
     localStorage.removeItem("eat-easy-cart");
 

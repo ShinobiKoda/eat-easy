@@ -41,8 +41,42 @@ export function useOrder() {
   // Send order handler
   const handleSend = (sent: any) => {
     try {
-      localStorage.setItem("eat-easy-last-order", JSON.stringify(sent));
-      localStorage.setItem("countdown_start", Date.now().toString());
+      const existingBatchesRaw = localStorage.getItem("eat-easy-order-batches");
+      const existingBatches = existingBatchesRaw ? JSON.parse(existingBatchesRaw) : [];
+
+      const isAnyPreparing = existingBatches.some((b: any) => b.status === "preparing");
+      
+      const newBatch = {
+        id: Date.now().toString(),
+        items: sent.items,
+        subtotal: sent.subtotal,
+        tax: sent.tax,
+        total: sent.total,
+        qty: sent.qty,
+        status: !isAnyPreparing ? "preparing" : "pending",
+        timerStart: !isAnyPreparing ? Date.now() : null,
+      };
+
+      const updatedBatches = [...existingBatches, newBatch];
+      localStorage.setItem("eat-easy-order-batches", JSON.stringify(updatedBatches));
+
+      // For backward compatibility (Checkout page uses this)
+      // Flatten all items from all batches
+      const allItems = updatedBatches.flatMap((b: any) => b.items);
+      const totalSubtotal = updatedBatches.reduce((acc: number, b: any) => acc + b.subtotal, 0);
+      const totalTax = updatedBatches.reduce((acc: number, b: any) => acc + b.tax, 0);
+      const totalTotal = updatedBatches.reduce((acc: number, b: any) => acc + b.total, 0);
+      const totalQty = updatedBatches.reduce((acc: number, b: any) => acc + b.qty, 0);
+
+      const combinedOrder = {
+        items: allItems,
+        subtotal: totalSubtotal,
+        tax: totalTax,
+        total: totalTotal,
+        qty: totalQty
+      };
+      localStorage.setItem("eat-easy-last-order", JSON.stringify(combinedOrder));
+
       setOrderItems([]); // Clear cart after successful order
     } catch (e) {
       console.error("Failed to save order to localStorage", e);
