@@ -415,11 +415,12 @@ const Sidebar: React.FC = () => {
                   </motion.button>
                 </div>
 
-                <motion.button
-                  type="button"
+                <motion.div
                   onClick={toggleTheme}
                   whileTap={{ scale: 0.95 }}
                   className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer border-none bg-transparent outline-none"
+                  role="button"
+                  tabIndex={0}
                 >
                   <div
                     onClick={toggleTheme}
@@ -434,7 +435,7 @@ const Sidebar: React.FC = () => {
                   >
                     {theme === "dark" ? "Dark" : "Light"}
                   </p>
-                </motion.button>
+                </motion.div>
               </div>
             </div>
 
