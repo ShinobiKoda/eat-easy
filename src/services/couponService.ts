@@ -65,6 +65,36 @@ export const couponService = {
       createdAt: c.created_at,
     }));
 
+    // Safety net: if user has no welcome coupon at all, grant one now
+    const hasWelcome = coupons.some((c) => c.type === "welcome");
+    if (!hasWelcome) {
+      await this.grantWelcomeCoupon(user.id);
+      // Re-fetch after granting
+      const { data: refreshed } = await supabase
+        .from("eat_easy_coupons")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (refreshed) {
+        const refreshedCoupons: Coupon[] = refreshed.map((c: any) => ({
+          id: c.id,
+          userId: c.user_id,
+          code: c.code,
+          type: c.type,
+          description: c.description,
+          discountPercent: Number(c.discount_percent),
+          isFreeItem: c.is_free_item,
+          isUsed: c.is_used,
+          expiresAt: c.expires_at,
+          createdAt: c.created_at,
+        }));
+        userCouponsCache = refreshedCoupons;
+        lastCouponsFetchTime = Date.now();
+        return refreshedCoupons;
+      }
+    }
+
     userCouponsCache = coupons;
     lastCouponsFetchTime = Date.now();
     return coupons;
@@ -101,7 +131,7 @@ export const couponService = {
       .select("id")
       .eq("user_id", userId)
       .eq("type", "welcome")
-      .single();
+      .maybeSingle();
 
     if (existing) return; // Already granted
 
