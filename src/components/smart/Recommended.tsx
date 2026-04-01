@@ -246,6 +246,7 @@ const Recommended: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              onClick={() => setSelectedItem(null)}
               className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
             >
               <ViewDish
@@ -264,6 +265,7 @@ const Recommended: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              onClick={() => setShowOrder(false)}
               className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
             >
               <ViewOrder

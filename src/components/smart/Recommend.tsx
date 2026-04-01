@@ -10,7 +10,11 @@ import {
 } from "../../services/recommendationHistoryService";
 import SEO from "../SEO";
 
-const Recommend: React.FC = () => {
+interface RecommendProps {
+  hideHeader?: boolean;
+}
+
+const Recommend: React.FC<RecommendProps> = ({ hideHeader }) => {
   const navigate = useNavigate();
   const [lastRec, setLastRec] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,12 +51,14 @@ const Recommend: React.FC = () => {
         description="Configure your food preferences and get personalized recommendations from EatEasy."
       />
       <div>
-        <Header
-          title="Food Menu"
-          description="Virtual Assistant"
-          navbarTitle="Gram Bistro"
-          showBack={true}
-        />
+        {!hideHeader && (
+          <Header
+            title="Food Menu"
+            description="Virtual Assistant"
+            navbarTitle="Gram Bistro"
+            showBack={true}
+          />
+        )}
 
         <div className="pt-20 md:py-30 lg:pt-50 lg:pb-20 max-w-[1440px] mx-auto flex flex-col items-center py-6 px-6 sm:px-20 lg:px-6">
           <div className="flex flex-col items-center text-center max-w-xl mb-20 md:mb-10">

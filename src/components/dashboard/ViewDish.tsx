@@ -1,7 +1,6 @@
 import { motion, type Variants } from "motion/react";
-// import { MotionContainer, PopIn, FadeIn, SlideIn } from "../animations/motion";
 import type { PropType } from "../../types";
-import { useState, type MouseEvent } from "react";
+import { useState, useRef, useCallback, type MouseEvent } from "react";
 import useIsDesktop from "../../hooks/useIsDesktop";
 import { FaPlus, FaMinus, FaCheck } from "react-icons/fa6";
 import { LiaTimesSolid } from "react-icons/lia";
@@ -40,8 +39,44 @@ const display = (isDesktop: boolean): Variants => {
   };
 };
 
+const DRAG_DISMISS_THRESHOLD = 120;
+
 const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
   const isDesktop = useIsDesktop();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const touchStartY = useRef(0);
+  const currentDragY = useRef(0);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    const delta = e.touches[0].clientY - touchStartY.current;
+    if (delta > 0) {
+      currentDragY.current = delta;
+      if (panelRef.current) {
+        panelRef.current.style.transform = `translateY(${delta}px)`;
+        panelRef.current.style.opacity = `${Math.max(0.2, 1 - delta / 300)}`;
+      }
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (currentDragY.current > DRAG_DISMISS_THRESHOLD) {
+      onClose();
+    } else {
+      currentDragY.current = 0;
+      if (panelRef.current) {
+        panelRef.current.style.transition = 'transform 0.25s ease, opacity 0.25s ease';
+        panelRef.current.style.transform = 'translateY(0)';
+        panelRef.current.style.opacity = '1';
+        setTimeout(() => {
+          if (panelRef.current) panelRef.current.style.transition = '';
+        }, 250);
+      }
+    }
+  }, [onClose]);
 
   if (!item) return null;
 
@@ -94,8 +129,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
     });
   };
 
-  // calculate sum of toppings
-  // when a topping is unchecked its (price * qty) will be subtracted
+
   const toppingsTotal = item.toppings.reduce((sum, t) => {
     const qty = toppingCounts[t.id] || 0;
     if (!selectedToppings.has(t.id)) return sum;
@@ -104,6 +138,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
 
   return (
     <motion.div
+      ref={panelRef}
       onClick={(e: MouseEvent) => e.stopPropagation()}
       variants={display(isDesktop)}
       initial="hidden"
@@ -112,10 +147,15 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
       className="z-50 fixed right-0 w-full min-h-screen sm:w-[55%] md:w-[45%] lg:w-[450px] top-[15%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl vieworder-bg"
     >
       <div className="flex flex-col h-full">
+        {/* Drag handle – touch-drag down to close on mobile */}
         <div
-          onClick={onClose}
-          className="top-0 my-2 mx-auto w-[134px] h-[5px] bg-(--neutral-300) dark:bg-white rounded-sm sm:hidden"
-        />
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className="top-0 py-3 flex items-center justify-center cursor-grab active:cursor-grabbing sm:hidden touch-none"
+        >
+          <div className="w-[134px] h-[5px] bg-(--neutral-300) dark:bg-white rounded-sm" />
+        </div>
 
         <motion.div
           whileTap={{ scale: 0.96 }}
@@ -279,7 +319,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
             </div>
 
             {/* comment */}
-            <div className="space-y-3">
+            <div className="space-y-3 pb-8">
               <h1 className="text-(--neutral-600) text-[16px] md:text-[18px] dark:text-(--neutral-200) font-semibold">
                 Add a request
               </h1>
