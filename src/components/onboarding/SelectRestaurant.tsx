@@ -29,10 +29,10 @@ const SelectRestaurant = () => {
   ];
 
   return (
-    <div className="w-full">
+    <div className="w-full min-h-screen">
       <Header title="Food Menu" description="Set Restaurant" />
       <div className="w-full px-6">
-        <MotionContainer className="lg:hidden pt-28">
+        <MotionContainer className="md:hidden pt-28">
           <SlideIn
             direction="down"
             className="w-full text-center max-w-[387px] mx-auto space-y-3.5"
@@ -87,7 +87,7 @@ const SelectRestaurant = () => {
         </MotionContainer>
       </div>
 
-      <div className="hidden lg:flex flex-col items-center justify-center h-screen w-full max-w-[900px] mx-auto pt-[100px] pb-10">
+      <div className="pt-20 md:py-30 lg:pt-50 lg:pb-20 max-w-[1440px] mx-auto hidden md:flex flex-col items-center py-6 px-6 sm:px-20 lg:px-6">
         <div className="space-y-4 text-center px-8">
           <h1 className="font-medium text-[40px] text-(--neutral-800) heading-font dark:text-white">
             Restaurants based on your selected location.
@@ -97,6 +97,7 @@ const SelectRestaurant = () => {
             all restaurants that are near you
           </p>
         </div>
+
         <div className="w-full max-w-[480px] mx-auto flex flex-col gap-8 mt-[60px]">
           {restuarants.map((restaurant, index) => (
             <PopIn key={index} className="">
@@ -137,7 +138,7 @@ const SelectRestaurant = () => {
           <div className="mt-[60px] w-full">
             <motion.button
               whileTap={{ scale: 0.98 }}
-              onClick={()=> navigate("/welcome")}
+              onClick={() => navigate("/welcome")}
               className="w-full px-6 py-4 rounded-2xl bg-(--purple-2) text-white text-semibold text-base cursor-pointer"
             >
               Continue
