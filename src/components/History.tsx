@@ -203,6 +203,7 @@ const History: React.FC = () => {
                         </div>
                       </div>
                     </div>
+
                     {/* More options */}
                     <div className="h-full pt-4 relative">
                       <motion.button
@@ -212,7 +213,7 @@ const History: React.FC = () => {
                           e.stopPropagation();
                           setSelectedOrder(order);
                         }}
-                        className="py-3 px-3 rounded-xl bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0 relative z-50"
+                        className="py-3 px-3 rounded-xl bg-(--orange-1) text-white flex items-center justify-center cursor-pointer shrink-0 relative"
                       >
                         <BsThreeDots className="text-sm" />
                       </motion.button>
