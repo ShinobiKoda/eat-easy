@@ -15,6 +15,7 @@ import LogoutModal from "../LogoutModal";
 import { supabase } from "../../config/supabaseClient";
 import { adminService } from "../../services/adminService";
 import { LuShieldCheck } from "react-icons/lu";
+import { useAuth } from "../../context/AuthContext";
 
 const Sidebar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -28,16 +29,14 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { user } = useAuth();
+
   // Fetch username from Supabase session
   useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error) {
-        console.error("Error fetching user:", error);
-      }
-      if (data?.user) {
-        const meta = data.user.user_metadata as any;
-        let uname = meta?.username || data.user.email?.split("@")[0] || "User";
+      if (user) {
+        const meta = user.user_metadata as any;
+        let uname = meta?.username || user.email?.split("@")[0] || "User";
         setUsername(uname);
 
         // Also check admin status
@@ -50,7 +49,7 @@ const Sidebar: React.FC = () => {
       }
     };
     fetchUser();
-  }, []);
+  }, [user]);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);

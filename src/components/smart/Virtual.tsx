@@ -4,7 +4,11 @@ import { NavLink } from "react-router-dom";
 import Header from "../layout/Header";
 import SEO from "../SEO";
 
-const Virtual: React.FC = () => {
+interface VirtualProps {
+  hideHeader?: boolean;
+}
+
+const Virtual: React.FC<VirtualProps> = ({ hideHeader }) => {
   return (
     <div className="w-full min-h-screen">
       <SEO
@@ -13,12 +17,14 @@ const Virtual: React.FC = () => {
       />
 
       <div>
-        <Header
-          title="Food Menu"
-          description="Virtual Assistant"
-          navbarTitle="Gram Bistro"
-          showBack={true}
-        />
+        {!hideHeader && (
+          <Header
+            title="Food Menu"
+            description="Virtual Assistant"
+            navbarTitle="Gram Bistro"
+            showBack={true}
+          />
+        )}
 
         <div className="pt-20 md:py-30 lg:pt-30 lg:pb-20 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5">
           <div className="lg:max-w-1/2">
