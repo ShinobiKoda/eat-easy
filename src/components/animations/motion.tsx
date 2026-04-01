@@ -9,8 +9,6 @@ export const productGridStagger = {
     transition: {
       duration: 0.3,
       ease: easeInOut,
-      staggerChildren: 0.15,
-      delayChildren: 0.6,
     },
   },
   exit: { opacity: 0, scale: 0.96, transition: { duration: 0.3 } },

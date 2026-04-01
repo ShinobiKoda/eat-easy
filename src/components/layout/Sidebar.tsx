@@ -186,7 +186,7 @@ const Sidebar: React.FC = () => {
           <div className="w-full h-px "></div>
 
           <div
-            className={`flex-1 overflow-y-auto scrollbar-hidden flex flex-col px-[30px] pt-5 pb-6  ${
+            className={`flex-1 overflow-y-auto overscroll-none scrollbar-hidden flex flex-col px-[30px] pt-5 pb-6  ${
               effectiveIsOpen ? "" : "items-center"
             }`}
           >
