@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion, type Variants } from "motion/react";
-import { useState, type MouseEvent } from "react"
+import { useState, useRef, useCallback, type MouseEvent } from "react"
 import useIsDesktop from "../hooks/useIsDesktop"
 import { LiaTimesSolid } from "react-icons/lia";
 import Star from "/images/star.svg";
@@ -105,6 +105,8 @@ const priceOptions: PriceOption[] = [
   }
 ];
 
+const DRAG_DISMISS_THRESHOLD = 120;
+
 const Filters: React.FC<FiltersProps> = ({
   onClose,
   onApply,
@@ -112,6 +114,40 @@ const Filters: React.FC<FiltersProps> = ({
   mainCategory,
 }) => {
   const isDesktop = useIsDesktop();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const touchStartY = useRef(0);
+  const currentDragY = useRef(0);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    const delta = e.touches[0].clientY - touchStartY.current;
+    if (delta > 0) {
+      currentDragY.current = delta;
+      if (panelRef.current) {
+        panelRef.current.style.transform = `translateY(${delta}px)`;
+        panelRef.current.style.opacity = `${Math.max(0.2, 1 - delta / 300)}`;
+      }
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (currentDragY.current > DRAG_DISMISS_THRESHOLD) {
+      onClose();
+    } else {
+      currentDragY.current = 0;
+      if (panelRef.current) {
+        panelRef.current.style.transition = 'transform 0.25s ease, opacity 0.25s ease';
+        panelRef.current.style.transform = 'translateY(0)';
+        panelRef.current.style.opacity = '1';
+        setTimeout(() => {
+          if (panelRef.current) panelRef.current.style.transition = '';
+        }, 250);
+      }
+    }
+  }, [onClose]);
 
   // Pending states
   const [pendingProductTypes, setPendingProductTypes] = useState<string[]>(
@@ -159,6 +195,7 @@ const Filters: React.FC<FiltersProps> = ({
 
   return (
     <motion.div
+      ref={panelRef}
       onClick={(e: MouseEvent) => e.stopPropagation()}
       variants={display(isDesktop)}
       initial="hidden"
@@ -167,10 +204,15 @@ const Filters: React.FC<FiltersProps> = ({
       className="z-50 fixed right-0 w-full sm:min-h-screen sm:w-[55%] md:w-[45%] lg:w-[450px] top-[7%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl bg-[#f7f7f7] dark:bg-[#32324D]"
     >
       <div className="flex flex-col h-full px-6 py-4">
+        {/* Drag handle – touch-drag down to close on mobile */}
         <div
-          onClick={onClose}
-          className="top-0 my-2 mx-auto w-[134px] h-[5px] bg-[#C0C0CF] rounded-sm sm:hidden"
-        />
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className="top-0 py-3 flex items-center justify-center cursor-grab active:cursor-grabbing sm:hidden touch-none"
+        >
+          <div className="w-[134px] h-[5px] bg-[#C0C0CF] rounded-sm" />
+        </div>
 
         <div className="flex justify-between mb-4">
           <h1 className="mx-auto sm:ml-0 text-[22px] dark:text-[#FFFFFF] font-semibold">

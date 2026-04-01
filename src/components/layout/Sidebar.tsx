@@ -15,6 +15,7 @@ import LogoutModal from "../LogoutModal";
 import { supabase } from "../../config/supabaseClient";
 import { adminService } from "../../services/adminService";
 import { LuShieldCheck } from "react-icons/lu";
+import { useAuth } from "../../context/AuthContext";
 
 const Sidebar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -28,16 +29,14 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { user } = useAuth();
+
   // Fetch username from Supabase session
   useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error) {
-        console.error("Error fetching user:", error);
-      }
-      if (data?.user) {
-        const meta = data.user.user_metadata as any;
-        let uname = meta?.username || data.user.email?.split("@")[0] || "User";
+      if (user) {
+        const meta = user.user_metadata as any;
+        let uname = meta?.username || user.email?.split("@")[0] || "User";
         setUsername(uname);
 
         // Also check admin status
@@ -50,7 +49,7 @@ const Sidebar: React.FC = () => {
       }
     };
     fetchUser();
-  }, []);
+  }, [user]);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -129,16 +128,36 @@ const Sidebar: React.FC = () => {
     setIsOpen(false);
   }, [location.pathname]);
 
+  // Lock body scroll on mobile when sidebar is open
+  useEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (isOpen && isMobile) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   return (
     <>
-      <aside
+      <motion.aside
+        initial={false}
+        animate={{
+          x: typeof window !== "undefined" && window.innerWidth < 768
+            ? (effectiveIsOpen ? 0 : -260)
+            : 0,
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
         style={{
           willChange: "width, transform",
-          transitionProperty: "width, transform",
+          transitionProperty: "width",
           transitionDuration: "300ms",
           transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
         }}
-        className={`aside h-screen rounded-r-3xl fixed left-0 top-0 z-50 w-[260px] ${effectiveIsOpen ? "translate-x-0 md:w-[260px]" : "-translate-x-full md:w-36"} md:translate-x-0`}
+        className={`aside h-screen rounded-r-3xl fixed left-0 top-0 z-50 w-[260px] ${effectiveIsOpen ? "md:w-[260px]" : "md:w-36"} md:translate-x-0`}
       >
         <motion.div
           onClick={handleToggle}
@@ -508,14 +527,21 @@ const Sidebar: React.FC = () => {
             </div>
           </div>
         </div>
-      </aside>
-      {effectiveIsOpen && (
-        <button
-          aria-label="Close sidebar"
-          onClick={() => setIsOpen(false)}
-          className="fixed inset-0 z-40 bg-black/40 md:hidden"
-        />
-      )}
+      </motion.aside>
+      <AnimatePresence>
+        {effectiveIsOpen && (
+          <motion.div
+            key="sidebar-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px] md:hidden"
+            onClick={() => setIsOpen(false)}
+            aria-label="Close sidebar"
+          />
+        )}
+      </AnimatePresence>
       <LogoutModal
         isOpen={showLogoutModal}
         onClose={() => setShowLogoutModal(false)}

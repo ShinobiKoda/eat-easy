@@ -5,7 +5,11 @@ import Header from "../layout/Header";
 import SEO from "../SEO";
 import { useRestaurant } from "../../context/RestaurantContext";
 
-const Virtual: React.FC = () => {
+interface VirtualProps {
+  hideHeader?: boolean;
+}
+
+const Virtual: React.FC<VirtualProps> = ({ hideHeader }) => {
   const { selectedRestaurant } = useRestaurant();
   const restaurantName = selectedRestaurant?.name || "Gram Bistro";
 
@@ -17,12 +21,14 @@ const Virtual: React.FC = () => {
       />
 
       <div>
-        <Header
-          title="Food Menu"
-          description="Virtual Assistant"
-          navbarTitle={restaurantName}
-          showBack={true}
-        />
+        {!hideHeader && (
+          <Header
+            title="Food Menu"
+            description="Virtual Assistant"
+            navbarTitle={restaurantName}
+            showBack={true}
+          />
+        )}
 
         <div className="pt-20 md:py-30 lg:pt-30 lg:pb-20 max-w-[1440px] mx-auto flex flex-col items-center p-6 space-y-10 mb-5">
           <div className="lg:max-w-1/2">
