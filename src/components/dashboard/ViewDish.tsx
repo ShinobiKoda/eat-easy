@@ -94,8 +94,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
     });
   };
 
-  // calculate sum of toppings
-  // when a topping is unchecked its (price * qty) will be subtracted
+
   const toppingsTotal = item.toppings.reduce((sum, t) => {
     const qty = toppingCounts[t.id] || 0;
     if (!selectedToppings.has(t.id)) return sum;
@@ -279,7 +278,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
             </div>
 
             {/* comment */}
-            <div className="space-y-3">
+            <div className="space-y-3 pb-8">
               <h1 className="text-(--neutral-600) text-[16px] md:text-[18px] dark:text-(--neutral-200) font-semibold">
                 Add a request
               </h1>
