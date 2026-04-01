@@ -1,5 +1,4 @@
 import { motion, useMotionValue, useTransform, type Variants } from "motion/react";
-// import { MotionContainer, PopIn, FadeIn, SlideIn } from "../animations/motion";
 import type { PropType } from "../../types";
 import { useState, useRef, type MouseEvent } from "react";
 import useIsDesktop from "../../hooks/useIsDesktop";
