@@ -13,7 +13,7 @@ import {
 import {
   orderService,
   type OrderRecord,
-  type OrderItem,
+  // type OrderItem,
 } from "../services/orderService";
 import { useTheme } from "../hooks/useTheme";
 import { motion, AnimatePresence } from "motion/react";
@@ -166,7 +166,7 @@ const History: React.FC = () => {
                       <div className="relative flex items-center justify-center w-[50%] overflow-hidden">
                         <img
                           src={
-                            isDark
+                            !isDark
                               ? "/images/dark-food-bg.png"
                               : "/images/food-bg.png"
                           }

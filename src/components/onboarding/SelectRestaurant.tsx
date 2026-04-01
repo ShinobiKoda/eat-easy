@@ -2,29 +2,29 @@ import { MotionContainer, SlideIn, PopIn } from "../animations/motion";
 import { motion } from "motion/react";
 import Header from "../layout/Header";
 import { useNavigate } from "react-router-dom";
-
+import { useTheme } from "../../hooks/useTheme";
 
 const SelectRestaurant = () => {
-
   const navigate = useNavigate();
-
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const restuarants = [
     //add images to restuarnts for desktop
     {
       name: "Gram Bistro",
       location: "790 8th Ave, New York",
-      image: "/images/restaurant-location-img.svg",
+      image: "/images/gram.svg",
     },
     {
       name: "Bin 71",
       location: "790 8th Ave, New York",
-      image: "/images/restaurant-location-img.svg",
+      image: "/images/bin.svg",
     },
     {
       name: "Sushi Bar",
       location: "790 8th Ave, New York",
-      image: "/images/restaurant-location-img.svg",
+      image: "/images/sushi.svg",
     },
   ];
 
@@ -88,7 +88,7 @@ const SelectRestaurant = () => {
       </div>
 
       <div className="pt-20 md:py-30 lg:pt-50 lg:pb-20 max-w-[1440px] mx-auto hidden md:flex flex-col items-center py-6 px-6 sm:px-20 lg:px-6">
-        <div className="space-y-4 text-center px-8">
+        <div className="space-y-4 text-center">
           <h1 className="font-medium text-[40px] text-(--neutral-800) heading-font dark:text-white">
             Restaurants based on your selected location.
           </h1>
@@ -105,15 +105,24 @@ const SelectRestaurant = () => {
                 whileTap={{ scale: 0.98 }}
                 className="flex items-center justify-between bg-white rounded-2xl pr-5 shadow-md dark:bg-(--neutral-700) h-[100px] overflow-hidden relative"
               >
-                <div className="flex items-center h-full">
-                  <div className="h-full w-[180px] overflow-hidden rounded-l-2xl absolute -left-16 bottom-0">
+                <div className="flex items-center h-full gap-4">
+                  <div className="relative flex items-center justify-center h-full overflow-hidden shrink-0 ml-[-8px]">
+                    <img
+                      src={
+                        !isDark
+                          ? "/images/dark-food-bg.png"
+                          : "/images/food-bg.png"
+                      }
+                      alt=""
+                      className="w-[130%] h-[150%] block z-20"
+                    />
                     <img
                       src={restaurant.image}
-                      alt="Resturant image"
-                      className="h-full w-full object-cover "
+                      alt={restaurant.name}
+                      className="absolute top-1/2 -left-1/28 -translate-y-1/2 w-[55%] rounded-full overflow-hidden object-cover z-10"
                     />
                   </div>
-                  <p className="flex flex-col gap-3 ml-[130px]">
+                  <p className="flex flex-col gap-3">
                     <span className="font-semibold text-base text-(--neutral-900) dark:text-white">
                       {restaurant.name}
                     </span>
