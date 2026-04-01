@@ -7,7 +7,7 @@ import { MdChevronRight } from "react-icons/md";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { TfiBook } from "react-icons/tfi";
 import { MdOutlineHistory } from "react-icons/md";
-import { IoLocationOutline } from "react-icons/io5";
+import { IoLocationOutline, IoRestaurantOutline } from "react-icons/io5";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import ThemeSwitchButton from "../ThemeSwitchButton";
 import { useTheme } from "../../hooks/useTheme";
@@ -105,6 +105,24 @@ const Sidebar: React.FC = () => {
     );
     isSelfDispatch.current = false;
   }, [isOpen]);
+
+  // Sync selection with current route
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.includes("/smart-assistant") || path.includes("/FullMenu") || path.includes("/welcome")) {
+      setSelectedItem(1);
+    } else if (path.includes("/history")) {
+      setSelectedItem(2);
+    } else if (path.includes("/locations")) {
+      setSelectedItem(3);
+    } else if (path.includes("/rewards")) {
+      setSelectedItem(4);
+    } else if (path.includes("/set-restaurant")) {
+      setSelectedItem(6);
+    } else if (path.includes("/admin")) {
+      setSelectedItem(99);
+    }
+  }, [location.pathname]);
 
   // Auto-close on navigation
   useEffect(() => {
@@ -309,6 +327,34 @@ const Sidebar: React.FC = () => {
                         } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
                       >
                         Location
+                      </p>
+                    </motion.button>
+                  </NavLink>
+                </div>
+
+                <div className="space-y-4">
+                  <NavLink to="/set-restaurant">
+                    <motion.button
+                      onClick={() => setSelectedItem(6)}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
+                    >
+                      <div
+                        className={`p-3 rounded-2xl ${
+                          selectedItem === 6 ? "bg-(--yellow-1)" : "bg-white/15"
+                        }`}
+                      >
+                        <IoRestaurantOutline className="text-white" size={24} />
+                      </div>
+
+                      <p
+                        className={`${
+                          selectedItem === 6
+                            ? "text-(--yellow-1) font-bold"
+                            : "text-white"
+                        } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
+                      >
+                        Set Restaurant
                       </p>
                     </motion.button>
                   </NavLink>

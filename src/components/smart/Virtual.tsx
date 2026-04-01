@@ -3,8 +3,12 @@ import AI from "/images/AI-image.png";
 import { NavLink } from "react-router-dom";
 import Header from "../layout/Header";
 import SEO from "../SEO";
+import { useRestaurant } from "../../context/RestaurantContext";
 
 const Virtual: React.FC = () => {
+  const { selectedRestaurant } = useRestaurant();
+  const restaurantName = selectedRestaurant?.name || "Gram Bistro";
+
   return (
     <div className="w-full min-h-screen">
       <SEO
@@ -16,7 +20,7 @@ const Virtual: React.FC = () => {
         <Header
           title="Food Menu"
           description="Virtual Assistant"
-          navbarTitle="Gram Bistro"
+          navbarTitle={restaurantName}
           showBack={true}
         />
 

@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useRestaurant } from "../../context/RestaurantContext";
 
 interface WelcomeDiscountModalProps {
   isOpen: boolean;
@@ -10,6 +11,8 @@ const WelcomeDiscountModal: React.FC<WelcomeDiscountModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { selectedRestaurant } = useRestaurant();
+  const restaurantName = selectedRestaurant?.name || "Gram Bistro";
   return (
     <AnimatePresence>
       {isOpen && (
@@ -59,7 +62,7 @@ const WelcomeDiscountModal: React.FC<WelcomeDiscountModalProps> = ({
                   <p className="text-(--neutral-500) dark:text-(--neutral-300) text-lg font-medium">
                     As a thank you for joining{" "}
                     <span className="text-(--neutral-900) dark:text-white font-bold">
-                      Gram Bistro
+                      {restaurantName}
                     </span>
                     , we've added a special gift to your account:
                   </p>

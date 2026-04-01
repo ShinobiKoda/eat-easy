@@ -116,7 +116,6 @@ const Recommended: React.FC = () => {
         <Header
           title="Smart Assistant"
           description="Your Recommendations"
-          navbarTitle="Gram Bistro"
           showBack={true}
         />
 

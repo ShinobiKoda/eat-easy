@@ -23,6 +23,7 @@ import { couponService, type Coupon } from "../../services/couponService";
 import { useTheme } from "../../hooks/useTheme";
 import Success from "./Success";
 import ProcessingPayment from "./ProcessingPayment";
+import { useRestaurant } from "../../context/RestaurantContext";
 
 const Checkout1: React.FC = () => {
   const [showLoader, setShowLoader] = useState(true);
@@ -35,6 +36,8 @@ const Checkout1: React.FC = () => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const { selectedRestaurant } = useRestaurant();
+  const restaurantName = selectedRestaurant?.name || "Gram Bistro";
 
   // Coupon states
   const [couponCode, setCouponCode] = useState("");
@@ -113,7 +116,7 @@ const Checkout1: React.FC = () => {
       }));
 
       await orderService.saveOrder({
-        restaurantName: "Gram Bistro",
+        restaurantName: restaurantName,
         items: orderItems,
         subtotal: currentOrderTotalRef.current,
         tax: currentOrderTotalRef.current * 0.11,
@@ -247,7 +250,7 @@ const Checkout1: React.FC = () => {
         <Header
           title="My Order"
           description="Checkout"
-          navbarTitle="Gram Bistro"
+          navbarTitle={restaurantName}
           showBack={true}
         />
 

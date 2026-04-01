@@ -16,6 +16,7 @@ import {
   // type OrderItem,
 } from "../services/orderService";
 import { useTheme } from "../hooks/useTheme";
+import { useRestaurant } from "../context/RestaurantContext";
 import { motion, AnimatePresence } from "motion/react";
 import { IoClose } from "react-icons/io5";
 
@@ -31,6 +32,7 @@ const History: React.FC = () => {
   const [orders, setOrders] = useState<OrderRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const { theme } = useTheme();
+  const { selectedRestaurant } = useRestaurant();
   const isDark = theme === "dark";
 
   useEffect(() => {
@@ -104,7 +106,7 @@ const History: React.FC = () => {
                     Active Order
                   </span>
                   <h3 className="text-white dark:text-(--neutral-800) font-bold text-[20px] md:text-[24px] lg:text-[32px] heading-font">
-                    Gram Bistro
+                    {selectedRestaurant?.name || "Gram Bistro"}
                   </h3>
                   <p className="hidden md:block text-(--neutral-400) dark:text-(--neutral-800) text-[13px] md:text-[14px] lg:text-[16px] font-medium max-w-[457px]">
                     From tracking its progress to making changes to the order,

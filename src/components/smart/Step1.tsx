@@ -44,7 +44,6 @@ const Step1: React.FC = () => {
         <Header
           title="Food Menu"
           description="Virtual Assistant"
-          navbarTitle="Gram Bistro"
           showBack={true}
         />
 

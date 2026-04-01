@@ -24,6 +24,7 @@ import type { PropType } from "../../types";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../hooks/useTheme";
 import { closeSidebar } from "../../utils/sidebar";
+import { useRestaurant } from "../../context/RestaurantContext";
 
 interface HeaderProps {
   title?: string;
@@ -38,10 +39,13 @@ const Header: React.FC<HeaderProps> = ({
   title = "Food Menu",
   description = "",
   previous,
-  navbarTitle = "",
+  navbarTitle,
   navbarDescription = "",
   showBack = false,
 }) => {
+  const { selectedRestaurant } = useRestaurant();
+  const defaultNavbarTitle = selectedRestaurant?.name || "Gram Bistro";
+  const finalNavbarTitle = navbarTitle || defaultNavbarTitle;
   const locationCtx = useLocation();
   const location = locationCtx.location;
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -139,7 +143,7 @@ const Header: React.FC<HeaderProps> = ({
     >
       <SlideIn direction="down" className="w-full md:hidden">
         <Navbar
-          title={navbarTitle}
+          title={finalNavbarTitle}
           description={navbarDescription}
           showBack={showBack}
         />
