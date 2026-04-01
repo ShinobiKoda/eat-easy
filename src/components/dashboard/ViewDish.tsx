@@ -1,7 +1,7 @@
-import { motion, type Variants } from "motion/react";
+import { motion, useMotionValue, useTransform, type Variants } from "motion/react";
 // import { MotionContainer, PopIn, FadeIn, SlideIn } from "../animations/motion";
 import type { PropType } from "../../types";
-import { useState, type MouseEvent } from "react";
+import { useState, useRef, type MouseEvent } from "react";
 import useIsDesktop from "../../hooks/useIsDesktop";
 import { FaPlus, FaMinus, FaCheck } from "react-icons/fa6";
 import { LiaTimesSolid } from "react-icons/lia";
@@ -40,8 +40,13 @@ const display = (isDesktop: boolean): Variants => {
   };
 };
 
+const DRAG_DISMISS_THRESHOLD = 120;
+
 const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
   const isDesktop = useIsDesktop();
+  const dragY = useMotionValue(0);
+  const dragOpacity = useTransform(dragY, [0, 300], [1, 0.2]);
+  const constraintsRef = useRef<HTMLDivElement>(null);
 
   if (!item) return null;
 
@@ -103,18 +108,32 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
 
   return (
     <motion.div
+      ref={constraintsRef}
       onClick={(e: MouseEvent) => e.stopPropagation()}
       variants={display(isDesktop)}
       initial="hidden"
       animate="visible"
       exit="exit"
+      style={!isDesktop ? { y: dragY, opacity: dragOpacity } : undefined}
+      drag={!isDesktop ? "y" : false}
+      dragConstraints={{ top: 0 }}
+      dragElastic={0.3}
+      onDragEnd={(_e, info) => {
+        if (info.offset.y > DRAG_DISMISS_THRESHOLD) {
+          onClose();
+        } else {
+          dragY.set(0);
+        }
+      }}
       className="z-50 fixed right-0 w-full min-h-screen sm:w-[55%] md:w-[45%] lg:w-[450px] top-[15%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl vieworder-bg"
     >
       <div className="flex flex-col h-full">
+        {/* Drag handle – tap or drag down to close on mobile */}
         <div
-          onClick={onClose}
-          className="top-0 my-2 mx-auto w-[134px] h-[5px] bg-(--neutral-300) dark:bg-white rounded-sm sm:hidden"
-        />
+          className="top-0 py-3 flex items-center justify-center cursor-grab active:cursor-grabbing sm:hidden"
+        >
+          <div className="w-[134px] h-[5px] bg-(--neutral-300) dark:bg-white rounded-sm" />
+        </div>
 
         <motion.div
           whileTap={{ scale: 0.96 }}

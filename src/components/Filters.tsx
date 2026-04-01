@@ -1,6 +1,6 @@
 import React from 'react'
-import { motion, type Variants } from "motion/react";
-import { useState, type MouseEvent } from "react"
+import { motion, useMotionValue, useTransform, type Variants } from "motion/react";
+import { useState, useRef, type MouseEvent } from "react"
 import useIsDesktop from "../hooks/useIsDesktop"
 import { LiaTimesSolid } from "react-icons/lia";
 import Star from "/images/star.svg";
@@ -105,6 +105,8 @@ const priceOptions: PriceOption[] = [
   }
 ];
 
+const DRAG_DISMISS_THRESHOLD = 120;
+
 const Filters: React.FC<FiltersProps> = ({
   onClose,
   onApply,
@@ -112,6 +114,9 @@ const Filters: React.FC<FiltersProps> = ({
   mainCategory,
 }) => {
   const isDesktop = useIsDesktop();
+  const dragY = useMotionValue(0);
+  const dragOpacity = useTransform(dragY, [0, 300], [1, 0.2]);
+  const constraintsRef = useRef<HTMLDivElement>(null);
 
   // Pending states
   const [pendingProductTypes, setPendingProductTypes] = useState<string[]>(
@@ -159,18 +164,32 @@ const Filters: React.FC<FiltersProps> = ({
 
   return (
     <motion.div
+      ref={constraintsRef}
       onClick={(e: MouseEvent) => e.stopPropagation()}
       variants={display(isDesktop)}
       initial="hidden"
       animate="visible"
       exit="exit"
+      style={!isDesktop ? { y: dragY, opacity: dragOpacity } : undefined}
+      drag={!isDesktop ? "y" : false}
+      dragConstraints={{ top: 0 }}
+      dragElastic={0.3}
+      onDragEnd={(_e, info) => {
+        if (info.offset.y > DRAG_DISMISS_THRESHOLD) {
+          onClose();
+        } else {
+          dragY.set(0);
+        }
+      }}
       className="z-50 fixed right-0 w-full sm:min-h-screen sm:w-[55%] md:w-[45%] lg:w-[450px] top-[7%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl bg-[#f7f7f7] dark:bg-[#32324D]"
     >
       <div className="flex flex-col h-full px-6 py-4">
+        {/* Drag handle – tap or drag down to close on mobile */}
         <div
-          onClick={onClose}
-          className="top-0 my-2 mx-auto w-[134px] h-[5px] bg-[#C0C0CF] rounded-sm sm:hidden"
-        />
+          className="top-0 py-3 flex items-center justify-center cursor-grab active:cursor-grabbing sm:hidden"
+        >
+          <div className="w-[134px] h-[5px] bg-[#C0C0CF] rounded-sm" />
+        </div>
 
         <div className="flex justify-between mb-4">
           <h1 className="mx-auto sm:ml-0 text-[22px] dark:text-[#FFFFFF] font-semibold">
