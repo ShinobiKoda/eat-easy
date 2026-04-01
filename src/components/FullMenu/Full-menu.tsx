@@ -14,10 +14,13 @@ import { productGridStagger, productCardFade } from "../animations/motion";
 import { useOrder } from "../../hooks/useOrder";
 import { getMenuItems } from "../../services/menuService";
 import type { PropType } from "../../types";
+import { useRestaurant } from "../../context/RestaurantContext";
 import StarHalf from "/images/star-half-icon.png";
 import StarFull from "/images/star.svg";
 
 const FullMenu: React.FC = () => {
+  const { selectedRestaurant } = useRestaurant();
+  const restaurantName = selectedRestaurant?.name || "Gram Bistro";
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   // Debounce search input
@@ -135,7 +138,7 @@ const FullMenu: React.FC = () => {
         <Header
           title="Full Menu"
           description="See All Our Dishes"
-          navbarTitle="Gram Bistro"
+          navbarTitle={restaurantName}
           showBack={false}
         />
 

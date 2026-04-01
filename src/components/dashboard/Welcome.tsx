@@ -12,6 +12,7 @@ import {
 import SEO from "../SEO";
 import { useState, useEffect } from "react";
 import WelcomeDiscountModal from "./WelcomeDiscountModal";
+import { useRestaurant } from "../../context/RestaurantContext";
 
 const options = [
   {
@@ -30,6 +31,11 @@ const options = [
 
 const Welcome: React.FC = () => {
   const [showWelcomeDiscount, setShowWelcomeDiscount] = useState(false);
+  const { selectedRestaurant } = useRestaurant();
+
+  const restaurantName = selectedRestaurant?.name || "Gram Bistro";
+  const restaurantLocation = selectedRestaurant?.location || "790 8th Ave, New York";
+  const restaurantDescription = selectedRestaurant?.description || "Welcome to Gram Bistro Restaurant. Find your flavor and browse our menu.";
 
   useEffect(() => {
     const shouldShow = localStorage.getItem("eat-easy-show-welcome-discount");
@@ -46,11 +52,14 @@ const Welcome: React.FC = () => {
         onClose={() => setShowWelcomeDiscount(false)}
       />
       <SEO
-        title="Dashboard | EatEasy"
-        description="Welcome to Gram Bistro Restaurant. Find your flavor and browse our menu."
+        title={`Dashboard | ${restaurantName}`}
+        description={restaurantDescription}
       />
       <MotionContainer className={`transition-all duration-300`}>
-        <Header description="Browse Our Food Menu" navbarTitle="Gbam Gbistro" />
+        <Header
+          description="Browse Our Food Menu"
+          navbarTitle={restaurantName}
+        />
         <div className="w-full pt-[60px] md:pt-30 md:pb-10 lg:pt-[120px] px-6 lg:px-[42px]">
           <PopIn className="heading-font text-(--neutral-800) font-medium text-[22px] text-center dark:text-white md:hidden">
             Let's find the perfect dish for you
@@ -65,7 +74,7 @@ const Welcome: React.FC = () => {
                 </span>
                 <br />
                 <span className="font-bold heading-font text-white dark:text-(--neutral-800)">
-                  Gram Bistro Restaurant 📍
+                  {restaurantName} Restaurant 📍
                 </span>
               </h1>
 
@@ -73,7 +82,7 @@ const Welcome: React.FC = () => {
                 <p className="flex items-center gap-2">
                   <CiLocationOn size={24} className="text-(--yellow-1)" />
                   <span className="whitespace-nowrap text-(--neutral-400)  dark:text-(--neutral-600) font-medium text-base">
-                    790 8th Ave, New York
+                    {restaurantLocation}
                   </span>
                 </p>
 

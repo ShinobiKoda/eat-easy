@@ -35,7 +35,6 @@ const SmartAssistant: React.FC = () => {
         <Header
           title="Food Menu"
           description="Virtual Assistant"
-          navbarTitle="Gram Bistro"
           showBack={true}
         />
         {loading ? (

@@ -8,6 +8,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import Navbar from "../layout/Navbar";
 import StarHalf from "/images/star-half-icon.png";
 import StarFull from "/images/star.svg";
+import { useRestaurant } from "../../context/RestaurantContext";
 
 export type ViewOrderProps = {
   items: PropType[];
@@ -22,6 +23,8 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
   removeOrder,
   onSend,
 }) => {
+  const { selectedRestaurant } = useRestaurant();
+  const restaurantName = selectedRestaurant?.name || "Gram Bistro";
   // subtotal: sum of item prices (you can expand to include toppings/counts)
   const orderTotal = items.reduce((sum, t) => sum + (t.price || 0), 0);
 
@@ -42,7 +45,7 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
     >
       {/* header for mobile */}
       <div className="flex sm:hidden">
-        <Navbar title="Gram Bistro" description="My Order" showBack={true} />
+        <Navbar title={restaurantName} description="My Order" showBack={true} />
       </div>
 
       {/* header for destop */}
@@ -62,7 +65,7 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
               />
             </div>
             <p className="text-[14px] lg:text-[16px] font-semibold text-(--neutral-500) dark:text-(--purple-5)">
-              Gram Bistro
+              {restaurantName}
             </p>
           </div>
         </div>

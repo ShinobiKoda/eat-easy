@@ -33,6 +33,7 @@ import Checkout1 from "./components/Checkout/Checkout1";
 import Rewards from "./components/dashboard/Rewards";
 import History from "./components/History";
 import AdminDashboard from "./components/admin/AdminDashboard";
+import { RestaurantProvider } from "./context/RestaurantContext";
 
 function App() {
   const location = useLocation();
@@ -80,7 +81,8 @@ function App() {
   }, []);
 
   return (
-    <div className="w-full min-h-screen" style={{ backgroundImage }}>
+    <RestaurantProvider>
+      <div className="w-full min-h-screen" style={{ backgroundImage }}>
       {showSidebar && <Sidebar />}
       <div
         style={{
@@ -306,7 +308,8 @@ function App() {
         </Routes>
       </div>
     </div>
-  );
+  </RestaurantProvider>
+);
 }
 
 export default App;

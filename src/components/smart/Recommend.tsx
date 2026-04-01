@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import Header from "../layout/Header";
+import { useRestaurant } from "../../context/RestaurantContext";
 import {
   getLatestRecommendation,
   type Recommendation,
@@ -16,6 +17,8 @@ interface RecommendProps {
 
 const Recommend: React.FC<RecommendProps> = ({ hideHeader }) => {
   const navigate = useNavigate();
+  const { selectedRestaurant } = useRestaurant();
+  const restaurantName = selectedRestaurant?.name || "Gram Bistro";
   const [lastRec, setLastRec] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -55,7 +58,7 @@ const Recommend: React.FC<RecommendProps> = ({ hideHeader }) => {
           <Header
             title="Food Menu"
             description="Virtual Assistant"
-            navbarTitle="Gram Bistro"
+            navbarTitle={restaurantName}
             showBack={true}
           />
         )}

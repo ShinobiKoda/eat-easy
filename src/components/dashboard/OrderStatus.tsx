@@ -48,7 +48,6 @@ const OrderStatus: React.FC = () => {
         <Header
           title="Full Menu"
           description="See All Our Dishes"
-          navbarTitle="Gram Bistro"
           navbarDescription="Your order status"
           showBack={true}
         />

@@ -2,31 +2,45 @@ import { MotionContainer, SlideIn, PopIn } from "../animations/motion";
 import { motion } from "motion/react";
 import Header from "../layout/Header";
 import { useNavigate } from "react-router-dom";
-
+import { useTheme } from "../../hooks/useTheme";
+import { useState, useEffect } from "react";
+import { restaurantService, type Restaurant } from "../../services/restaurantService";
+import { useRestaurant } from "../../context/RestaurantContext";
 
 const SelectRestaurant = () => {
-
   const navigate = useNavigate();
+  const { theme } = useTheme();
+  const { setSelectedRestaurant } = useRestaurant();
+  const isDark = theme === "dark";
 
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const restuarants = [
-    //add images to restuarnts for desktop
-    {
-      name: "Gram Bistro",
-      location: "790 8th Ave, New York",
-      image: "/images/restaurant-location-img.svg",
-    },
-    {
-      name: "Bin 71",
-      location: "790 8th Ave, New York",
-      image: "/images/restaurant-location-img.svg",
-    },
-    {
-      name: "Sushi Bar",
-      location: "790 8th Ave, New York",
-      image: "/images/restaurant-location-img.svg",
-    },
-  ];
+  useEffect(() => {
+    const fetchRestaurants = async () => {
+      try {
+        const data = await restaurantService.getAllRestaurants();
+        setRestaurants(data);
+        if (data.length > 0) {
+          setSelectedId(data[0].id);
+        }
+      } catch (error) {
+        console.error("Failed to fetch restaurants:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRestaurants();
+  }, []);
+
+  const handleContinue = () => {
+    const restaurant = restaurants.find((r) => r.id === selectedId);
+    if (restaurant) {
+      setSelectedRestaurant(restaurant);
+      navigate("/welcome");
+    }
+  };
 
   return (
     <div className="w-full min-h-screen">
@@ -47,39 +61,54 @@ const SelectRestaurant = () => {
           </SlideIn>
 
           <div className="mt-6 flex flex-col gap-6">
-            {restuarants.map((restaurant, index) => (
-              <PopIn key={index} className="">
-                <motion.div
-                  whileTap={{ scale: 0.98 }}
-                  className="flex items-center justify-between bg-white rounded-2xl p-5 shadow-md dark:bg-(--neutral-700)"
-                >
-                  <p className="flex flex-col gap-3">
-                    <span className="font-semibold text-base text-(--neutral-900) dark:text-white">
-                      {restaurant.name}
-                    </span>
-                    <span className="font-medium text-sm text-(--neutral-500) dark:text-(--neutral-300)">
-                      {restaurant.location}
-                    </span>
-                  </p>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="restaurant"
-                      className="hidden peer"
-                    />
-                    <span className="w-5 h-5 rounded-full border-2 border-(--yellow-1) dark:border-(--neutral-500) flex items-center justify-center peer-checked:before:content-[''] peer-checked:before:block before:hidden peer-checked:before:w-2.5 peer-checked:before:h-2.5 peer-checked:before:rounded-full relative peer-checked:border-(--yellow-1) peer-checked:dark:border-(--yellow-1)">
-                      <style>{`.peer:checked + span::before{background-color: var(--yellow-1);}`}</style>
-                    </span>
-                  </label>
-                </motion.div>
-              </PopIn>
-            ))}
+            {loading ? (
+              <div className="flex justify-center py-10">
+                <div className="w-8 h-8 border-4 border-(--purple-2) border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            ) : (
+              restaurants.map((restaurant) => (
+                <PopIn key={restaurant.id}>
+                  <motion.div
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setSelectedId(restaurant.id)}
+                    className={`flex items-center justify-between rounded-2xl p-5 shadow-sm cursor-pointer transition-all ${
+                      selectedId === restaurant.id
+                        ? "bg-(--purple-2)/5 border-2 border-(--purple-2)"
+                        : "bg-white dark:bg-(--neutral-700) border-2 border-transparent"
+                    }`}
+                  >
+                    <p className="flex flex-col gap-3">
+                      <span className="font-semibold text-base text-(--neutral-900) dark:text-white">
+                        {restaurant.name}
+                      </span>
+                      <span className="font-medium text-sm text-(--neutral-500) dark:text-(--neutral-300)">
+                        {restaurant.location}
+                      </span>
+                    </p>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="restaurant"
+                        checked={selectedId === restaurant.id}
+                        onChange={() => setSelectedId(restaurant.id)}
+                        className="hidden peer"
+                      />
+                      <span className="w-5 h-5 rounded-full border-2 border-(--yellow-1) dark:border-(--neutral-500) flex items-center justify-center peer-checked:before:content-[''] peer-checked:before:block before:hidden peer-checked:before:w-2.5 peer-checked:before:h-2.5 peer-checked:before:rounded-full relative peer-checked:border-(--yellow-1) peer-checked:dark:border-(--yellow-1)">
+                        <style>{`.peer:checked + span::before{background-color: var(--yellow-1);}`}</style>
+                      </span>
+                    </label>
+                  </motion.div>
+                </PopIn>
+              ))
+            )}
           </div>
 
           <div className="mt-[76px] w-full max-w-[327px] mx-auto">
             <motion.button
               whileTap={{ scale: 0.98 }}
+              onClick={handleContinue}
               className="w-full px-6 py-4 rounded-2xl bg-(--purple-2) text-white text-semibold text-base"
+              disabled={!selectedId || loading}
             >
               Continue
             </motion.button>
@@ -88,7 +117,7 @@ const SelectRestaurant = () => {
       </div>
 
       <div className="pt-20 md:py-30 lg:pt-50 lg:pb-20 max-w-[1440px] mx-auto hidden md:flex flex-col items-center py-6 px-6 sm:px-20 lg:px-6">
-        <div className="space-y-4 text-center px-8">
+        <div className="space-y-4 text-center">
           <h1 className="font-medium text-[40px] text-(--neutral-800) heading-font dark:text-white">
             Restaurants based on your selected location.
           </h1>
@@ -99,47 +128,70 @@ const SelectRestaurant = () => {
         </div>
 
         <div className="w-full max-w-[480px] mx-auto flex flex-col gap-8 mt-[60px]">
-          {restuarants.map((restaurant, index) => (
-            <PopIn key={index} className="">
-              <motion.div
-                whileTap={{ scale: 0.98 }}
-                className="flex items-center justify-between bg-white rounded-2xl pr-5 shadow-md dark:bg-(--neutral-700) h-[100px] overflow-hidden relative"
-              >
-                <div className="flex items-center h-full">
-                  <div className="h-full w-[180px] overflow-hidden rounded-l-2xl absolute -left-16 bottom-0">
-                    <img
-                      src={restaurant.image}
-                      alt="Resturant image"
-                      className="h-full w-full object-cover "
-                    />
+          {loading ? (
+            <div className="flex justify-center py-10">
+              <div className="w-8 h-8 border-4 border-(--purple-2) border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            restaurants.map((restaurant) => (
+              <PopIn key={restaurant.id}>
+                <motion.div
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setSelectedId(restaurant.id)}
+                  className={`flex items-center justify-between rounded-2xl pr-5 shadow-sm h-[100px] overflow-hidden relative cursor-pointer border-2 transition-all ${
+                    selectedId === restaurant.id
+                      ? "bg-(--purple-2)/5 border-(--purple-2)"
+                      : "bg-white dark:bg-(--neutral-700) border-transparent"
+                  }`}
+                >
+                  <div className="flex items-center h-full gap-4">
+                    <div className="relative flex items-center justify-center h-full overflow-hidden shrink-0 ml-[-8px]">
+                      <img
+                        src={
+                          !isDark
+                            ? "/images/dark-food-bg.png"
+                            : "/images/food-bg.png"
+                        }
+                        alt=""
+                        className="w-[130%] h-[150%] block z-20"
+                      />
+                      <img
+                        src={restaurant.image}
+                        alt={restaurant.name}
+                        className="absolute top-1/2 -left-1/28 -translate-y-1/2 w-[55%] rounded-full overflow-hidden object-cover z-10"
+                      />
+                    </div>
+                    <p className="flex flex-col gap-3">
+                      <span className="font-semibold text-base text-(--neutral-900) dark:text-white">
+                        {restaurant.name}
+                      </span>
+                      <span className="font-medium text-sm text-(--neutral-500) dark:text-(--neutral-300)">
+                        {restaurant.location}
+                      </span>
+                    </p>
                   </div>
-                  <p className="flex flex-col gap-3 ml-[130px]">
-                    <span className="font-semibold text-base text-(--neutral-900) dark:text-white">
-                      {restaurant.name}
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="restaurant"
+                      checked={selectedId === restaurant.id}
+                      onChange={() => setSelectedId(restaurant.id)}
+                      className="hidden peer"
+                    />
+                    <span className="w-5 h-5 rounded-full border-2 border-(--yellow-1) dark:border-(--neutral-500) flex items-center justify-center peer-checked:before:content-[''] peer-checked:before:block before:hidden peer-checked:before:w-2.5 peer-checked:before:h-2.5 peer-checked:before:rounded-full relative peer-checked:border-(--yellow-1) peer-checked:dark:border-(--yellow-1)">
+                      <style>{`.peer:checked + span::before{background-color: var(--yellow-1);}`}</style>
                     </span>
-                    <span className="font-medium text-sm text-(--neutral-500) dark:text-(--neutral-300)">
-                      {restaurant.location}
-                    </span>
-                  </p>
-                </div>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="restaurant"
-                    className="hidden peer"
-                  />
-                  <span className="w-5 h-5 rounded-full border-2 border-(--yellow-1) dark:border-(--neutral-500) flex items-center justify-center peer-checked:before:content-[''] peer-checked:before:block before:hidden peer-checked:before:w-2.5 peer-checked:before:h-2.5 peer-checked:before:rounded-full relative peer-checked:border-(--yellow-1) peer-checked:dark:border-(--yellow-1)">
-                    <style>{`.peer:checked + span::before{background-color: var(--yellow-1);}`}</style>
-                  </span>
-                </label>
-              </motion.div>
-            </PopIn>
-          ))}
+                  </label>
+                </motion.div>
+              </PopIn>
+            ))
+          )}
           <div className="mt-[60px] w-full">
             <motion.button
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/welcome")}
+              onClick={handleContinue}
               className="w-full px-6 py-4 rounded-2xl bg-(--purple-2) text-white text-semibold text-base cursor-pointer"
+              disabled={!selectedId || loading}
             >
               Continue
             </motion.button>
