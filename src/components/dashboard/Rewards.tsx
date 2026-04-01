@@ -94,6 +94,7 @@ const Rewards: React.FC = () => {
     speed: 500,
     slidesToScroll: 1,
     arrows: false,
+    centerMode: false,
     beforeChange: (_current: number, next: number) => setCurrentSlide(next),
   };
 

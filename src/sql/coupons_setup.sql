@@ -19,11 +19,24 @@ CREATE TABLE IF NOT EXISTS eat_easy_coupons (
 -- Turn on Row Level Security
 ALTER TABLE eat_easy_coupons ENABLE ROW LEVEL SECURITY;
 
--- Policy 1: Users can interact with their own coupons
-CREATE POLICY "Users can manage their own coupons"
+-- Policy 1a: Users can read their own coupons
+CREATE POLICY "Users can read their own coupons"
   ON eat_easy_coupons
-  FOR ALL
+  FOR SELECT
   USING (auth.uid() = user_id);
+
+-- Policy 1b: Users can insert their own coupons
+CREATE POLICY "Users can insert their own coupons"
+  ON eat_easy_coupons
+  FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+-- Policy 1c: Users can update their own coupons
+CREATE POLICY "Users can update their own coupons"
+  ON eat_easy_coupons
+  FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
 
 -- Policy 2: Admins can view all coupons
 -- Requires the public.is_admin() function created in admin_setup.sql
