@@ -1,4 +1,5 @@
 import Navbar from "./Navbar";
+import { createPortal } from "react-dom";
 import { CiLocationOn } from "react-icons/ci";
 import { FiChevronDown } from "react-icons/fi";
 import { IoCartOutline } from "react-icons/io5";
@@ -586,25 +587,28 @@ const Header: React.FC<HeaderProps> = ({
         </div>
       </MotionContainer>
 
-      {/* Global ViewOrder overlay */}
-      <AnimatePresence>
-        {showOrder && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowOrder(false)}
-            className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
-          >
-            <ViewOrder
-              items={orderItems}
-              onClose={() => setShowOrder(false)}
-              removeOrder={removeOrder}
-              onSend={handleSend}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Global ViewOrder overlay using Portal so it covers everything including Sidebar */}
+      {createPortal(
+        <AnimatePresence>
+          {showOrder && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowOrder(false)}
+              className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/50 z-100"
+            >
+              <ViewOrder
+                items={orderItems}
+                onClose={() => setShowOrder(false)}
+                removeOrder={removeOrder}
+                onSend={handleSend}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 };
