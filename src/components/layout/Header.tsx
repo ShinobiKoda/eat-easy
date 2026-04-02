@@ -7,7 +7,9 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MdOutlineMyLocation } from "react-icons/md";
 import { RiShoppingBag3Line } from "react-icons/ri";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import ViewOrder from "../dashboard/ViewOrder";
+import { useOrder } from "../../hooks/useOrder";
 import {
   MotionContainer,
   MotionItem,
@@ -19,12 +21,10 @@ import {
 } from "../animations/motion";
 import { motion, AnimatePresence } from "motion/react";
 import { useLocation } from "../../hooks/useLocation";
-import { useState, useEffect, useRef, useCallback } from "react";
-import type { PropType } from "../../types";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useRestaurant } from "../../context/RestaurantContext";
 import { useTheme } from "../../hooks/useTheme";
 import { closeSidebar } from "../../utils/sidebar";
-import { useRestaurant } from "../../context/RestaurantContext";
 
 interface HeaderProps {
   title?: string;
@@ -58,33 +58,8 @@ const Header: React.FC<HeaderProps> = ({
   const { theme } = useTheme();
   const navigate = useNavigate();
 
-  // Read cart items from localStorage (same key as useOrder hook)
-  const readCart = useCallback((): PropType[] => {
-    try {
-      const saved = localStorage.getItem("eat-easy-cart");
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  }, []);
-
-  const [cartItems, setCartItems] = useState<PropType[]>(readCart);
-
-  // Keep cart in sync: listen for storage events + poll for same-tab changes
-  useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === "eat-easy-cart") setCartItems(readCart());
-    };
-    window.addEventListener("storage", onStorage);
-
-    // Poll every second to catch same-tab localStorage writes
-    const interval = setInterval(() => setCartItems(readCart()), 1000);
-
-    return () => {
-      window.removeEventListener("storage", onStorage);
-      clearInterval(interval);
-    };
-  }, [readCart]);
+  const { orderItems, setShowOrder, showOrder, removeOrder, handleSend } =
+    useOrder();
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -96,16 +71,16 @@ const Header: React.FC<HeaderProps> = ({
         setLocationDropdownOpen(false);
       }
       if (
-        orderRef.current &&
-        !orderRef.current.contains(event.target as Node)
-      ) {
-        setOrderDropdownOpen(false);
-      }
-      if (
         tabletMenuRef.current &&
         !tabletMenuRef.current.contains(event.target as Node)
       ) {
         setTabletMenuOpen(false);
+      }
+      if (
+        orderRef.current &&
+        !orderRef.current.contains(event.target as Node)
+      ) {
+        setOrderDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -146,6 +121,8 @@ const Header: React.FC<HeaderProps> = ({
           title={finalNavbarTitle}
           description={navbarDescription}
           showBack={showBack}
+          cartCount={orderItems.length}
+          onCartClick={() => setShowOrder(true)}
         />
       </SlideIn>
 
@@ -284,46 +261,57 @@ const Header: React.FC<HeaderProps> = ({
                       <Link
                         to="/OrderStatus"
                         onClick={() => setTabletMenuOpen(false)}
-                        className="block"
+                        className="block mb-2"
                       >
                         <motion.div
-                          className="px-4 py-3 rounded-xl bg-(--purple-2) cursor-pointer"
+                          className="px-4 py-3 rounded-xl bg-(--neutral-100) dark:bg-(--neutral-600) cursor-pointer"
                           whileHover={{ scale: 1.01 }}
                           whileTap={{ scale: 0.99 }}
                         >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-                                <IoCartOutline
-                                  size={20}
-                                  className="text-white"
-                                />
-                              </div>
-                              <div>
-                                <p className="font-semibold text-sm text-white">
-                                  My Order
-                                </p>
-                                <p className="font-medium text-xs text-white/70">
-                                  View your cart
-                                </p>
-                              </div>
-                            </div>
-                            <motion.div
-                              animate={{ x: [0, 4, 0] }}
-                              transition={{
-                                duration: 1.5,
-                                repeat: Infinity,
-                                ease: "easeInOut",
-                              }}
-                            >
-                              <FiChevronDown
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-(--purple-2) flex items-center justify-center">
+                              <RiShoppingBag3Line
                                 size={20}
-                                className="text-white -rotate-90"
+                                className="text-white"
                               />
-                            </motion.div>
+                            </div>
+                            <div>
+                              <p className="font-semibold text-sm text-(--neutral-800) dark:text-white">
+                                Order Status
+                              </p>
+                              <p className="font-medium text-xs text-(--neutral-500) dark:text-(--neutral-300)">
+                                Track your active orders
+                              </p>
+                            </div>
                           </div>
                         </motion.div>
                       </Link>
+
+                      <motion.div
+                        className="px-4 py-3 rounded-xl bg-(--purple-2) cursor-pointer"
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        onClick={() => {
+                          setTabletMenuOpen(false);
+                          setShowOrder(true);
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                              <IoCartOutline size={20} className="text-white" />
+                            </div>
+                            <div>
+                              <p className="font-semibold text-sm text-white">
+                                My Cart ({orderItems.length})
+                              </p>
+                              <p className="font-medium text-xs text-white/70">
+                                View items in cart
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
                     </motion.div>
                   </div>
                 </motion.div>
@@ -496,7 +484,7 @@ const Header: React.FC<HeaderProps> = ({
           <SlideIn direction="left">
             <div className="relative" ref={orderRef}>
               <motion.button
-                className="px-6 py-3 text-(--purple-3) dark:text-(--purple-5) flex items-center gap-px cursor-pointer"
+                className="px-6 py-3 text-(--purple-3) dark:text-(--purple-5) flex items-center gap-2 cursor-pointer group"
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98, y: 0 }}
                 transition={{ type: "spring", stiffness: 380, damping: 22 }}
@@ -505,13 +493,20 @@ const Header: React.FC<HeaderProps> = ({
                   setLocationDropdownOpen(false);
                 }}
               >
-                <IoCartOutline size={20} />
+                <div className="relative">
+                  <IoCartOutline size={22} />
+                  {orderItems.length > 0 && (
+                    <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-(--orange-1) rounded-full border-2 border-white dark:border-(--dark-mode-bg)">
+                      {orderItems.length}
+                    </span>
+                  )}
+                </div>
                 <span className="font-semibold text-sm">My Order</span>
                 <motion.div
                   animate={{ rotate: orderDropdownOpen ? 180 : 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <FiChevronDown size={20} className="" />
+                  <FiChevronDown size={20} />
                 </motion.div>
               </motion.button>
 
@@ -522,79 +517,59 @@ const Header: React.FC<HeaderProps> = ({
                     initial="hidden"
                     animate="show"
                     exit="exit"
-                    className="absolute top-full right-0 mt-2 w-[300px] bg-white dark:bg-(--neutral-700) rounded-2xl shadow-lg border border-(--neutral-150) dark:border-(--neutral-600) overflow-hidden z-50"
+                    className="absolute top-full right-0 mt-2 w-[240px] bg-white dark:bg-(--neutral-700) rounded-2xl shadow-lg border border-(--neutral-150) dark:border-(--neutral-600) overflow-hidden z-50"
                   >
-                    <div className="p-4">
+                    <div className="p-2">
                       <motion.div
                         variants={dropdownItem}
-                        className="flex items-center justify-between mb-4"
+                        className="px-4 py-3 rounded-xl hover:bg-(--neutral-100) dark:hover:bg-(--neutral-600) cursor-pointer transition-colors"
+                        onClick={() => {
+                          setShowOrder(true);
+                          setOrderDropdownOpen(false);
+                        }}
                       >
-                        <p className="font-semibold text-base text-(--neutral-800) dark:text-white">
-                          Your Order
-                        </p>
-                        <span className="px-2 py-1 bg-(--purple-6) dark:bg-(--purple-3)/20 rounded-lg text-xs font-semibold text-(--purple-3)">
-                          {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
-                        </span>
-                      </motion.div>
-
-                      {cartItems.length === 0 ? (
-                        <motion.div
-                          variants={dropdownItem}
-                          className="flex flex-col items-center justify-center py-8 text-center"
-                        >
-                          <div className="w-16 h-16 rounded-full bg-(--neutral-100) dark:bg-(--neutral-600) flex items-center justify-center mb-4">
-                            <RiShoppingBag3Line
-                              size={28}
-                              className="text-(--neutral-400) dark:text-(--neutral-300)"
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-(--purple-6) dark:bg-(--purple-3)/20 flex items-center justify-center">
+                            <IoCartOutline
+                              size={20}
+                              className="text-(--purple-3)"
                             />
                           </div>
-                          <p className="font-semibold text-sm text-(--neutral-800) dark:text-white mb-1">
-                            Your cart is empty
-                          </p>
-                          <p className="font-medium text-xs text-(--neutral-500) dark:text-(--neutral-300)">
-                            Add items to get started
-                          </p>
-                        </motion.div>
-                      ) : (
-                        <motion.div
-                          variants={dropdownItem}
-                          className="flex flex-col gap-2 max-h-48 overflow-y-auto mb-4"
-                        >
-                          {cartItems.map((item, idx) => (
-                            <div
-                              key={`${item.id}-${idx}`}
-                              className="flex items-center gap-3 p-2 rounded-xl bg-(--neutral-50) dark:bg-(--neutral-600)"
-                            >
-                              <img
-                                src={item.image}
-                                alt={item.name}
-                                className="w-10 h-10 rounded-lg object-cover"
-                              />
-                              <div className="flex-1 min-w-0">
-                                <p className="font-semibold text-sm text-(--neutral-800) dark:text-white truncate">
-                                  {item.name}
-                                </p>
-                                <p className="font-medium text-xs text-(--orange-1)">
-                                  ${item.price.toFixed(2)}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </motion.div>
-                      )}
+                          <div>
+                            <p className="font-semibold text-sm text-(--neutral-800) dark:text-white">
+                              View Cart
+                            </p>
+                            <p className="font-medium text-xs text-(--neutral-500) dark:text-(--neutral-300)">
+                              {orderItems.length} items in cart
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
 
-                      <motion.div variants={dropdownItem}>
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="w-full px-4 py-3 bg-(--purple-2) text-white font-semibold text-sm rounded-xl cursor-pointer"
-                          onClick={() => {
-                            navigate("/orderStatus");
-                            setOrderDropdownOpen(false);
-                          }}
-                        >
-                          Order Status
-                        </motion.button>
+                      <motion.div
+                        variants={dropdownItem}
+                        className="px-4 py-3 rounded-xl hover:bg-(--neutral-100) dark:hover:bg-(--neutral-600) cursor-pointer transition-colors"
+                        onClick={() => {
+                          navigate("/orderStatus");
+                          setOrderDropdownOpen(false);
+                        }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-(--purple-2) flex items-center justify-center">
+                            <RiShoppingBag3Line
+                              size={20}
+                              className="text-white"
+                            />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-sm text-(--neutral-800) dark:text-white">
+                              Order Status
+                            </p>
+                            <p className="font-medium text-xs text-(--neutral-500) dark:text-(--neutral-300)">
+                              Track active orders
+                            </p>
+                          </div>
+                        </div>
                       </motion.div>
                     </div>
                   </motion.div>
@@ -604,6 +579,26 @@ const Header: React.FC<HeaderProps> = ({
           </SlideIn>
         </div>
       </MotionContainer>
+
+      {/* Global ViewOrder overlay */}
+      <AnimatePresence>
+        {showOrder && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowOrder(false)}
+            className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+          >
+            <ViewOrder
+              items={orderItems}
+              onClose={() => setShowOrder(false)}
+              removeOrder={removeOrder}
+              onSend={handleSend}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { RiMenu2Fill } from "react-icons/ri";
-import { IoArrowBack } from "react-icons/io5";
+import { IoArrowBack, IoCartOutline } from "react-icons/io5";
 import { HiOutlineLocationMarker } from "react-icons/hi";
-import { MotionItem, PopIn } from "../animations/motion";
+import { MotionItem, PopIn, FadeIn } from "../animations/motion";
 import { useNavigate } from "react-router-dom";
 
 type NavbarProps = {
@@ -12,6 +12,8 @@ type NavbarProps = {
   title?: string;
   previous?: () => void;
   showBack?: boolean;
+  cartCount?: number;
+  onCartClick?: () => void;
 };
 
 const Navbar: React.FC<NavbarProps> = ({
@@ -20,6 +22,8 @@ const Navbar: React.FC<NavbarProps> = ({
   className = "",
   previous,
   showBack,
+  cartCount = 0,
+  onCartClick,
 }) => {
   const navigate = useNavigate();
   return (
@@ -63,17 +67,35 @@ const Navbar: React.FC<NavbarProps> = ({
         )}
       </MotionItem>
 
-      <motion.button
-        whileTap={{ scale: 0.95 }}
-        className="w-full outline-none border-none cursor-pointer"
-        onClick={() => window.dispatchEvent(new Event("toggle-sidebar"))}
-        aria-label="Toggle sidebar"
-      >
-        <RiMenu2Fill
-          size={24}
-          className="ml-auto text-(--neutral-700) dark:text-(--purple-5)"
-        />
-      </motion.button>
+      <div className="flex items-center gap-4 ml-auto">
+        <FadeIn>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            className="relative p-2 text-(--neutral-700) dark:text-(--purple-5) cursor-pointer"
+            onClick={onCartClick}
+            aria-label="View cart"
+          >
+            <IoCartOutline size={26} />
+            {cartCount > 0 && (
+              <span className="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-(--orange-1) rounded-full border-2 border-white dark:border-(--dark-mode-bg)">
+                {cartCount}
+              </span>
+            )}
+          </motion.button>
+        </FadeIn>
+
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          className="outline-none border-none cursor-pointer p-2"
+          onClick={() => window.dispatchEvent(new Event("toggle-sidebar"))}
+          aria-label="Toggle sidebar"
+        >
+          <RiMenu2Fill
+            size={24}
+            className="text-(--neutral-700) dark:text-(--purple-5)"
+          />
+        </motion.button>
+      </div>
     </nav>
   );
 };

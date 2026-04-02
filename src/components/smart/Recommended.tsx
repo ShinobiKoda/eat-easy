@@ -257,25 +257,6 @@ const Recommended: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* ViewOrder modal */}
-        <AnimatePresence>
-          {showOrder && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowOrder(false)}
-              className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
-            >
-              <ViewOrder
-                items={orderItems}
-                onClose={() => setShowOrder(false)}
-                removeOrder={removeOrder}
-                onSend={handleSend}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </div>
   );
