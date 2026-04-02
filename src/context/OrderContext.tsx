@@ -1,7 +1,8 @@
 
-import React, { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef, type ReactNode } from "react";
 import type { PropType } from "../types";
 import { useNavigate } from "react-router-dom";
+import { useRestaurant } from "./RestaurantContext";
 
 interface OrderContextType {
   selectedItem: PropType | null;
@@ -18,10 +19,14 @@ interface OrderContextType {
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
 export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { selectedRestaurant, getStorageKey } = useRestaurant();
+  const restaurantId = selectedRestaurant?.id ?? null;
+
   const [selectedItem, setSelectedItem] = useState<PropType | null>(null);
   const [orderItems, setOrderItems] = useState<PropType[]>(() => {
     try {
-      const saved = localStorage.getItem("eat-easy-cart");
+      const key = restaurantId ? `${restaurantId}:eat-easy-cart` : "eat-easy-cart";
+      const saved = localStorage.getItem(key);
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -30,10 +35,33 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [showOrder, setShowOrder] = useState(false);
   const navigate = useNavigate();
 
-  // Persist cart to localStorage
+  // Track the previous restaurant ID to detect switches
+  const prevRestaurantIdRef = useRef<string | null>(restaurantId);
+
+  // When restaurant changes, re-initialize cart from the new restaurant's scoped storage
   useEffect(() => {
-    localStorage.setItem("eat-easy-cart", JSON.stringify(orderItems));
-  }, [orderItems]);
+    if (prevRestaurantIdRef.current !== restaurantId) {
+      prevRestaurantIdRef.current = restaurantId;
+
+      try {
+        const key = getStorageKey("eat-easy-cart");
+        const saved = localStorage.getItem(key);
+        setOrderItems(saved ? JSON.parse(saved) : []);
+      } catch {
+        setOrderItems([]);
+      }
+
+      // Reset UI state
+      setSelectedItem(null);
+      setShowOrder(false);
+    }
+  }, [restaurantId, getStorageKey]);
+
+  // Persist cart to restaurant-scoped localStorage
+  useEffect(() => {
+    const key = getStorageKey("eat-easy-cart");
+    localStorage.setItem(key, JSON.stringify(orderItems));
+  }, [orderItems, getStorageKey]);
 
   // Add a dish to order
   const addToOrder = (order: PropType) => {
@@ -53,7 +81,10 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   // Send order handler
   const handleSend = (sent: any) => {
     try {
-      const existingBatchesRaw = localStorage.getItem("eat-easy-order-batches");
+      const batchesKey = getStorageKey("eat-easy-order-batches");
+      const lastOrderKey = getStorageKey("eat-easy-last-order");
+
+      const existingBatchesRaw = localStorage.getItem(batchesKey);
       const existingBatches = existingBatchesRaw ? JSON.parse(existingBatchesRaw) : [];
 
       const isAnyPreparing = existingBatches.some((b: any) => b.status === "preparing");
@@ -70,7 +101,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       };
 
       const updatedBatches = [...existingBatches, newBatch];
-      localStorage.setItem("eat-easy-order-batches", JSON.stringify(updatedBatches));
+      localStorage.setItem(batchesKey, JSON.stringify(updatedBatches));
 
       // For backward compatibility (Checkout page uses this)
       const allItems = updatedBatches.flatMap((b: any) => b.items);
@@ -86,7 +117,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         total: totalTotal,
         qty: totalQty
       };
-      localStorage.setItem("eat-easy-last-order", JSON.stringify(combinedOrder));
+      localStorage.setItem(lastOrderKey, JSON.stringify(combinedOrder));
 
       setOrderItems([]); // Clear cart after successful order
     } catch (e) {

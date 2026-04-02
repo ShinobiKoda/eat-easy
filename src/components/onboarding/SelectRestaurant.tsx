@@ -10,7 +10,7 @@ import { useRestaurant } from "../../context/RestaurantContext";
 const SelectRestaurant = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
-  const { setSelectedRestaurant } = useRestaurant();
+  const { selectedRestaurant, setSelectedRestaurant } = useRestaurant();
   const isDark = theme === "dark";
 
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -22,7 +22,12 @@ const SelectRestaurant = () => {
       try {
         const data = await restaurantService.getAllRestaurants();
         setRestaurants(data);
-        if (data.length > 0) {
+        
+        // Use the currently selected restaurant's ID if available, 
+        // otherwise default to the first one in the list.
+        if (selectedRestaurant?.id) {
+          setSelectedId(selectedRestaurant.id);
+        } else if (data.length > 0) {
           setSelectedId(data[0].id);
         }
       } catch (error) {
@@ -32,7 +37,7 @@ const SelectRestaurant = () => {
       }
     };
     fetchRestaurants();
-  }, []);
+  }, [selectedRestaurant]);
 
   const handleContinue = () => {
     const restaurant = restaurants.find((r) => r.id === selectedId);

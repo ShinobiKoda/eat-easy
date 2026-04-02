@@ -36,7 +36,7 @@ const Checkout1: React.FC = () => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const { selectedRestaurant } = useRestaurant();
+  const { selectedRestaurant, getStorageKey } = useRestaurant();
   const restaurantName = selectedRestaurant?.name || "Gram Bistro";
 
   // Coupon states
@@ -137,11 +137,11 @@ const Checkout1: React.FC = () => {
 
     setShowSuccessModal(true);
 
-    // Clear order from localStorage after payment
-    localStorage.removeItem("eat-easy-last-order");
-    localStorage.removeItem("eat-easy-order-batches");
-    localStorage.removeItem("countdown_start");
-    localStorage.removeItem("eat-easy-cart");
+    // Clear order from localStorage after payment (scoped to current restaurant)
+    localStorage.removeItem(getStorageKey("eat-easy-last-order"));
+    localStorage.removeItem(getStorageKey("eat-easy-order-batches"));
+    localStorage.removeItem(getStorageKey("countdown_start"));
+    localStorage.removeItem(getStorageKey("eat-easy-cart"));
 
     // Also clear the React state so the useOrder hook doesn't re-persist the cart
     setOrderItems([]);
