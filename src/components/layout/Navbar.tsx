@@ -89,7 +89,7 @@ const Navbar: React.FC<NavbarProps> = ({
           <FadeIn>
             <motion.button
               whileTap={{ scale: 0.95 }}
-              className="relative p-2 text-(--neutral-700) dark:text-(--purple-5) cursor-pointer flex items-center gap-1"
+              className="relative p-2 text-(--neutral-700) dark:text-(--purple-5) cursor-pointer flex items-center gap-1 hidden"
               onClick={() => setDropdownOpen(!dropdownOpen)}
               aria-label="Toggle order menu"
             >

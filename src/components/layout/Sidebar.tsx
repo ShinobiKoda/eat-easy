@@ -24,7 +24,19 @@ const Sidebar: React.FC = () => {
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" ? window.innerWidth < 768 : false,
   );
-  const [selectedItem, setSelectedItem] = useState<number | null>(1);
+  const [selectedItem, setSelectedItem] = useState<number | null>(() => {
+    const path =
+      typeof window !== "undefined" ? window.location.pathname : "";
+    if (path.includes("/smart-assistant") || path.includes("/welcome"))
+      return 1;
+    if (path.includes("/FullMenu")) return 7;
+    if (path.includes("/history")) return 2;
+    if (path.includes("/locations")) return 3;
+    if (path.includes("/rewards")) return 4;
+    if (path.includes("/set-restaurant")) return 6;
+    if (path.includes("/admin")) return 99;
+    return null;
+  });
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [username, setUsername] = useState<string>("");

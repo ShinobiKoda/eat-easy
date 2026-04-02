@@ -277,6 +277,29 @@ const EditableField = ({
   );
 };
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+// Avatar: gradient colours cycling through app palette
+const avatarGradients = [
+  "linear-gradient(135deg, #615793, #ff7b2c)",
+  "linear-gradient(135deg, #32324d, #615793)",
+  "linear-gradient(135deg, #ffb01d, #ff7b2c)",
+  "linear-gradient(135deg, #615793, #ffb01d)",
+];
+
+function pickGradient(name: string) {
+  let code = 0;
+  for (let i = 0; i < name.length; i++) code += name.charCodeAt(i);
+  return avatarGradients[code % avatarGradients.length];
+}
+
 // ─── Main Profile Component ───────────────────────────────────────────────────
 
 const Profile: React.FC = () => {
@@ -294,7 +317,10 @@ const Profile: React.FC = () => {
   const email = user?.email || "";
   const phone = meta?.phone || "";
   const username = meta?.username || user?.email?.split("@")[0] || "";
-  const avatarUrl = meta?.avatar_url || "/images/profile-img.png";
+  // Only treat as a real uploaded avatar if it exists in metadata
+  const avatarUrl = meta?.avatar_url || null;
+  const initials = getInitials(displayName);
+  const avatarGradient = pickGradient(displayName);
   const joinedDate = user?.created_at
     ? new Date(user.created_at).toLocaleDateString("en-US", {
         month: "long",
@@ -430,11 +456,24 @@ const Profile: React.FC = () => {
                       className="relative w-[88px] h-[88px] md:w-[100px] md:h-[100px] cursor-pointer"
                       onClick={handleAvatarClick}
                     >
-                      <img
-                        src={avatarUrl}
-                        alt="Profile avatar"
-                        className="w-full h-full rounded-full object-cover border-4 border-white dark:border-(--neutral-700) shadow-md"
-                      />
+                      {avatarUrl ? (
+                        <img
+                          src={avatarUrl}
+                          alt="Profile avatar"
+                          className="w-full h-full rounded-full object-cover border-4 border-white dark:border-(--neutral-700) shadow-md"
+                        />
+                      ) : (
+                        <div
+                          className="w-full h-full rounded-full border-4 border-white dark:border-(--neutral-700) shadow-md flex items-center justify-center select-none"
+                          style={{ background: avatarGradient }}
+                        >
+                          <span className="text-white font-bold text-2xl md:text-3xl heading-font tracking-wide">
+                            {initials}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Camera overlay — email accounts only */}
                       {provider === "email" && (
                         <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
                           {avatarLoading ? (
@@ -489,7 +528,7 @@ const Profile: React.FC = () => {
             </div>
           </SlideIn>
 
-          <div className="grid lg:grid-cols-[1fr_340px] gap-6 items-start">
+          <div className="lg:grid lg:grid-cols-[1fr_340px] gap-6 items-start">
 
             {/* ── Left column ────────────────────────────────────────── */}
             <div className="space-y-6">
@@ -500,7 +539,7 @@ const Profile: React.FC = () => {
                   variants={staggerContainer}
                   initial="hidden"
                   animate="show"
-                  className="flex gap-3 overflow-x-auto scrollbar-hidden pb-1"
+                  className="flex flex-col lg:flex-row gap-3 overflow-x-auto scrollbar-hidden pb-1"
                 >
                   <StatCard
                     icon={<MdOutlineHistory size={20} />}
