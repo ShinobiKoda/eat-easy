@@ -12,6 +12,14 @@ function GetStarted() {
 
   useEffect(() => setAnimateBar(true), []);
 
+  const handleGetStarted = () => {
+    // Play ding on first user interaction — guaranteed to work via user gesture
+    const ding = new Audio("/sounds/ding.mp3");
+    ding.volume = 0.9;
+    ding.play().catch(() => {});
+    navigate("/method");
+  };
+
   return (
     <MotionContainer className="relative w-full min-h-screen">
       <SEO
@@ -65,7 +73,7 @@ function GetStarted() {
 
             <PopIn>
               <motion.button
-                onClick={() => navigate("/method")}
+                onClick={handleGetStarted}
                 className="px-6 py-4 bg-(--purple-2) text-white font-semibold text-base rounded-2xl w-full"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -91,7 +99,7 @@ function GetStarted() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/method")}
+              onClick={handleGetStarted}
               className="px-6 py-4 rounded-2xl bg-(--purple-2) text-white font-semibold text-base cursor-pointer"
             >
               Get Started

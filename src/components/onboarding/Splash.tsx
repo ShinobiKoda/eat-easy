@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../hooks/useTheme";
 
@@ -7,57 +7,18 @@ function Splash() {
   const { theme } = useTheme();
   const navigate = useNavigate();
 
-  // Refs for audio
-  const popRef = useRef<HTMLAudioElement | null>(null);
-  const dingRef = useRef<HTMLAudioElement | null>(null);
-
-  const [isAudioReady, setIsAudioReady] = useState(false);
-  const [overlayVisible, setOverlayVisible] = useState(false);
-
   useEffect(() => {
+    // Silently attempt autoplay — if browser blocks it, just skip
     const popAudio = new Audio("/sounds/pop-up.mp3");
-    const dingAudio = new Audio("/sounds/ding.mp3");
-    popAudio.volume = dingAudio.volume = 0.9;
-
-    popRef.current = popAudio;
-    dingRef.current = dingAudio;
-
-    popAudio
-      .play()
-      .then(() => {
-        localStorage.setItem("soundEnabled", "true");
-      })
-      .catch(() => {
-        if (localStorage.getItem("soundEnabled") === "true") {
-          setIsAudioReady(true);
-        } else {
-          setIsAudioReady(true);
-        }
-      });
+    popAudio.volume = 0.9;
+    popAudio.play().catch(() => {});
 
     const timer = setTimeout(() => {
-      dingAudio.play().catch(() => {});
       navigate("/get-started");
     }, 4000);
 
     return () => clearTimeout(timer);
   }, [navigate]);
-
-  // Handle manual click if autoplay is blocked
-  const handlePlayManually = () => {
-    if (popRef.current && dingRef.current) {
-      popRef.current.play().catch(() => {});
-      // Fade overlay then clear audio-prompt state
-      setOverlayVisible(false);
-      // allow short fade-out before removing the prompt state
-      setTimeout(() => setIsAudioReady(false), 240);
-    }
-  };
-
-  // When autoplay is detected as blocked, show overlay
-  useEffect(() => {
-    if (isAudioReady) setOverlayVisible(true);
-  }, [isAudioReady]);
 
   const backgroundImage = `var(--${
     theme === "dark" ? "dark" : "light"
@@ -70,27 +31,7 @@ function Splash() {
       initial={{ opacity: 1 }}
       animate={{ opacity: [1, 1, 0] }}
       transition={{ duration: 1, delay: 3 }}
-      // overlay handles the manual play gesture; don't attach global click
-      onClick={undefined}
     >
-      {/* Theme toggle (top-right) */}
-
-      {/* Full-screen centered enable-sound overlay when autoplay is blocked */}
-      {overlayVisible && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-auto z-40">
-          {/* Backdrop layer */}
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-md transition-opacity duration-200" />
-
-          {/* Centered button (above the backdrop) */}
-          <button
-            onClick={handlePlayManually}
-            className="relative z-50 bg-white/95 dark:bg-gray-900/95 text-black dark:text-white px-6 py-3 rounded-xl shadow-xl text-lg font-semibold hover:scale-[1.02] transition-transform"
-          >
-            Enable sound 🔊
-          </button>
-        </div>
-      )}
-
       {/* Rotating + 3D Wobble SVG */}
       <motion.img
         src="/images/splash-img-1.svg"
@@ -149,3 +90,4 @@ function Splash() {
 }
 
 export default Splash;
+
