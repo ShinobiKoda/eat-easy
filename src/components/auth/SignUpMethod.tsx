@@ -21,8 +21,7 @@ function SignUpMethod() {
                 Let's Get Started 😁
               </h1>
               <p className="font-medium text-base text-(--neutral-600) dark:text-(--neutral-150)">
-                Sign up or login into to have a full digital experience in our
-                restaurant
+                Sign up with email or google to have a full digital experience
               </p>
             </div>
           </SlideIn>
@@ -35,7 +34,7 @@ function SignUpMethod() {
                 onClick={() => navigate("/signup")}
                 className="py-4 bg-(--purple-2) rounded-2xl text-white font-semibold text-base w-full cursor-pointer"
               >
-                Get started
+                Sign up with Email
               </motion.button>
 
               <div className="w-full flex items-center justify-between gap-6">
@@ -50,23 +49,6 @@ function SignUpMethod() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-6 py-4 bg-white dark:bg-(--neutral-800) dark:border dark:border-(--purple-3) shadow-sm rounded-2xl w-full flex items-center justify-center gap-2"
-                >
-                  <img
-                    src="/images/facebook-icon.svg"
-                    alt="Social Icon"
-                    className="w-5 h-5"
-                  />
-                  <span className="font-semibold text-base text-(--purple-2) dark:text-(--purple-5)">
-                    Continue with Facebook
-                  </span>
-                </motion.button>
-              </PopIn>
-
-              <PopIn>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
                   className="px-6 py-4 bg-white dark:bg-(--neutral-800) dark:border dark:border-(--purple-3) shadow-sm rounded-2xl w-full flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <img
@@ -75,22 +57,11 @@ function SignUpMethod() {
                     className="w-5 h-5"
                   />
                   <span className="font-semibold text-base text-(--purple-2) dark:text-(--purple-5)">
-                    Continue with Gmail
+                    Continue with Google
                   </span>
                 </motion.button>
               </PopIn>
             </FadeIn>
-          </div>
-
-          <div className="w-full max-w-[480px] mx-auto text-center">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/login")}
-              className="px-6 py-4 text-(--purple-3) font-semibold w-full left-0 text-base absolute bottom-[70px] mx-auto dark:text-(--purple-5) cursor-pointer"
-            >
-              Sign up later
-            </motion.button>
           </div>
         </div>
 

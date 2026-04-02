@@ -1,4 +1,4 @@
-import { MotionContainer, PopIn, FadeIn, SlideIn } from "../animations/motion";
+import { MotionContainer, PopIn, SlideIn } from "../animations/motion";
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
@@ -61,16 +61,7 @@ function GetStarted() {
           </div>
 
           <div className="mt-8 flex flex-col gap-2.5 w-full px-6">
-            <FadeIn>
-              <motion.button
-                onClick={() => navigate("/login")}
-                className="px-6 py-4 text-(--purple-3) font-semibold text-base dark:text-(--purple-5) w-full"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Sign up later
-              </motion.button>
-            </FadeIn>
+            
 
             <PopIn>
               <motion.button
@@ -105,14 +96,7 @@ function GetStarted() {
             >
               Get Started
             </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/welcome")}
-              className="px-6 py-4 text-(--purple-2) dark:text-(--purple-5) font-semibold text-base cursor-pointer"
-            >
-              Sign up later
-            </motion.button>
+            
           </PopIn>
         </div>
 
