@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { AiOutlinePlus } from "react-icons/ai";
 import type { PropType } from "../../types";
 import ViewDish from "../dashboard/ViewDish";
-import ViewOrder from "../dashboard/ViewOrder";
+// import ViewOrder from "../dashboard/ViewOrder";
 import Header from "../layout/Header";
 import SkeletonCard from "../SkeletonCard";
 import { AnimatePresence } from "motion/react";
@@ -25,12 +25,12 @@ const Recommended: React.FC = () => {
   const {
     selectedItem,
     setSelectedItem,
-    orderItems,
+    // orderItems,
     showOrder,
-    setShowOrder,
+    // setShowOrder,
     addToOrder,
-    removeOrder,
-    handleSend,
+    // removeOrder,
+    // handleSend,
   } = useOrder();
 
   // stop background scroll when modals are open

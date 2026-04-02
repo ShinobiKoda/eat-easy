@@ -9,7 +9,7 @@ import SkeletonCard from "../SkeletonCard";
 import ProductCarousel from "./ProductCarousel";
 import Filters from "../Filters";
 import ViewDish from "../dashboard/ViewDish";
-import ViewOrder from "../dashboard/ViewOrder";
+// import ViewOrder from "../dashboard/ViewOrder";
 import { productGridStagger, productCardFade } from "../animations/motion";
 import { useOrder } from "../../hooks/useOrder";
 import { getMenuItems } from "../../services/menuService";
@@ -113,13 +113,13 @@ const FullMenu: React.FC = () => {
   const {
     selectedItem,
     setSelectedItem,
-    orderItems,
+    // orderItems,
     // setOrderItems,
     showOrder,
-    setShowOrder,
+    // setShowOrder,
     addToOrder,
-    removeOrder,
-    handleSend,
+    // removeOrder,
+    // handleSend,
   } = useOrder();
 
   // stop background scroll effect when any of this is open
