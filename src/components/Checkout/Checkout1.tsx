@@ -236,6 +236,9 @@ const Checkout1: React.FC = () => {
     } else {
       document.body.classList.remove("overflow-hidden");
     }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
   }, [showNewCard, showCvvModal, showSuccessModal, isProcessing]);
 
   return (

@@ -41,6 +41,10 @@ function App() {
   useEffect(() => {
     // scroll immediately to top when pathname changes
     window.scrollTo({ top: 0 });
+    // Always clear any stale overflow-hidden left by modals/overlays
+    // that didn't clean up before the route changed
+    document.body.classList.remove("overflow-hidden");
+    document.body.style.overflow = "";
   }, [location.pathname]);
 
   const { theme } = useTheme();

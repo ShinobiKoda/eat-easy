@@ -41,6 +41,9 @@ const Recommended: React.FC = () => {
     } else {
       document.body.classList.remove("overflow-hidden");
     }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
   }, [selectedItem, showOrder]);
 
   // Load recommended items either from route state or from latest DB recommendation
