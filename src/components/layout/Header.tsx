@@ -7,7 +7,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MdOutlineMyLocation } from "react-icons/md";
 import { RiShoppingBag3Line } from "react-icons/ri";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation as useRouteLocation } from "react-router-dom";
 import ViewOrder from "../dashboard/ViewOrder";
 import { useOrder } from "../../hooks/useOrder";
 import {
@@ -99,6 +99,12 @@ const Header: React.FC<HeaderProps> = ({
       window.removeEventListener("sidebar-state", handler as EventListener);
   }, []);
 
+  // Close order overlay on route change
+  const routeLocation = useRouteLocation();
+  useEffect(() => {
+    setShowOrder(false);
+  }, [routeLocation.pathname, setShowOrder]);
+
   const backgroundImage = `var(--${
     theme === "dark" ? "dark" : "light"
   }-mode-bg)`;
@@ -121,8 +127,8 @@ const Header: React.FC<HeaderProps> = ({
           title={finalNavbarTitle}
           description={navbarDescription}
           showBack={showBack}
-          cartCount={orderItems.length}
-          onCartClick={() => setShowOrder(true)}
+          orderItems={orderItems}
+          setShowOrder={setShowOrder}
         />
       </SlideIn>
 
