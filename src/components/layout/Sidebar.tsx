@@ -151,6 +151,8 @@ const Sidebar: React.FC = () => {
       setSelectedItem(7);
     } else if (path.includes("/admin")) {
       setSelectedItem(99);
+    } else if (path.includes("/help")) {
+      setSelectedItem(5);
     } else if (path.includes("/profile")) {
       setSelectedItem(null);
     }
@@ -503,32 +505,34 @@ const Sidebar: React.FC = () => {
                 )}
 
                 <div className="space-y-4">
-                  <motion.button
-                    onClick={() => setSelectedItem(5)}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
-                  >
-                    <div
-                      className={`p-3 rounded-2xl ${
-                        selectedItem === 5 ? "bg-(--yellow-1)" : "bg-white/15"
-                      }`}
+                  <NavLink to="/help">
+                    <motion.button
+                      onClick={() => { setSelectedItem(5); setIsOpen(false); }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
-                      <IoIosHelpCircleOutline
-                        className="text-white"
-                        size={24}
-                      />
-                    </div>
+                      <div
+                        className={`p-3 rounded-2xl ${
+                          selectedItem === 5 ? "bg-(--yellow-1)" : "bg-white/15"
+                        }`}
+                      >
+                        <IoIosHelpCircleOutline
+                          className="text-white"
+                          size={24}
+                        />
+                      </div>
 
-                    <p
-                      className={`${
-                        selectedItem === 5
-                          ? "text-(--yellow-1) font-bold"
-                          : "text-white"
-                      } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
-                    >
-                      Help
-                    </p>
-                  </motion.button>
+                      <p
+                        className={`${
+                          selectedItem === 5
+                            ? "text-(--yellow-1) font-bold"
+                            : "text-white"
+                        } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
+                      >
+                        Help
+                      </p>
+                    </motion.button>
+                  </NavLink>
                 </div>
 
                 <motion.div

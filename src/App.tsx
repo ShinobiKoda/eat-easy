@@ -34,6 +34,7 @@ import Rewards from "./components/dashboard/Rewards";
 import History from "./components/History";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import Profile from "./components/profile/Profile";
+import Help from "./components/dashboard/Help";
 
 import { RestaurantProvider } from "./context/RestaurantContext";
 import { OrderProvider } from "./context/OrderContext";
@@ -319,6 +320,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="help"
+            element={
+              <ProtectedRoute>
+                <Help />
               </ProtectedRoute>
             }
           />
