@@ -270,7 +270,7 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <NavLink to="/smart-assistant">
                     <motion.button
-                      onClick={() => setSelectedItem(1)}
+                      onClick={() => { setSelectedItem(1); setIsOpen(false); }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
@@ -297,7 +297,7 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <NavLink to="/FullMenu">
                     <motion.button
-                      onClick={() => setSelectedItem(7)}
+                      onClick={() => { setSelectedItem(7); setIsOpen(false); }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
@@ -325,25 +325,17 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <motion.button
                     onClick={() => {
-                      setSelectedItem(8);
                       setShowOrder(true);
+                      setIsOpen(false);
                     }}
                     whileTap={{ scale: 0.95 }}
                     className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                   >
-                    <div
-                      className={`p-3 rounded-2xl relative ${
-                        selectedItem === 8 ? "bg-(--yellow-1)" : "bg-white/15"
-                      }`}
-                    >
+                    <div className="p-3 rounded-2xl relative bg-white/15">
                       <IoCartOutline className="text-white" size={24} />
                     </div>
                     <p
-                      className={`${
-                        selectedItem === 8
-                          ? "text-(--yellow-1) font-bold"
-                          : "text-white"
-                      } text-base ${effectiveIsOpen ? "flex items-center gap-2" : "hidden"}`}
+                      className={`text-white text-base ${effectiveIsOpen ? "flex items-center gap-2" : "hidden"}`}
                     >
                       My Cart
                       {cartCount > 0 && (
@@ -358,7 +350,7 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <NavLink to="/history">
                     <motion.button
-                      onClick={() => setSelectedItem(2)}
+                      onClick={() => { setSelectedItem(2); setIsOpen(false); }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
@@ -385,7 +377,7 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <NavLink to="/locations">
                     <motion.button
-                      onClick={() => setSelectedItem(3)}
+                      onClick={() => { setSelectedItem(3); setIsOpen(false); }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
@@ -413,7 +405,7 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <NavLink to="/set-restaurant">
                     <motion.button
-                      onClick={() => setSelectedItem(6)}
+                      onClick={() => { setSelectedItem(6); setIsOpen(false); }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
@@ -454,7 +446,7 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <NavLink to="/rewards">
                     <motion.button
-                      onClick={() => setSelectedItem(4)}
+                      onClick={() => { setSelectedItem(4); setIsOpen(false); }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
@@ -483,7 +475,7 @@ const Sidebar: React.FC = () => {
                   <div className="space-y-4">
                     <NavLink to="/admin">
                       <motion.button
-                        onClick={() => setSelectedItem(99)}
+                        onClick={() => { setSelectedItem(99); setIsOpen(false); }}
                         whileTap={{ scale: 0.95 }}
                         className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                       >

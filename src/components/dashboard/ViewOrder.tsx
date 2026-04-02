@@ -5,7 +5,6 @@ import { RiDeleteBinLine, RiShoppingBag3Line } from "react-icons/ri";
 import { FaPlus, FaArrowRight } from "react-icons/fa6";
 import { LiaTimesSolid } from "react-icons/lia";
 import { HiOutlineLocationMarker } from "react-icons/hi";
-import Navbar from "../layout/Navbar";
 import StarHalf from "/images/star-half-icon.png";
 import StarFull from "/images/star.svg";
 import { useRestaurant } from "../../context/RestaurantContext";
@@ -44,14 +43,32 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
       className="z-50 top-0 fixed right-0 w-full h-screen flex flex-col sm:w-[55%] md:w-[45%] lg:w-[450px] sm:rounded-l-2xl vieworder-bg"
     >
       {/* header for mobile */}
-      <div className="flex sm:hidden">
-        <Navbar
-          title={restaurantName}
-          description="My Order"
-          showBack={true}
-          previous={onClose}
-          orderItems={items}
-        />
+      <div className="flex sm:hidden items-center justify-between px-6 py-4">
+        <div className="flex items-center gap-3">
+          <HiOutlineLocationMarker
+            size={20}
+            className="dark:text-(--neutral-200)"
+          />
+          <p className="flex flex-col">
+            <span className="font-semibold text-[14px] text-(--neutral-500) dark:text-(--neutral-200)">
+              {restaurantName}
+            </span>
+            <span className="heading-font font-semibold text-[14px] sm:text-[18px] text-(--neutral-800) dark:text-white">
+              My Order
+            </span>
+          </p>
+        </div>
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={onClose}
+          className="w-10 h-10 rounded-xl bg-white dark:bg-(--neutral-700) flex items-center justify-center cursor-pointer shadow-sm"
+          aria-label="Close cart"
+        >
+          <LiaTimesSolid
+            size={20}
+            className="text-(--neutral-600) dark:text-white"
+          />
+        </motion.button>
       </div>
 
       {/* header for destop */}
