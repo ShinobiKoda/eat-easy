@@ -1,11 +1,12 @@
 import { FaArrowLeft } from "react-icons/fa";
 import { motion } from "motion/react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { RxLightningBolt } from "react-icons/rx";
 import { useNavigate, useLocation } from "react-router-dom";
 import { MotionContainer, PopIn, fadeIn } from "../animations/motion";
 import ThemeSwitchButton from "../ThemeSwitchButton";
 import { ClipLoader } from "react-spinners";
+import { IoCheckmarkCircle } from "react-icons/io5";
 import AsideCard from "../onboarding/AsideCard";
 import { supabase } from "../../config/supabaseClient";
 import { createProfile } from "../../services/userProfile";
@@ -21,6 +22,8 @@ const ConfirmLink = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [resending, setResending] = useState(false);
+  const [resendSent, setResendSent] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
   const [verifying, setVerifying] = useState(false);
 
   // 4-digit code state
@@ -142,10 +145,18 @@ const ConfirmLink = () => {
     }
   };
 
-  const handleResend = async () => {
-    if (!gmail) return;
+  // Cooldown timer
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setInterval(() => setCooldown((c) => c - 1), 1000);
+    return () => clearInterval(id);
+  }, [cooldown]);
+
+  const handleResend = useCallback(async () => {
+    if (!gmail || resending || cooldown > 0) return;
     setError(null);
     setResending(true);
+    setResendSent(false);
     try {
       const response = await fetch("/api/send", {
         method: "POST",
@@ -156,12 +167,16 @@ const ConfirmLink = () => {
       if (!response.ok) {
         throw new Error("Failed to resend code");
       }
+      setResendSent(true);
+      setCooldown(60);
+      // Reset "Sent!" label after 2 seconds
+      setTimeout(() => setResendSent(false), 2000);
     } catch (e: any) {
       setError(e?.message || "Failed to resend code.");
     } finally {
       setResending(false);
     }
-  };
+  }, [gmail, resending, cooldown]);
 
   return (
     <MotionContainer className="w-full">
@@ -244,13 +259,33 @@ const ConfirmLink = () => {
                 <p className="text-center mt-6 lg:mt-[42px] font-semibold text-base text-(--neutral-500) dark:text-white">
                   Didn't receive code?{" "}
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="font-bold text-(--yellow-1) cursor-pointer disabled:opacity-60"
+                    whileHover={cooldown <= 0 && !resending ? { scale: 1.02 } : {}}
+                    whileTap={cooldown <= 0 && !resending ? { scale: 0.98 } : {}}
+                    className={`font-bold cursor-pointer inline-flex items-center gap-1.5 ${
+                      resending || cooldown > 0
+                        ? "opacity-60 cursor-not-allowed text-(--neutral-400)"
+                        : resendSent
+                          ? "text-green-500"
+                          : "text-(--yellow-1)"
+                    }`}
                     onClick={handleResend}
-                    disabled={resending}
+                    disabled={resending || cooldown > 0}
                   >
-                    {resending ? "Resending..." : "Resend Code"}
+                    {resending ? (
+                      <>
+                        <ClipLoader color="currentColor" size={14} />
+                        <span>Sending...</span>
+                      </>
+                    ) : resendSent ? (
+                      <>
+                        <IoCheckmarkCircle size={16} />
+                        <span>Sent!</span>
+                      </>
+                    ) : cooldown > 0 ? (
+                      <span>Resend in {cooldown}s</span>
+                    ) : (
+                      <span>Resend Code</span>
+                    )}
                   </motion.button>
                 </p>
               </div>
