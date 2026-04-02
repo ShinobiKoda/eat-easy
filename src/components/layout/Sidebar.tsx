@@ -8,7 +8,11 @@ import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { TfiBook } from "react-icons/tfi";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { MdOutlineHistory } from "react-icons/md";
-import { IoLocationOutline, IoRestaurantOutline } from "react-icons/io5";
+import {
+  IoLocationOutline,
+  IoRestaurantOutline,
+  IoCartOutline,
+} from "react-icons/io5";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import ThemeSwitchButton from "../ThemeSwitchButton";
 import { useTheme } from "../../hooks/useTheme";
@@ -17,6 +21,7 @@ import { supabase } from "../../config/supabaseClient";
 import { adminService } from "../../services/adminService";
 import { LuShieldCheck } from "react-icons/lu";
 import { useAuth } from "../../context/AuthContext";
+import { useOrder } from "../../hooks/useOrder";
 
 const Sidebar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -25,8 +30,7 @@ const Sidebar: React.FC = () => {
     typeof window !== "undefined" ? window.innerWidth < 768 : false,
   );
   const [selectedItem, setSelectedItem] = useState<number | null>(() => {
-    const path =
-      typeof window !== "undefined" ? window.location.pathname : "";
+    const path = typeof window !== "undefined" ? window.location.pathname : "";
     if (path.includes("/smart-assistant") || path.includes("/welcome"))
       return 1;
     if (path.includes("/FullMenu")) return 7;
@@ -45,6 +49,8 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
 
   const { user } = useAuth();
+  const { orderItems } = useOrder();
+  const cartCount = orderItems.length;
 
   // Reactively track viewport width so sidebar responds to resize
   useEffect(() => {
@@ -146,6 +152,8 @@ const Sidebar: React.FC = () => {
       setSelectedItem(99);
     } else if (path.includes("/profile")) {
       setSelectedItem(null);
+    } else if (path.includes("/cart")) {
+      setSelectedItem(8);
     }
   }, [location.pathname]);
 
@@ -172,9 +180,7 @@ const Sidebar: React.FC = () => {
       <motion.aside
         initial={false}
         animate={{
-          x: isMobile
-            ? (effectiveIsOpen ? 0 : -260)
-            : 0,
+          x: isMobile ? (effectiveIsOpen ? 0 : -260) : 0,
         }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         style={{
@@ -311,6 +317,39 @@ const Sidebar: React.FC = () => {
                         } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
                       >
                         Full Menu
+                      </p>
+                    </motion.button>
+                  </NavLink>
+                </div>
+
+                {/* Cart — mobile only, navigates to /cart page */}
+                <div className="space-y-4 md:hidden">
+                  <NavLink to="/cart">
+                    <motion.button
+                      onClick={() => setSelectedItem(8)}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
+                    >
+                      <div
+                        className={`p-3 rounded-2xl relative ${
+                          selectedItem === 8 ? "bg-(--yellow-1)" : "bg-white/15"
+                        }`}
+                      >
+                        <IoCartOutline className="text-white" size={24} />
+                      </div>
+                      <p
+                        className={`${
+                          selectedItem === 8
+                            ? "text-(--yellow-1) font-bold"
+                            : "text-white"
+                        } text-base ${effectiveIsOpen ? "flex items-center gap-2" : "hidden"}`}
+                      >
+                        My Cart
+                        {cartCount > 0 && (
+                          <span className="ml-auto px-2 py-0.5 rounded-full bg-(--orange-1) text-white text-[11px] font-bold">
+                            {cartCount}
+                          </span>
+                        )}
                       </p>
                     </motion.button>
                   </NavLink>

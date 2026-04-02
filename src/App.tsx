@@ -34,6 +34,7 @@ import Rewards from "./components/dashboard/Rewards";
 import History from "./components/History";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import Profile from "./components/profile/Profile";
+import CartPage from "./components/dashboard/CartPage";
 import { RestaurantProvider } from "./context/RestaurantContext";
 import { OrderProvider } from "./context/OrderContext";
 
@@ -61,6 +62,7 @@ function App() {
     "/verify-url",
     "/reset-email-sent",
     "/reset-password",
+    "/cart", // Full-page cart on mobile — no sidebar
   ]);
   const excludedPrefixes: string[] = [
     // Add future sections to exclude by prefix here, e.g. "/auth"
@@ -317,6 +319,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="cart"
+            element={
+              <ProtectedRoute>
+                <CartPage />
               </ProtectedRoute>
             }
           />
