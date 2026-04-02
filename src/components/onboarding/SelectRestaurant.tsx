@@ -10,7 +10,7 @@ import { useRestaurant } from "../../context/RestaurantContext";
 const SelectRestaurant = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
-  const { setSelectedRestaurant } = useRestaurant();
+  const { selectedRestaurant, setSelectedRestaurant } = useRestaurant();
   const isDark = theme === "dark";
 
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -22,7 +22,12 @@ const SelectRestaurant = () => {
       try {
         const data = await restaurantService.getAllRestaurants();
         setRestaurants(data);
-        if (data.length > 0) {
+        
+        // Use the currently selected restaurant's ID if available, 
+        // otherwise default to the first one in the list.
+        if (selectedRestaurant?.id) {
+          setSelectedId(selectedRestaurant.id);
+        } else if (data.length > 0) {
           setSelectedId(data[0].id);
         }
       } catch (error) {
@@ -32,7 +37,7 @@ const SelectRestaurant = () => {
       }
     };
     fetchRestaurants();
-  }, []);
+  }, [selectedRestaurant]);
 
   const handleContinue = () => {
     const restaurant = restaurants.find((r) => r.id === selectedId);
@@ -85,18 +90,15 @@ const SelectRestaurant = () => {
                         {restaurant.location}
                       </span>
                     </p>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="restaurant"
-                        checked={selectedId === restaurant.id}
-                        onChange={() => setSelectedId(restaurant.id)}
-                        className="hidden peer"
-                      />
-                      <span className="w-5 h-5 rounded-full border-2 border-(--yellow-1) dark:border-(--neutral-500) flex items-center justify-center peer-checked:before:content-[''] peer-checked:before:block before:hidden peer-checked:before:w-2.5 peer-checked:before:h-2.5 peer-checked:before:rounded-full relative peer-checked:border-(--yellow-1) peer-checked:dark:border-(--yellow-1)">
-                        <style>{`.peer:checked + span::before{background-color: var(--yellow-1);}`}</style>
-                      </span>
-                    </label>
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                      selectedId === restaurant.id
+                        ? "border-(--yellow-1)"
+                        : "border-(--yellow-1) dark:border-(--neutral-500)"
+                    }`}>
+                      {selectedId === restaurant.id && (
+                        <div className="w-2.5 h-2.5 rounded-full bg-(--yellow-1)" />
+                      )}
+                    </div>
                   </motion.div>
                 </PopIn>
               ))
@@ -170,18 +172,15 @@ const SelectRestaurant = () => {
                       </span>
                     </p>
                   </div>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="restaurant"
-                      checked={selectedId === restaurant.id}
-                      onChange={() => setSelectedId(restaurant.id)}
-                      className="hidden peer"
-                    />
-                    <span className="w-5 h-5 rounded-full border-2 border-(--yellow-1) dark:border-(--neutral-500) flex items-center justify-center peer-checked:before:content-[''] peer-checked:before:block before:hidden peer-checked:before:w-2.5 peer-checked:before:h-2.5 peer-checked:before:rounded-full relative peer-checked:border-(--yellow-1) peer-checked:dark:border-(--yellow-1)">
-                      <style>{`.peer:checked + span::before{background-color: var(--yellow-1);}`}</style>
-                    </span>
-                  </label>
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                    selectedId === restaurant.id
+                      ? "border-(--yellow-1)"
+                      : "border-(--yellow-1) dark:border-(--neutral-500)"
+                  }`}>
+                    {selectedId === restaurant.id && (
+                      <div className="w-2.5 h-2.5 rounded-full bg-(--yellow-1)" />
+                    )}
+                  </div>
                 </motion.div>
               </PopIn>
             ))

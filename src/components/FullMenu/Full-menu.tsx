@@ -9,7 +9,7 @@ import SkeletonCard from "../SkeletonCard";
 import ProductCarousel from "./ProductCarousel";
 import Filters from "../Filters";
 import ViewDish from "../dashboard/ViewDish";
-import ViewOrder from "../dashboard/ViewOrder";
+// import ViewOrder from "../dashboard/ViewOrder";
 import { productGridStagger, productCardFade } from "../animations/motion";
 import { useOrder } from "../../hooks/useOrder";
 import { getMenuItems } from "../../services/menuService";
@@ -113,13 +113,13 @@ const FullMenu: React.FC = () => {
   const {
     selectedItem,
     setSelectedItem,
-    orderItems,
+    // orderItems,
     // setOrderItems,
     showOrder,
-    setShowOrder,
+    // setShowOrder,
     addToOrder,
-    removeOrder,
-    handleSend,
+    // removeOrder,
+    // handleSend,
   } = useOrder();
 
   // stop background scroll effect when any of this is open
@@ -130,6 +130,9 @@ const FullMenu: React.FC = () => {
     } else {
       document.body.classList.remove("overflow-hidden");
     }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
   }, [selectedItem, showOrder, filterButton]);
 
   return (
@@ -279,25 +282,7 @@ const FullMenu: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* vieworder component */}
-        <AnimatePresence>
-          {showOrder && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowOrder(false)}
-              className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
-            >
-              <ViewOrder
-                items={orderItems}
-                onClose={() => setShowOrder(false)}
-                removeOrder={removeOrder}
-                onSend={handleSend}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+
 
         {/* filter component */}
         <AnimatePresence>

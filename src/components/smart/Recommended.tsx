@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { AiOutlinePlus } from "react-icons/ai";
 import type { PropType } from "../../types";
 import ViewDish from "../dashboard/ViewDish";
-import ViewOrder from "../dashboard/ViewOrder";
+// import ViewOrder from "../dashboard/ViewOrder";
 import Header from "../layout/Header";
 import SkeletonCard from "../SkeletonCard";
 import { AnimatePresence } from "motion/react";
@@ -25,12 +25,12 @@ const Recommended: React.FC = () => {
   const {
     selectedItem,
     setSelectedItem,
-    orderItems,
+    // orderItems,
     showOrder,
-    setShowOrder,
+    // setShowOrder,
     addToOrder,
-    removeOrder,
-    handleSend,
+    // removeOrder,
+    // handleSend,
   } = useOrder();
 
   // stop background scroll when modals are open
@@ -41,6 +41,9 @@ const Recommended: React.FC = () => {
     } else {
       document.body.classList.remove("overflow-hidden");
     }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
   }, [selectedItem, showOrder]);
 
   // Load recommended items either from route state or from latest DB recommendation
@@ -257,25 +260,6 @@ const Recommended: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* ViewOrder modal */}
-        <AnimatePresence>
-          {showOrder && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowOrder(false)}
-              className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
-            >
-              <ViewOrder
-                items={orderItems}
-                onClose={() => setShowOrder(false)}
-                removeOrder={removeOrder}
-                onSend={handleSend}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </div>
   );

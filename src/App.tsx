@@ -34,12 +34,17 @@ import Rewards from "./components/dashboard/Rewards";
 import History from "./components/History";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import { RestaurantProvider } from "./context/RestaurantContext";
+import { OrderProvider } from "./context/OrderContext";
 
 function App() {
   const location = useLocation();
   useEffect(() => {
     // scroll immediately to top when pathname changes
     window.scrollTo({ top: 0 });
+    // Always clear any stale overflow-hidden left by modals/overlays
+    // that didn't clean up before the route changed
+    document.body.classList.remove("overflow-hidden");
+    document.body.style.overflow = "";
   }, [location.pathname]);
 
   const { theme } = useTheme();
@@ -82,7 +87,8 @@ function App() {
 
   return (
     <RestaurantProvider>
-      <div className="w-full min-h-screen" style={{ backgroundImage }}>
+      <OrderProvider>
+        <div className="w-full min-h-screen" style={{ backgroundImage }}>
       {showSidebar && <Sidebar />}
       <div
         style={{
@@ -308,8 +314,9 @@ function App() {
         </Routes>
       </div>
     </div>
-  </RestaurantProvider>
-);
+      </OrderProvider>
+    </RestaurantProvider>
+  );
 }
 
 export default App;

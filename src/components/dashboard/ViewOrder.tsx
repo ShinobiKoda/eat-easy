@@ -45,7 +45,13 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
     >
       {/* header for mobile */}
       <div className="flex sm:hidden">
-        <Navbar title={restaurantName} description="My Order" showBack={true} />
+        <Navbar
+          title={restaurantName}
+          description="My Order"
+          showBack={true}
+          previous={onClose}
+          orderItems={items}
+        />
       </div>
 
       {/* header for destop */}

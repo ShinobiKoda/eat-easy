@@ -36,7 +36,7 @@ const Checkout1: React.FC = () => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const { selectedRestaurant } = useRestaurant();
+  const { selectedRestaurant, getStorageKey } = useRestaurant();
   const restaurantName = selectedRestaurant?.name || "Gram Bistro";
 
   // Coupon states
@@ -45,6 +45,7 @@ const Checkout1: React.FC = () => {
   const [couponError, setCouponError] = useState<string | null>(null);
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
+  const [cvv, setCvv] = useState("");
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -65,8 +66,8 @@ const Checkout1: React.FC = () => {
     setCvvConfirmed(false);
   };
 
-  const handleCvvConfirm = (cvv: string) => {
-    sessionStorage.setItem("checkout_cvv", cvv);
+  const handleCvvConfirm = (cvvValue: string) => {
+    setCvv(cvvValue);
     setCvvConfirmed(true);
     setShowCvvModal(false);
   };
@@ -92,14 +93,13 @@ const Checkout1: React.FC = () => {
   const discountAmountRef = useRef(0);
 
   const handlePay = async () => {
-    const cvv = sessionStorage.getItem("checkout_cvv");
     if (!cvv) return;
     
     setIsProcessing(true);
     
     // Use CVV for payment processing here
-    console.log("Processing payment with CVV:", cvv);
-    sessionStorage.removeItem("checkout_cvv");
+    // console.log("Processing payment...");
+    setCvv("");
     setCvvConfirmed(false);
 
     // Simulate processing delay
@@ -137,11 +137,11 @@ const Checkout1: React.FC = () => {
 
     setShowSuccessModal(true);
 
-    // Clear order from localStorage after payment
-    localStorage.removeItem("eat-easy-last-order");
-    localStorage.removeItem("eat-easy-order-batches");
-    localStorage.removeItem("countdown_start");
-    localStorage.removeItem("eat-easy-cart");
+    // Clear order from localStorage after payment (scoped to current restaurant)
+    localStorage.removeItem(getStorageKey("eat-easy-last-order"));
+    localStorage.removeItem(getStorageKey("eat-easy-order-batches"));
+    localStorage.removeItem(getStorageKey("countdown_start"));
+    localStorage.removeItem(getStorageKey("eat-easy-cart"));
 
     // Also clear the React state so the useOrder hook doesn't re-persist the cart
     setOrderItems([]);
@@ -167,7 +167,7 @@ const Checkout1: React.FC = () => {
     afterChange: (index: number) => {
       setActiveCardIndex(index);
       setCvvConfirmed(false);
-      sessionStorage.removeItem("checkout_cvv");
+      setCvv("");
     },
   };
 
@@ -236,6 +236,9 @@ const Checkout1: React.FC = () => {
     } else {
       document.body.classList.remove("overflow-hidden");
     }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
   }, [showNewCard, showCvvModal, showSuccessModal, isProcessing]);
 
   return (
