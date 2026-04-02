@@ -57,16 +57,13 @@ const Navbar: React.FC<NavbarProps> = ({
               <PopIn>
                 <motion.button
                   onClick={previous || (() => navigate(-1))}
-                  className="w-12 h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer dark:bg-(--neutral-700)"
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white flex items-center justify-center cursor-pointer dark:bg-(--neutral-700)"
                   aria-label="Go back"
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
                   transition={{ type: "spring", stiffness: 400, damping: 24 }}
                 >
-                  <IoArrowBack
-                    size={20}
-                    className="dark:text-white text-(--neutral-600)"
-                  />
+                  <IoArrowBack className="dark:text-white text-[16px] sm:text-[20px] text-(--neutral-600)" />
                 </motion.button>
               </PopIn>
             ) : (

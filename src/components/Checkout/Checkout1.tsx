@@ -45,6 +45,7 @@ const Checkout1: React.FC = () => {
   const [couponError, setCouponError] = useState<string | null>(null);
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
+  const [cvv, setCvv] = useState("");
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -65,8 +66,8 @@ const Checkout1: React.FC = () => {
     setCvvConfirmed(false);
   };
 
-  const handleCvvConfirm = (cvv: string) => {
-    sessionStorage.setItem("checkout_cvv", cvv);
+  const handleCvvConfirm = (cvvValue: string) => {
+    setCvv(cvvValue);
     setCvvConfirmed(true);
     setShowCvvModal(false);
   };
@@ -92,14 +93,13 @@ const Checkout1: React.FC = () => {
   const discountAmountRef = useRef(0);
 
   const handlePay = async () => {
-    const cvv = sessionStorage.getItem("checkout_cvv");
     if (!cvv) return;
     
     setIsProcessing(true);
     
     // Use CVV for payment processing here
-    console.log("Processing payment with CVV:", cvv);
-    sessionStorage.removeItem("checkout_cvv");
+    // console.log("Processing payment...");
+    setCvv("");
     setCvvConfirmed(false);
 
     // Simulate processing delay
@@ -167,7 +167,7 @@ const Checkout1: React.FC = () => {
     afterChange: (index: number) => {
       setActiveCardIndex(index);
       setCvvConfirmed(false);
-      sessionStorage.removeItem("checkout_cvv");
+      setCvv("");
     },
   };
 
