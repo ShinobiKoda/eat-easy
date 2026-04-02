@@ -3,9 +3,25 @@ import { motion } from "motion/react";
 import ThemeSwitchButton from "../ThemeSwitchButton";
 import { useNavigate } from "react-router-dom";
 import AsideCard from "../onboarding/AsideCard";
+import { signInWithGoogle } from "../../services/googleAuth";
+import { useState } from "react";
+import { ClipLoader } from "react-spinners";
 
 function SignUpMethod() {
   const navigate = useNavigate();
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleError, setGoogleError] = useState<string | null>(null);
+
+  const handleGoogleSignIn = async () => {
+    setGoogleError(null);
+    setGoogleLoading(true);
+    try {
+      await signInWithGoogle();
+    } catch (err: any) {
+      setGoogleError(err?.message || "Failed to sign in with Google.");
+      setGoogleLoading(false);
+    }
+  };
 
   return (
     <MotionContainer className="relative min-h-screen">
@@ -45,20 +61,34 @@ function SignUpMethod() {
                 <div className="h-0.5 bg-(--neutral-200) w-1/2 dark:bg-(--neutral-600)"></div>
               </div>
 
+              {googleError && (
+                <p className="text-sm text-red-500 text-center">
+                  {googleError}
+                </p>
+              )}
+
               <PopIn>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-6 py-4 bg-white dark:bg-(--neutral-800) dark:border dark:border-(--purple-3) shadow-sm rounded-2xl w-full flex items-center justify-center gap-2 cursor-pointer"
+                  onClick={handleGoogleSignIn}
+                  disabled={googleLoading}
+                  className="px-6 py-4 bg-white dark:bg-(--neutral-800) dark:border dark:border-(--purple-3) shadow-sm rounded-2xl w-full flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  <img
-                    src="/images/google-icon.svg"
-                    alt="Social Icon"
-                    className="w-5 h-5"
-                  />
-                  <span className="font-semibold text-base text-(--purple-2) dark:text-(--purple-5)">
-                    Continue with Google
-                  </span>
+                  {googleLoading ? (
+                    <ClipLoader color="#6C63FF" size={19} />
+                  ) : (
+                    <>
+                      <img
+                        src="/images/google-icon.svg"
+                        alt="Google Icon"
+                        className="w-5 h-5"
+                      />
+                      <span className="font-semibold text-base text-(--purple-2) dark:text-(--purple-5)">
+                        Continue with Google
+                      </span>
+                    </>
+                  )}
                 </motion.button>
               </PopIn>
             </FadeIn>
@@ -72,3 +102,4 @@ function SignUpMethod() {
 }
 
 export default SignUpMethod;
+
