@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getRestaurantStorageKey } from "../context/RestaurantContext";
 
 export type ContentStatus = {
     text: string;
@@ -7,9 +8,12 @@ export type ContentStatus = {
     action?: string;
 };
 
-export const OrderStatusSchema = () => {
+export const OrderStatusSchema = (restaurantId: string | null = null) => {
   const TOTAL_TIME = 2 * 60 * 1000; // 2 mins
   const MID_TIME = 1 * 60 * 1000; // 1 mins
+
+  const batchesKey = getRestaurantStorageKey(restaurantId, "eat-easy-order-batches");
+  const lastOrderKey = getRestaurantStorageKey(restaurantId, "eat-easy-last-order");
 
   const status: Record<string, ContentStatus> = {
     start: {
@@ -44,7 +48,7 @@ export const OrderStatusSchema = () => {
 
   useEffect(() => {
     const updateLoop = () => {
-      const raw = localStorage.getItem("eat-easy-order-batches");
+      const raw = localStorage.getItem(batchesKey);
       if (!raw) {
         setBatches([]);
         return;
@@ -104,7 +108,7 @@ export const OrderStatusSchema = () => {
       }
 
       if (changed) {
-        localStorage.setItem("eat-easy-order-batches", JSON.stringify(currentBatches));
+        localStorage.setItem(batchesKey, JSON.stringify(currentBatches));
         // Also update the flattened order for Checkout page
         const allItems = currentBatches.flatMap((b: any) => b.items);
         const totalSubtotal = currentBatches.reduce((acc: number, b: any) => acc + b.subtotal, 0);
@@ -119,7 +123,7 @@ export const OrderStatusSchema = () => {
           total: totalTotal,
           qty: totalQty
         };
-        localStorage.setItem("eat-easy-last-order", JSON.stringify(combinedOrder));
+        localStorage.setItem(lastOrderKey, JSON.stringify(combinedOrder));
       }
 
       setBatches(currentBatches);
@@ -129,7 +133,8 @@ export const OrderStatusSchema = () => {
     updateLoop(); // Initial call
 
     return () => clearInterval(interval);
-  }, []);
+  }, [batchesKey, lastOrderKey]);
 
   return { currentStatus, showRecommend, showSubmit, timeLeft, batches };
 };
+

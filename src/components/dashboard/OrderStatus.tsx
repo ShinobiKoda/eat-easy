@@ -7,9 +7,11 @@ import Loader from "../Loader";
 import Header from "../layout/Header";
 
 import { useNavigate } from "react-router-dom";
+import { useRestaurant } from "../../context/RestaurantContext";
 
 const OrderStatus: React.FC = () => {
   const navigate = useNavigate();
+  const { selectedRestaurant, getStorageKey } = useRestaurant();
   const [showLoader, setShowLoader] = useState(true);
   const [toggleList, setToggleList] = useState(false);
 
@@ -22,15 +24,15 @@ const OrderStatus: React.FC = () => {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("eat-easy-last-order");
+      const raw = localStorage.getItem(getStorageKey("eat-easy-last-order"));
       if (raw) setOrder(JSON.parse(raw));
     } catch (e) {
       console.error("Failed to read saved order", e);
     }
-  }, []);
+  }, [getStorageKey]);
 
   const { currentStatus, showRecommend, showSubmit, timeLeft, batches } =
-    OrderStatusSchema();
+    OrderStatusSchema(selectedRestaurant?.id ?? null);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
