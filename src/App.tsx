@@ -35,6 +35,7 @@ import History from "./components/History";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import Profile from "./components/profile/Profile";
 import Help from "./components/dashboard/Help";
+import NotFound from "./components/NotFound";
 
 import { RestaurantProvider } from "./context/RestaurantContext";
 import { OrderProvider } from "./context/OrderContext";
@@ -69,9 +70,37 @@ function App() {
     // Add future sections to exclude by prefix here, e.g. "/auth"
   ];
 
+  // Known paths that should show the sidebar
+  const knownSidebarPaths = new Set([
+    "/welcome",
+    "/set-location",
+    "/set-restaurant",
+    "/set-custom-location",
+    "/smart-assistant",
+    "/virtual",
+    "/recommend",
+    "/recommended",
+    "/step1",
+    "/step2-budget",
+    "/step3-party",
+    "/step4-food-type",
+    "/generating",
+    "/FullMenu",
+    "/OrderStatus",
+    "/Checkout",
+    "/rewards",
+    "/history",
+    "/admin",
+    "/profile",
+    "/help",
+    "/locations",
+    "/orderStatus",
+  ]);
+
   const isExcluded =
     excludedPaths.has(path) || excludedPrefixes.some((p) => path.startsWith(p));
-  const showSidebar = !isExcluded;
+  const isKnownPage = knownSidebarPaths.has(path);
+  const showSidebar = !isExcluded && isKnownPage;
 
   const backgroundImage = `var(--${
     theme === "dark" ? "dark" : "light"
@@ -242,14 +271,7 @@ function App() {
             }
           />
 
-          <Route
-            path="*"
-            element={
-              <ProtectedRoute>
-                <SetLocation />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="*" element={<NotFound />} />
           <Route
             path="/recommended"
             element={
