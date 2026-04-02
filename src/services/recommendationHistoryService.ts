@@ -40,17 +40,15 @@ export async function getLatestRecommendation(): Promise<Recommendation | null> 
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(1)
-    .single();
+    .maybeSingle();
 
   if (error) {
-    // PGRST116 = no rows found — not a real error
-    if (error.code === "PGRST116") {
-      console.debug(
-        "[RecommendationHistory] No previous recommendations found",
-      );
-      return null;
-    }
     console.error("[RecommendationHistory] Fetch error:", error);
+    return null;
+  }
+
+  if (!data) {
+    console.debug("[RecommendationHistory] No previous recommendations found");
     return null;
   }
 

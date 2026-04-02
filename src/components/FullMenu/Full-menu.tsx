@@ -271,7 +271,7 @@ const FullMenu: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedItem(null)}
-              className="fixed inset-0 flex items-center justify-center bg-black/50 z-100"
+              className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-100"
             >
               <ViewDish
                 item={selectedItem}
@@ -292,7 +292,7 @@ const FullMenu: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setFilterButton(false)}
-              className="fixed inset-0 flex items-center justify-center bg-black/50 z-40"
+              className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-40"
             >
               <Filters
                 onClose={() => setFilterButton(false)}

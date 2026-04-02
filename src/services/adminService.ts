@@ -90,7 +90,7 @@ export const adminService = {
       .from("eat_easy_profile")
       .select("is_admin")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
     if (error || !data) {
       isAdminCache = false;
