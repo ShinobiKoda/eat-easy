@@ -13,6 +13,7 @@ import AsideCard from "../onboarding/AsideCard";
 import { MotionContainer, fadeIn, popIn } from "../animations/motion";
 import { supabase } from "../../config/supabaseClient";
 import SEO from "../SEO";
+import { signInWithGoogle } from "../../services/googleAuth";
 
 function Login() {
   const {
@@ -27,6 +28,8 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleError, setGoogleError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const onLogin = async (data: z.infer<typeof LoginSchema>) => {
@@ -43,6 +46,17 @@ function Login() {
       setSubmitError(err?.message || "Failed to sign in. Please try again.");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setGoogleError(null);
+    setGoogleLoading(true);
+    try {
+      await signInWithGoogle();
+    } catch (err: any) {
+      setGoogleError(err?.message || "Failed to sign in with Google.");
+      setGoogleLoading(false);
     }
   };
 
@@ -160,6 +174,43 @@ function Login() {
                 "Sign In"
               )}
             </motion.button>
+
+            <div className="w-full flex items-center justify-between gap-6 mt-4">
+              <div className="h-0.5 bg-(--neutral-200) w-1/2 dark:bg-(--neutral-600)"></div>
+              <span className="text-(--neutral-400) dark:text-(--purple-4)">OR</span>
+              <div className="h-0.5 bg-(--neutral-200) w-1/2 dark:bg-(--neutral-600)"></div>
+            </div>
+
+            {googleError && (
+              <p className="text-sm text-red-500 text-center mt-1">
+                {googleError}
+              </p>
+            )}
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              type="button"
+              onClick={handleGoogleSignIn}
+              disabled={googleLoading}
+              className="mt-2 px-6 py-4 bg-white dark:bg-(--neutral-800) dark:border dark:border-(--purple-3) shadow-sm rounded-2xl w-full flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {googleLoading ? (
+                <ClipLoader color="#6C63FF" size={19} />
+              ) : (
+                <>
+                  <img
+                    src="/images/google-icon.svg"
+                    alt="Google Icon"
+                    className="w-5 h-5"
+                  />
+                  <span className="font-semibold text-base text-(--purple-2) dark:text-(--purple-5)">
+                    Continue with Google
+                  </span>
+                </>
+              )}
+            </motion.button>
+
             <p className="text-center mt-3 font-semibold text-(--neutral-500) dark:text-(--neutral-150)">
               Don't have an account?{" "}
               <Link to="/signup" className="text-(--yellow-1)">
