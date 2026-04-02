@@ -228,7 +228,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
                     className="py-3 min-w-20 space-y-2.5 text-center flex flex-col items-center bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]"
                   >
                     <img src={ingredient.ingimage} alt="" />
-                    <p className="text-[12px] text-(--neutral-600) dark:text-(--neutral-150) font-600">
+                    <p className="text-[12px] text-(--neutral-600) dark:text-(--neutral-150) font-600 p-1 w-18 truncate">
                       {ingredient.ingname}
                     </p>
                   </div>
@@ -319,7 +319,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
             </div>
 
             {/* comment */}
-            <div className="space-y-3 pb-8">
+            <div className="space-y-3 pb-12 lg:pb-0">
               <h1 className="text-(--neutral-600) text-[16px] md:text-[18px] dark:text-(--neutral-200) font-semibold">
                 Add a request
               </h1>

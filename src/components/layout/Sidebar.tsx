@@ -6,6 +6,7 @@ import { PiMedalThin } from "react-icons/pi";
 import { MdChevronRight } from "react-icons/md";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { TfiBook } from "react-icons/tfi";
+import { HiOutlineSparkles } from "react-icons/hi2";
 import { MdOutlineHistory } from "react-icons/md";
 import { IoLocationOutline, IoRestaurantOutline } from "react-icons/io5";
 import { IoIosHelpCircleOutline } from "react-icons/io";
@@ -20,7 +21,9 @@ import { useAuth } from "../../context/AuthContext";
 const Sidebar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 768 : false,
+  );
   const [selectedItem, setSelectedItem] = useState<number | null>(1);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -30,6 +33,18 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
 
   const { user } = useAuth();
+
+  // Reactively track viewport width so sidebar responds to resize
+  useEffect(() => {
+    const onResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      // Auto-close when resizing down to mobile
+      if (mobile) setIsOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   // Fetch username from Supabase session
   useEffect(() => {
@@ -65,14 +80,9 @@ const Sidebar: React.FC = () => {
   };
 
   const effectiveIsOpen = isOpen;
-  const activeMenu = openMenuId;
   const isSelfDispatch = useRef(false);
 
   const handleToggle = () => setIsOpen((v) => !v);
-
-  const toggleMenu = (id: number) => {
-    setOpenMenuId((prev) => (prev === id ? null : id));
-  };
 
   // Listen to global toggle
   useEffect(() => {
@@ -108,7 +118,7 @@ const Sidebar: React.FC = () => {
   // Sync selection with current route
   useEffect(() => {
     const path = location.pathname;
-    if (path.includes("/smart-assistant") || path.includes("/FullMenu") || path.includes("/welcome")) {
+    if (path.includes("/smart-assistant") || path.includes("/welcome")) {
       setSelectedItem(1);
     } else if (path.includes("/history")) {
       setSelectedItem(2);
@@ -118,6 +128,8 @@ const Sidebar: React.FC = () => {
       setSelectedItem(4);
     } else if (path.includes("/set-restaurant")) {
       setSelectedItem(6);
+    } else if (path.includes("/FullMenu")) {
+      setSelectedItem(7);
     } else if (path.includes("/admin")) {
       setSelectedItem(99);
     }
@@ -146,7 +158,7 @@ const Sidebar: React.FC = () => {
       <motion.aside
         initial={false}
         animate={{
-          x: typeof window !== "undefined" && window.innerWidth < 768
+          x: isMobile
             ? (effectiveIsOpen ? 0 : -260)
             : 0,
         }}
@@ -157,7 +169,7 @@ const Sidebar: React.FC = () => {
           transitionDuration: "300ms",
           transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
         }}
-        className={`aside h-screen rounded-r-3xl fixed left-0 top-0 z-50 w-[260px] ${effectiveIsOpen ? "md:w-[260px]" : "md:w-36"} md:translate-x-0`}
+        className={`aside h-screen rounded-r-3xl fixed left-0 top-0 z-50 w-[260px] ${effectiveIsOpen ? "md:w-[260px]" : "md:w-36"}`}
       >
         <motion.div
           onClick={handleToggle}
@@ -235,65 +247,57 @@ const Sidebar: React.FC = () => {
 
               <div className="w-full space-y-4 mt-4">
                 <div className="space-y-4">
-                  <motion.button
-                    onClick={() => {
-                      if (!isOpen) setIsOpen(true);
-                      toggleMenu(1);
-                      setSelectedItem(1);
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
-                  >
-                    <div
-                      className={`p-3 rounded-2xl ${
-                        selectedItem === 1 ? "bg-(--yellow-1)" : "bg-white/15"
-                      }`}
+                  <NavLink to="/smart-assistant">
+                    <motion.button
+                      onClick={() => setSelectedItem(1)}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
-                      <TfiBook className="text-white" size={24} />
-                    </div>
-                    <p
-                      className={`${
-                        selectedItem === 1
-                          ? "text-(--yellow-1) font-bold"
-                          : "text-white"
-                      } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
-                    >
-                      Food Menu
-                    </p>
-                  </motion.button>
-                  <AnimatePresence>
-                    {effectiveIsOpen && activeMenu === 1 && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className={`border-l-2 border-(--yellow-2) ml-[25px] space-y-4 pl-[33px] overflow-hidden ${
-                          activeMenu === 1
-                            ? "max-h-[300px] overflow-y-auto scrollbar-hidden"
-                            : ""
+                      <div
+                        className={`p-3 rounded-2xl ${
+                          selectedItem === 1 ? "bg-(--yellow-1)" : "bg-white/15"
                         }`}
                       >
-                        <NavLink to="/smart-assistant">
-                          <motion.div
-                            whileTap={{ scale: 0.95 }}
-                            className="cursor-pointer font-medium text-base text-white"
-                          >
-                            Smart Assistant
-                          </motion.div>
-                        </NavLink>
+                        <HiOutlineSparkles className="text-white" size={24} />
+                      </div>
+                      <p
+                        className={`${
+                          selectedItem === 1
+                            ? "text-(--yellow-1) font-bold"
+                            : "text-white"
+                        } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
+                      >
+                        Smart Assistant
+                      </p>
+                    </motion.button>
+                  </NavLink>
+                </div>
 
-                        <NavLink to="/FullMenu">
-                          <motion.div
-                            whileTap={{ scale: 0.95 }}
-                            className="cursor-pointer font-medium text-base text-white"
-                          >
-                            Full Menu
-                          </motion.div>
-                        </NavLink>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                <div className="space-y-4">
+                  <NavLink to="/FullMenu">
+                    <motion.button
+                      onClick={() => setSelectedItem(7)}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
+                    >
+                      <div
+                        className={`p-3 rounded-2xl ${
+                          selectedItem === 7 ? "bg-(--yellow-1)" : "bg-white/15"
+                        }`}
+                      >
+                        <TfiBook className="text-white" size={24} />
+                      </div>
+                      <p
+                        className={`${
+                          selectedItem === 7
+                            ? "text-(--yellow-1) font-bold"
+                            : "text-white"
+                        } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
+                      >
+                        Full Menu
+                      </p>
+                    </motion.button>
+                  </NavLink>
                 </div>
 
                 <div className="space-y-4">

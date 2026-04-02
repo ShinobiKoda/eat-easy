@@ -4,6 +4,24 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@layer base {
+  :root {
+    --scale-factor: calc(100vw / 375);
+  }
+
+  @media (min-width: 501px) {
+    :root {
+      --scale-factor: calc(100vw / 768);
+    }
+  }
+
+  @media (min-width: 1025px) {
+    :root {
+      --scale-factor: calc(100vw / 1440);
+    }
+  }
+}
+
 :root {
   --light-mode-bg: linear-gradient(
     90deg,
