@@ -4,7 +4,7 @@ import Profile from "/images/profile-img.png";
 import { IoIosLogOut } from "react-icons/io";
 import { PiMedalThin } from "react-icons/pi";
 import { MdChevronRight } from "react-icons/md";
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { TfiBook } from "react-icons/tfi";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { MdOutlineHistory } from "react-icons/md";
@@ -22,6 +22,7 @@ import { adminService } from "../../services/adminService";
 import { LuShieldCheck } from "react-icons/lu";
 import { useAuth } from "../../context/AuthContext";
 import { useOrder } from "../../hooks/useOrder";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -29,6 +30,7 @@ const Sidebar: React.FC = () => {
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" ? window.innerWidth < 768 : false,
   );
+  const navigate = useNavigate();
   const [selectedItem, setSelectedItem] = useState<number | null>(() => {
     const path = typeof window !== "undefined" ? window.location.pathname : "";
     if (path.includes("/smart-assistant") || path.includes("/welcome"))
@@ -45,11 +47,10 @@ const Sidebar: React.FC = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [username, setUsername] = useState<string>("");
   const [isAdmin, setIsAdmin] = useState(false);
-  const navigate = useNavigate();
+  const { orderItems, setShowOrder } = useOrder();
   const location = useLocation();
 
   const { user } = useAuth();
-  const { orderItems } = useOrder();
   const cartCount = orderItems.length;
 
   // Reactively track viewport width so sidebar responds to resize
@@ -152,8 +153,6 @@ const Sidebar: React.FC = () => {
       setSelectedItem(99);
     } else if (path.includes("/profile")) {
       setSelectedItem(null);
-    } else if (path.includes("/cart")) {
-      setSelectedItem(8);
     }
   }, [location.pathname]);
 
@@ -322,37 +321,38 @@ const Sidebar: React.FC = () => {
                   </NavLink>
                 </div>
 
-                {/* Cart — mobile only, navigates to /cart page */}
-                <div className="space-y-4 md:hidden">
-                  <NavLink to="/cart">
-                    <motion.button
-                      onClick={() => setSelectedItem(8)}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
+                {/* Cart — opens cart modal on all screen sizes */}
+                <div className="space-y-4">
+                  <motion.button
+                    onClick={() => {
+                      setSelectedItem(8);
+                      setShowOrder(true);
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
+                  >
+                    <div
+                      className={`p-3 rounded-2xl relative ${
+                        selectedItem === 8 ? "bg-(--yellow-1)" : "bg-white/15"
+                      }`}
                     >
-                      <div
-                        className={`p-3 rounded-2xl relative ${
-                          selectedItem === 8 ? "bg-(--yellow-1)" : "bg-white/15"
-                        }`}
-                      >
-                        <IoCartOutline className="text-white" size={24} />
-                      </div>
-                      <p
-                        className={`${
-                          selectedItem === 8
-                            ? "text-(--yellow-1) font-bold"
-                            : "text-white"
-                        } text-base ${effectiveIsOpen ? "flex items-center gap-2" : "hidden"}`}
-                      >
-                        My Cart
-                        {cartCount > 0 && (
-                          <span className="ml-auto px-2 py-0.5 rounded-full bg-(--orange-1) text-white text-[11px] font-bold">
-                            {cartCount}
-                          </span>
-                        )}
-                      </p>
-                    </motion.button>
-                  </NavLink>
+                      <IoCartOutline className="text-white" size={24} />
+                    </div>
+                    <p
+                      className={`${
+                        selectedItem === 8
+                          ? "text-(--yellow-1) font-bold"
+                          : "text-white"
+                      } text-base ${effectiveIsOpen ? "flex items-center gap-2" : "hidden"}`}
+                    >
+                      My Cart
+                      {cartCount > 0 && (
+                        <span className="ml-auto px-2 py-0.5 rounded-full bg-(--orange-1) text-white text-[11px] font-bold">
+                          {cartCount}
+                        </span>
+                      )}
+                    </p>
+                  </motion.button>
                 </div>
 
                 <div className="space-y-4">
