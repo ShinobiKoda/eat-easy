@@ -132,6 +132,8 @@ const Sidebar: React.FC = () => {
       setSelectedItem(7);
     } else if (path.includes("/admin")) {
       setSelectedItem(99);
+    } else if (path.includes("/profile")) {
+      setSelectedItem(null);
     }
   }, [location.pathname]);
 
@@ -235,7 +237,9 @@ const Sidebar: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   className="cursor-pointer font-medium text-sm underline outline-none border-none"
                 >
-                  View Profile
+                  <NavLink to="/profile" className="text-white">
+                    View Profile
+                  </NavLink>
                 </motion.button>
               </div>
             </div>

@@ -33,6 +33,7 @@ import Checkout1 from "./components/Checkout/Checkout1";
 import Rewards from "./components/dashboard/Rewards";
 import History from "./components/History";
 import AdminDashboard from "./components/admin/AdminDashboard";
+import Profile from "./components/profile/Profile";
 import { RestaurantProvider } from "./context/RestaurantContext";
 import { OrderProvider } from "./context/OrderContext";
 
@@ -309,6 +310,14 @@ function App() {
               <AdminRoute>
                 <AdminDashboard />
               </AdminRoute>
+            }
+          />
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
             }
           />
         </Routes>
