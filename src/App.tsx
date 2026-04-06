@@ -1,41 +1,41 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import Splash from "./components/onboarding/Splash";
-import GetStarted from "./components/onboarding/GetStarted";
-import SignUpMethod from "./components/auth/SignUpMethod";
-import Signup from "./components/auth/SignUp";
-import Login from "./components/auth/Login";
-import ForgotPassword from "./components/auth/ForgotPassword";
-import Welcome from "./components/dashboard/Welcome";
-import Virtual from "./components/smart/Virtual";
-import Recommend from "./components/smart/Recommend";
-import Recommended from "./components/smart/Recommended";
-import SmartAssistant from "./components/smart/SmartAssistant";
-import FullMenu from "./components/FullMenu/Full-menu";
-import OrderStatus from "./components/dashboard/OrderStatus";
-import Step1 from "./components/smart/Step1";
-import Step2Budget from "./components/smart/Step2Budget";
-import Step3Party from "./components/smart/Step3Party";
-import Step4FoodType from "./components/smart/Step4FoodType";
-import Generating from "./components/smart/Generating";
+import Splash from "./pages/Splash";
+import GetStarted from "./pages/GetStarted";
+import SignUpMethod from "./pages/auth/SignUpMethod";
+import Signup from "./pages/auth/SignUp";
+import Login from "./pages/auth/Login";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import Welcome from "./pages/Welcome";
+import Virtual from "./pages/VirtualAssistant/VirtualAssitantHomepage";
+import Recommend from "./components/AI-Assistant/Recommend";
+import Recommended from "./pages/VirtualAssistant/ShowVirtualAssistantRecommendations";
+import SmartAssistant from "./pages/VirtualAssistant/VirtualAssistantWelcomeBackPage";
+import FullMenu from "./pages/FullMenu";
+import OrderStatus from "./pages/OrderStatus";
+import Step1 from "./pages/VirtualAssistant/ChooseFeeling";
+import Step2Budget from "./pages/VirtualAssistant/ChooseBudget";
+import Step3Party from "./pages/VirtualAssistant/ChoosePopulation";
+import Step4FoodType from "./pages/VirtualAssistant/ChooseFoodType";
+import Generating from "./pages/VirtualAssistant/GenerateAIRecommendations";
 import { useTheme } from "./hooks/useTheme";
-import ConfirmLink from "./components/auth/ConfirmLink";
-import ResetEmailSent from "./components/auth/ResetEmailSent";
-import ResetPassword from "./components/auth/ResetPassword";
-import SetLocation from "./components/onboarding/SetLocation";
+import ConfirmLink from "./pages/auth/ConfirmLink";
+import ResetEmailSent from "./pages/auth/ResetEmailSent";
+import ResetPassword from "./pages/auth/ResetPassword";
+import SetLocation from "./pages/SetLocation";
 import Sidebar from "./components/layout/Sidebar";
-import SelectRestaurant from "./components/onboarding/SelectRestaurant";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
-import PublicRoute from "./components/auth/PublicRoute";
-import AdminRoute from "./components/auth/AdminRoute";
-import SetCustomLocation from "./components/onboarding/SetCustomLocation";
-import Checkout1 from "./components/Checkout/Checkout1";
-import Rewards from "./components/dashboard/Rewards";
-import History from "./components/History";
-import AdminDashboard from "./components/admin/AdminDashboard";
-import Profile from "./components/profile/Profile";
-import Help from "./components/dashboard/Help";
-import NotFound from "./components/NotFound";
+import SelectRestaurant from "./pages/SelectRestaurant";
+import ProtectedRoute from "./pages/auth/ProtectedRoute";
+import PublicRoute from "./pages/auth/PublicRoute";
+import AdminRoute from "./pages/auth/AdminRoute";
+import SetCustomLocation from "./pages/SetCustomLocation";
+import Checkout1 from "./pages/OrderCheckout";
+import Rewards from "./pages/Rewards";
+import History from "./pages/OrderHistory";
+import AdminDashboard from "./pages/AdminDashboard";
+import Profile from "./pages/Profile";
+import Help from "./pages/Help";
+import NotFound from "./pages/NotFound";
 
 import { RestaurantProvider } from "./context/RestaurantContext";
 import { OrderProvider } from "./context/OrderContext";
@@ -64,7 +64,6 @@ function App() {
     "/verify-url",
     "/reset-email-sent",
     "/reset-password",
-
   ]);
   const excludedPrefixes: string[] = [
     // Add future sections to exclude by prefix here, e.g. "/auth"
@@ -122,241 +121,240 @@ function App() {
     <RestaurantProvider>
       <OrderProvider>
         <div className="w-full min-h-screen" style={{ backgroundImage }}>
-      {showSidebar && <Sidebar />}
-      <div
-        style={{
-          willChange: "margin-left",
-          transitionProperty: "margin-left",
-          transitionDuration: "300ms",
-          transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-        }}
-        className={`${
-          showSidebar ? (sidebarOpen ? "md:ml-[260px]" : "md:ml-36") : ""
-        }`}
-      >
-        <Routes>
-          <Route path="/" element={<Splash />} />
-          <Route path="/get-started" element={<GetStarted />} />
+          {showSidebar && <Sidebar />}
+          <div
+            style={{
+              willChange: "margin-left",
+              transitionProperty: "margin-left",
+              transitionDuration: "300ms",
+              transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
+            className={`${
+              showSidebar ? (sidebarOpen ? "md:ml-[260px]" : "md:ml-36") : ""
+            }`}
+          >
+            <Routes>
+              <Route path="/" element={<Splash />} />
+              <Route path="/get-started" element={<GetStarted />} />
 
-          <Route
-            path="/method"
-            element={
-              <PublicRoute>
-                <SignUpMethod />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <PublicRoute>
-                <Signup />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/forgot-password"
-            element={
-              <PublicRoute>
-                <ForgotPassword />
-              </PublicRoute>
-            }
-          />
-          <Route path="/verify-url" element={<ConfirmLink />} />
-          <Route
-            path="/reset-email-sent"
-            element={
-              <PublicRoute>
-                <ResetEmailSent />
-              </PublicRoute>
-            }
-          />
-          <Route path="/reset-password" element={<ResetPassword />} />
+              <Route
+                path="/method"
+                element={
+                  <PublicRoute>
+                    <SignUpMethod />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/signup"
+                element={
+                  <PublicRoute>
+                    <Signup />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <PublicRoute>
+                    <Login />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/forgot-password"
+                element={
+                  <PublicRoute>
+                    <ForgotPassword />
+                  </PublicRoute>
+                }
+              />
+              <Route path="/verify-url" element={<ConfirmLink />} />
+              <Route
+                path="/reset-email-sent"
+                element={
+                  <PublicRoute>
+                    <ResetEmailSent />
+                  </PublicRoute>
+                }
+              />
+              <Route path="/reset-password" element={<ResetPassword />} />
 
-          {/* Protected routes - require authentication */}
-          <Route
-            path="/set-location"
-            element={
-              <ProtectedRoute>
-                <SetLocation />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/set-restaurant"
-            element={
-              <ProtectedRoute>
-                <SelectRestaurant />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/welcome"
-            element={
-              <ProtectedRoute>
-                <Welcome />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/set-custom-location"
-            element={
-              <ProtectedRoute>
-                <SetCustomLocation />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/virtual"
-            element={
-              <ProtectedRoute>
-                <Virtual />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/recommend"
-            element={
-              <ProtectedRoute>
-                <Recommend />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/step1"
-            element={
-              <ProtectedRoute>
-                <Step1 />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/step2-budget"
-            element={
-              <ProtectedRoute>
-                <Step2Budget />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/step3-party"
-            element={
-              <ProtectedRoute>
-                <Step3Party />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/step4-food-type"
-            element={
-              <ProtectedRoute>
-                <Step4FoodType />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/generating"
-            element={
-              <ProtectedRoute>
-                <Generating />
-              </ProtectedRoute>
-            }
-          />
+              {/* Protected routes - require authentication */}
+              <Route
+                path="/set-location"
+                element={
+                  <ProtectedRoute>
+                    <SetLocation />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/set-restaurant"
+                element={
+                  <ProtectedRoute>
+                    <SelectRestaurant />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/welcome"
+                element={
+                  <ProtectedRoute>
+                    <Welcome />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/set-custom-location"
+                element={
+                  <ProtectedRoute>
+                    <SetCustomLocation />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/virtual"
+                element={
+                  <ProtectedRoute>
+                    <Virtual />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/recommend"
+                element={
+                  <ProtectedRoute>
+                    <Recommend />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/step1"
+                element={
+                  <ProtectedRoute>
+                    <Step1 />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/step2-budget"
+                element={
+                  <ProtectedRoute>
+                    <Step2Budget />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/step3-party"
+                element={
+                  <ProtectedRoute>
+                    <Step3Party />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/step4-food-type"
+                element={
+                  <ProtectedRoute>
+                    <Step4FoodType />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/generating"
+                element={
+                  <ProtectedRoute>
+                    <Generating />
+                  </ProtectedRoute>
+                }
+              />
 
-          <Route path="*" element={<NotFound />} />
-          <Route
-            path="/recommended"
-            element={
-              <ProtectedRoute>
-                <Recommended />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/smart-assistant"
-            element={
-              <ProtectedRoute>
-                <SmartAssistant />
-              </ProtectedRoute>
-            }
-          />
+              <Route path="*" element={<NotFound />} />
+              <Route
+                path="/recommended"
+                element={
+                  <ProtectedRoute>
+                    <Recommended />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/smart-assistant"
+                element={
+                  <ProtectedRoute>
+                    <SmartAssistant />
+                  </ProtectedRoute>
+                }
+              />
 
-          <Route
-            path="FullMenu"
-            element={
-              <ProtectedRoute>
-                <FullMenu />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="OrderStatus"
-            element={
-              <ProtectedRoute>
-                <OrderStatus />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="Checkout"
-            element={
-              <ProtectedRoute>
-                <Checkout1 />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="rewards"
-            element={
-              <ProtectedRoute>
-                <Rewards />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="history"
-            element={
-              <ProtectedRoute>
-                <History />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="admin"
-            element={
-              <AdminRoute>
-                <AdminDashboard />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="help"
-            element={
-              <ProtectedRoute>
-                <Help />
-              </ProtectedRoute>
-            }
-          />
-
-        </Routes>
-      </div>
-    </div>
+              <Route
+                path="FullMenu"
+                element={
+                  <ProtectedRoute>
+                    <FullMenu />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="OrderStatus"
+                element={
+                  <ProtectedRoute>
+                    <OrderStatus />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="Checkout"
+                element={
+                  <ProtectedRoute>
+                    <Checkout1 />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="rewards"
+                element={
+                  <ProtectedRoute>
+                    <Rewards />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="history"
+                element={
+                  <ProtectedRoute>
+                    <History />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin"
+                element={
+                  <AdminRoute>
+                    <AdminDashboard />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="help"
+                element={
+                  <ProtectedRoute>
+                    <Help />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </div>
       </OrderProvider>
     </RestaurantProvider>
   );
