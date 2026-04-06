@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
+import Loader from "../../components/Loader";
 import { useAuth } from "../../context/AuthContext";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -7,11 +7,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
   if (loading) {
-    return (
-      <div className="w-full min-h-screen flex items-center justify-center">
-        <ClipLoader color="var(--purple-2)" size={40} />
-      </div>
-    );
+    return <Loader />;
   }
 
   if (!user) {

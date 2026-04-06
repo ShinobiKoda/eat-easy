@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { adminService } from "../../services/adminService";
-import { ClipLoader } from "react-spinners";
+import Loader from "../../components/Loader";
 
 const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
@@ -25,11 +25,7 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="w-full min-h-screen flex items-center justify-center">
-        <ClipLoader color="var(--purple-2)" size={40} />
-      </div>
-    );
+    return <Loader />;
   }
 
   // If not admin, redirect them to the home dashboard

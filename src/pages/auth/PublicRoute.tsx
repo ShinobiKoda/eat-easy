@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { supabase } from "../../config/supabaseClient";
-import { ClipLoader } from "react-spinners";
+import Loader from "../../components/Loader";
 
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
@@ -26,11 +26,7 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="w-full min-h-screen flex items-center justify-center">
-        <ClipLoader color="var(--purple-2)" size={40} />
-      </div>
-    );
+    return <Loader />;
   }
 
   if (authenticated) {
