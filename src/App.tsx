@@ -37,6 +37,7 @@ import Profile from "./pages/Profile";
 import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
 import OrderReadyToast from "./components/OrderReadyToast";
+import OrderBatchMonitor from "./components/OrderBatchMonitor";
 
 import { RestaurantProvider } from "./context/RestaurantContext";
 import { OrderProvider } from "./context/OrderContext";
@@ -44,10 +45,8 @@ import { OrderProvider } from "./context/OrderContext";
 function App() {
   const location = useLocation();
   useEffect(() => {
-    // scroll immediately to top when pathname changes
     window.scrollTo({ top: 0 });
-    // Always clear any stale overflow-hidden left by modals/overlays
-    // that didn't clean up before the route changed
+
     document.body.classList.remove("overflow-hidden");
     document.body.style.overflow = "";
   }, [location.pathname]);
@@ -122,6 +121,7 @@ function App() {
     <RestaurantProvider>
       <OrderProvider>
         <div className="w-full min-h-screen" style={{ backgroundImage }}>
+          <OrderBatchMonitor />
           <OrderReadyToast />
           {showSidebar && <Sidebar />}
           <div

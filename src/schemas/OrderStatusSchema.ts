@@ -9,8 +9,8 @@ export type ContentStatus = {
 };
 
 export const OrderStatusSchema = (restaurantId: string | null = null) => {
-  const TOTAL_TIME = 2 * 60 * 1000; // 2 mins
-  const MID_TIME = 1 * 60 * 1000; // 1 mins
+  const TOTAL_TIME = 2 * 60 * 1000; 
+  const MID_TIME = 1 * 60 * 1000;
 
   const batchesKey = getRestaurantStorageKey(restaurantId, "eat-easy-order-batches");
   const lastOrderKey = getRestaurantStorageKey(restaurantId, "eat-easy-last-order");
@@ -46,28 +46,33 @@ export const OrderStatusSchema = (restaurantId: string | null = null) => {
   const [showSubmit, setShowSubmit] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number>(0);
 
+
   useEffect(() => {
-    const updateLoop = () => {
+    const readState = () => {
       const raw = localStorage.getItem(batchesKey);
       if (!raw) {
         setBatches([]);
         return;
       }
 
-      let currentBatches = JSON.parse(raw);
-      let changed = false;
+      let currentBatches: any[];
+      try {
+        currentBatches = JSON.parse(raw);
+      } catch {
+        setBatches([]);
+        return;
+      }
 
       // Find the active (preparing) batch
       const prepIdx = currentBatches.findIndex((b: any) => b.status === "preparing");
-      
+
       if (prepIdx !== -1) {
         const activeBatch = currentBatches[prepIdx];
         const elapsed = Date.now() - activeBatch.timerStart;
         const remaining = Math.max(0, Math.floor((TOTAL_TIME - elapsed) / 1000));
-        
+
         setTimeLeft(remaining);
 
-        // Update overall UI state based on the active batch
         if (elapsed <= MID_TIME) {
           setCurrentStatus(status.start);
           setShowRecommend(true);
@@ -76,64 +81,25 @@ export const OrderStatusSchema = (restaurantId: string | null = null) => {
           setCurrentStatus(status.mid);
           setShowRecommend(true);
           setShowSubmit(false);
-        } else {
-          // Batch finished!
-          currentBatches[prepIdx].status = "ready";
-          changed = true;
-
-          // Notify the app that a batch is ready (for ding sound + toast)
-          window.dispatchEvent(new CustomEvent("order-batch-ready"));
-
-          // Check for next pending batch
-          const nextPendingIdx = currentBatches.findIndex((b: any) => b.status === "pending");
-          if (nextPendingIdx !== -1) {
-            currentBatches[nextPendingIdx].status = "preparing";
-            currentBatches[nextPendingIdx].timerStart = Date.now();
-          }
         }
       } else {
-        // No preparing batch. Look for pending to start one.
-        const nextPendingIdx = currentBatches.findIndex((b: any) => b.status === "pending");
-        if (nextPendingIdx !== -1) {
-          currentBatches[nextPendingIdx].status = "preparing";
-          currentBatches[nextPendingIdx].timerStart = Date.now();
-          changed = true;
-        } else {
-          // All done or none at all
-          const anyReady = currentBatches.some((b: any) => b.status === "ready");
-          if (anyReady) {
-            setCurrentStatus(status.end);
-            setShowSubmit(true);
-            setShowRecommend(false);
-            setTimeLeft(0);
-          }
+        // No preparing batch — check if everything is done
+        const anyPending = currentBatches.some((b: any) => b.status === "pending");
+        const anyReady = currentBatches.some((b: any) => b.status === "ready");
+
+        if (!anyPending && anyReady) {
+          setCurrentStatus(status.end);
+          setShowSubmit(true);
+          setShowRecommend(false);
+          setTimeLeft(0);
         }
-      }
-
-      if (changed) {
-        localStorage.setItem(batchesKey, JSON.stringify(currentBatches));
-        // Also update the flattened order for Checkout page
-        const allItems = currentBatches.flatMap((b: any) => b.items);
-        const totalSubtotal = currentBatches.reduce((acc: number, b: any) => acc + b.subtotal, 0);
-        const totalTax = currentBatches.reduce((acc: number, b: any) => acc + b.tax, 0);
-        const totalTotal = currentBatches.reduce((acc: number, b: any) => acc + (b.total || 0), 0);
-        const totalQty = currentBatches.reduce((acc: number, b: any) => acc + b.qty, 0);
-
-        const combinedOrder = {
-          items: allItems,
-          subtotal: totalSubtotal,
-          tax: totalTax,
-          total: totalTotal,
-          qty: totalQty
-        };
-        localStorage.setItem(lastOrderKey, JSON.stringify(combinedOrder));
       }
 
       setBatches(currentBatches);
     };
 
-    const interval = setInterval(updateLoop, 1000);
-    updateLoop(); // Initial call
+    const interval = setInterval(readState, 1000);
+    readState(); // Initial call
 
     return () => clearInterval(interval);
   }, [batchesKey, lastOrderKey]);

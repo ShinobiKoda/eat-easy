@@ -127,10 +127,10 @@ const OrderStatus: React.FC = () => {
                   >
                     <div className="space-y-3 pt-4">
                       {batches.length > 0 ? (
-                        batches.flatMap((batch: any) =>
-                          batch.items.map((item: any) => (
+                        batches.flatMap((batch: any, batchIdx: number) =>
+                          batch.items.map((item: any, itemIdx: number) => (
                             <div
-                              key={`${batch.id}-${item.id}`}
+                              key={`${batch.id}-${batchIdx}-${item.id}-${itemIdx}`}
                               className={`dark:text-[#FFFFFF] flex justify-between items-center gap-5 ${batch.status === "pending" ? "opacity-45" : ""}`}
                             >
                               <div className="flex items-center gap-2">

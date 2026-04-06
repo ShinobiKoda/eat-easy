@@ -63,9 +63,23 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     localStorage.setItem(key, JSON.stringify(orderItems));
   }, [orderItems, getStorageKey]);
 
-  // Add a dish to order
+  // Add a dish to order — merge into existing cart item if same dish
   const addToOrder = (order: PropType) => {
-    setOrderItems((prev) => [...prev, order]);
+    setOrderItems((prev) => {
+      const existingIdx = prev.findIndex((o) => o.id === order.id);
+      if (existingIdx !== -1) {
+        // Increment qty on the existing item
+        const updated = [...prev];
+        const existing = updated[existingIdx] as any;
+        updated[existingIdx] = {
+          ...existing,
+          qty: (existing.qty ?? 1) + ((order as any).qty ?? 1),
+        };
+        return updated;
+      }
+      // New item — add with qty
+      return [...prev, { ...order, qty: (order as any).qty ?? 1 } as any];
+    });
     setShowOrder(true);
   };
 
@@ -87,27 +101,69 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       const existingBatchesRaw = localStorage.getItem(batchesKey);
       const existingBatches = existingBatchesRaw ? JSON.parse(existingBatchesRaw) : [];
 
-      const isAnyPreparing = existingBatches.some((b: any) => b.status === "preparing");
-      
-      const newBatch = {
-        id: Date.now().toString(),
-        items: sent.items,
-        subtotal: sent.subtotal,
-        tax: sent.tax,
-        total: sent.total,
-        qty: sent.qty,
-        status: !isAnyPreparing ? "preparing" : "pending",
-        timerStart: !isAnyPreparing ? Date.now() : null,
-      };
+      // Look for an existing pending batch we can merge into
+      const pendingIdx = existingBatches.findIndex((b: any) => b.status === "pending");
 
-      const updatedBatches = [...existingBatches, newBatch];
+      let updatedBatches: any[];
+
+      if (pendingIdx !== -1) {
+        // Merge new items into the pending batch
+        const pending = existingBatches[pendingIdx];
+        const mergedItems = [...pending.items];
+
+        for (const newItem of sent.items) {
+          const existingItemIdx = mergedItems.findIndex((i: any) => i.id === newItem.id);
+          if (existingItemIdx !== -1) {
+            // Same dish — sum quantities
+            mergedItems[existingItemIdx] = {
+              ...mergedItems[existingItemIdx],
+              qty: (mergedItems[existingItemIdx].qty ?? 1) + (newItem.qty ?? 1),
+            };
+          } else {
+            mergedItems.push(newItem);
+          }
+        }
+
+        const mergedSubtotal = pending.subtotal + sent.subtotal;
+        const mergedTax = pending.tax + sent.tax;
+        const mergedTotal = (pending.total || 0) + sent.total;
+        const mergedQty = pending.qty + sent.qty;
+
+        existingBatches[pendingIdx] = {
+          ...pending,
+          items: mergedItems,
+          subtotal: mergedSubtotal,
+          tax: mergedTax,
+          total: mergedTotal,
+          qty: mergedQty,
+        };
+
+        updatedBatches = existingBatches;
+      } else {
+        // No pending batch — create a new one
+        const isAnyPreparing = existingBatches.some((b: any) => b.status === "preparing");
+
+        const newBatch = {
+          id: Date.now().toString(),
+          items: sent.items,
+          subtotal: sent.subtotal,
+          tax: sent.tax,
+          total: sent.total,
+          qty: sent.qty,
+          status: !isAnyPreparing ? "preparing" : "pending",
+          timerStart: !isAnyPreparing ? Date.now() : null,
+        };
+
+        updatedBatches = [...existingBatches, newBatch];
+      }
+
       localStorage.setItem(batchesKey, JSON.stringify(updatedBatches));
 
       // For backward compatibility (Checkout page uses this)
       const allItems = updatedBatches.flatMap((b: any) => b.items);
       const totalSubtotal = updatedBatches.reduce((acc: number, b: any) => acc + b.subtotal, 0);
       const totalTax = updatedBatches.reduce((acc: number, b: any) => acc + b.tax, 0);
-      const totalTotal = updatedBatches.reduce((acc: number, b: any) => acc + b.total, 0);
+      const totalTotal = updatedBatches.reduce((acc: number, b: any) => acc + (b.total || 0), 0);
       const totalQty = updatedBatches.reduce((acc: number, b: any) => acc + b.qty, 0);
 
       const combinedOrder = {
@@ -115,7 +171,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         subtotal: totalSubtotal,
         tax: totalTax,
         total: totalTotal,
-        qty: totalQty
+        qty: totalQty,
       };
       localStorage.setItem(lastOrderKey, JSON.stringify(combinedOrder));
 
