@@ -36,6 +36,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Profile from "./pages/Profile";
 import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
+import OrderReadyToast from "./components/OrderReadyToast";
 
 import { RestaurantProvider } from "./context/RestaurantContext";
 import { OrderProvider } from "./context/OrderContext";
@@ -121,6 +122,7 @@ function App() {
     <RestaurantProvider>
       <OrderProvider>
         <div className="w-full min-h-screen" style={{ backgroundImage }}>
+          <OrderReadyToast />
           {showSidebar && <Sidebar />}
           <div
             style={{

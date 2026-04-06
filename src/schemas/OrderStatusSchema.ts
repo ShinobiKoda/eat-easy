@@ -81,6 +81,9 @@ export const OrderStatusSchema = (restaurantId: string | null = null) => {
           currentBatches[prepIdx].status = "ready";
           changed = true;
 
+          // Notify the app that a batch is ready (for ding sound + toast)
+          window.dispatchEvent(new CustomEvent("order-batch-ready"));
+
           // Check for next pending batch
           const nextPendingIdx = currentBatches.findIndex((b: any) => b.status === "pending");
           if (nextPendingIdx !== -1) {
