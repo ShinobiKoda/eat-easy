@@ -35,10 +35,10 @@ export function PriceSelector({
 
   // Update gradient position when selection changes
   useEffect(() => {
-    if (selectedIndex >= 0 && circleRefs.current[selectedIndex] && containerRef.current) {
-      const circleElement = circleRefs.current[selectedIndex];
-      const containerElement = containerRef.current;
-      
+    const circleElement = circleRefs.current[selectedIndex];
+    const containerElement = containerRef.current;
+
+    if (selectedIndex >= 0 && circleElement && containerElement) {
       const circleRect = circleElement.getBoundingClientRect();
       const containerRect = containerElement.getBoundingClientRect();
       

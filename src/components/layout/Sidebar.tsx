@@ -14,6 +14,7 @@ import {
   IoCartOutline,
 } from "react-icons/io5";
 import { IoIosHelpCircleOutline } from "react-icons/io";
+import { RiShoppingBag3Line } from "react-icons/ri";
 import ThemeSwitchButton from "../ThemeSwitchButton";
 import { useTheme } from "../../hooks/useTheme";
 import LogoutModal from "../LogoutModal";
@@ -41,6 +42,7 @@ const Sidebar: React.FC = () => {
     if (path.includes("/rewards")) return 4;
     if (path.includes("/set-restaurant")) return 6;
     if (path.includes("/admin")) return 99;
+    if (path.includes("/OrderStatus") || path.includes("/orderStatus")) return 8;
     return null;
   });
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -153,6 +155,8 @@ const Sidebar: React.FC = () => {
       setSelectedItem(99);
     } else if (path.includes("/help")) {
       setSelectedItem(5);
+    } else if (path.includes("/OrderStatus") || path.includes("/orderStatus")) {
+      setSelectedItem(8);
     } else if (path.includes("/profile")) {
       setSelectedItem(null);
     }
@@ -323,31 +327,68 @@ const Sidebar: React.FC = () => {
                   </NavLink>
                 </div>
 
-                {/* Cart — opens cart modal on all screen sizes */}
-                <div className="space-y-4">
-                  <motion.button
-                    onClick={() => {
-                      setShowOrder(true);
-                      setIsOpen(false);
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
-                  >
-                    <div className="p-3 rounded-2xl relative bg-white/15">
-                      <IoCartOutline className="text-white" size={24} />
-                    </div>
-                    <p
-                      className={`text-white text-base ${effectiveIsOpen ? "flex items-center gap-2" : "hidden"}`}
+                {/* Cart — only visible on mobile */}
+                {isMobile && (
+                  <div className="space-y-4">
+                    <motion.button
+                      onClick={() => {
+                        setShowOrder(true);
+                        setIsOpen(false);
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
-                      My Cart
-                      {cartCount > 0 && (
-                        <span className="ml-auto px-2 py-0.5 rounded-full bg-(--orange-1) text-white text-[11px] font-bold">
-                          {cartCount}
-                        </span>
-                      )}
-                    </p>
-                  </motion.button>
-                </div>
+                      <div className="p-3 rounded-2xl relative bg-white/15">
+                        <IoCartOutline className="text-white" size={24} />
+                      </div>
+                      <p
+                        className={`text-white text-base ${effectiveIsOpen ? "flex items-center gap-2" : "hidden"}`}
+                      >
+                        My Cart
+                        {cartCount > 0 && (
+                          <span className="ml-auto px-2 py-0.5 rounded-full bg-(--orange-1) text-white text-[11px] font-bold">
+                            {cartCount}
+                          </span>
+                        )}
+                      </p>
+                    </motion.button>
+                  </div>
+                )}
+
+                {/* Order Status — only visible on mobile */}
+                {isMobile && (
+                  <div className="space-y-4">
+                    <NavLink to="/OrderStatus">
+                      <motion.button
+                        onClick={() => {
+                          setSelectedItem(8);
+                          setIsOpen(false);
+                        }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
+                      >
+                        <div
+                          className={`p-3 rounded-2xl ${
+                            selectedItem === 8
+                              ? "bg-(--yellow-1)"
+                              : "bg-white/15"
+                          }`}
+                        >
+                          <RiShoppingBag3Line className="text-white" size={24} />
+                        </div>
+                        <p
+                          className={`${
+                            selectedItem === 8
+                              ? "text-(--yellow-1) font-bold"
+                              : "text-white"
+                          } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
+                        >
+                          Order Status
+                        </p>
+                      </motion.button>
+                    </NavLink>
+                  </div>
+                )}
 
                 <div className="space-y-4">
                   <NavLink to="/history">

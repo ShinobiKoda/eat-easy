@@ -5,11 +5,9 @@ import { RiDeleteBinLine, RiShoppingBag3Line } from "react-icons/ri";
 import { FaPlus, FaArrowRight } from "react-icons/fa6";
 import { LiaTimesSolid } from "react-icons/lia";
 import { HiOutlineLocationMarker } from "react-icons/hi";
-import { MdOutlineDeliveryDining } from "react-icons/md";
 import StarHalf from "/images/star-half-icon.png";
 import StarFull from "/images/star.svg";
 import { useRestaurant } from "../../context/RestaurantContext";
-import { useNavigate } from "react-router-dom";
 
 export type ViewOrderProps = {
   items: PropType[];
@@ -25,7 +23,6 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
   onSend,
 }) => {
   const { selectedRestaurant } = useRestaurant();
-  const navigate = useNavigate();
   const restaurantName = selectedRestaurant?.name || "Gram Bistro";
   // subtotal: sum of item prices (you can expand to include toppings/counts)
   const orderTotal = items.reduce((sum, t) => sum + (t.price || 0), 0);
@@ -279,24 +276,6 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
               size={18}
               className="group-hover:translate-x-3 transition-all duration-300 text-[#FFFFFF]"
             />
-          </motion.button>
-
-          {/* Order Status shortcut — mobile only */}
-          <motion.button
-            onClick={() => {
-              onClose();
-              navigate("/orderStatus");
-            }}
-            whileTap={{ scale: 0.96 }}
-            className="sm:hidden group rounded-2xl border-2 border-(--purple-2) p-3.5 cursor-pointer w-full flex items-center justify-center gap-2"
-          >
-            <MdOutlineDeliveryDining
-              size={20}
-              className="text-(--purple-2) dark:text-(--purple-5)"
-            />
-            <p className="text-[15px] text-(--purple-2) dark:text-(--purple-5) font-semibold">
-              View Order Status
-            </p>
           </motion.button>
         </div>
       )}
