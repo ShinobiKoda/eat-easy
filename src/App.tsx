@@ -1,46 +1,49 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import Splash from "./pages/Splash";
-import GetStarted from "./pages/GetStarted";
-import SignUpMethod from "./pages/auth/SignUpMethod";
-import Signup from "./pages/auth/SignUp";
-import Login from "./pages/auth/Login";
-import ForgotPassword from "./pages/auth/ForgotPassword";
-import Welcome from "./pages/Welcome";
-import Virtual from "./pages/VirtualAssistant/VirtualAssitantHomepage";
-import Recommend from "./components/AI-Assistant/Recommend";
-import Recommended from "./pages/VirtualAssistant/ShowVirtualAssistantRecommendations";
-import SmartAssistant from "./pages/VirtualAssistant/VirtualAssistantWelcomeBackPage";
-import FullMenu from "./pages/FullMenu";
-import OrderStatus from "./pages/OrderStatus";
-import Step1 from "./pages/VirtualAssistant/ChooseFeeling";
-import Step2Budget from "./pages/VirtualAssistant/ChooseBudget";
-import Step3Party from "./pages/VirtualAssistant/ChoosePopulation";
-import Step4FoodType from "./pages/VirtualAssistant/ChooseFoodType";
-import Generating from "./pages/VirtualAssistant/GenerateAIRecommendations";
 import { useTheme } from "./hooks/useTheme";
-import ConfirmLink from "./pages/auth/ConfirmLink";
-import ResetEmailSent from "./pages/auth/ResetEmailSent";
-import ResetPassword from "./pages/auth/ResetPassword";
-import SetLocation from "./pages/SetLocation";
 import Sidebar from "./components/layout/Sidebar";
-import SelectRestaurant from "./pages/SelectRestaurant";
 import ProtectedRoute from "./pages/auth/ProtectedRoute";
 import PublicRoute from "./pages/auth/PublicRoute";
 import AdminRoute from "./pages/auth/AdminRoute";
-import SetCustomLocation from "./pages/SetCustomLocation";
-import Checkout1 from "./pages/OrderCheckout";
-import Rewards from "./pages/Rewards";
-import History from "./pages/OrderHistory";
-import AdminDashboard from "./pages/AdminDashboard";
-import Profile from "./pages/Profile";
-import Help from "./pages/Help";
-import NotFound from "./pages/NotFound";
+import Loader from "./components/Loader";
 import OrderReadyToast from "./components/OrderReadyToast";
 import OrderBatchMonitor from "./components/OrderBatchMonitor";
 
 import { RestaurantProvider } from "./context/RestaurantContext";
 import { OrderProvider } from "./context/OrderContext";
+
+// Lazy-loaded components
+const Splash = lazy(() => import("./pages/Splash"));
+const GetStarted = lazy(() => import("./pages/GetStarted"));
+const SignUpMethod = lazy(() => import("./pages/auth/SignUpMethod"));
+const Signup = lazy(() => import("./pages/auth/SignUp"));
+const Login = lazy(() => import("./pages/auth/Login"));
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
+const Welcome = lazy(() => import("./pages/Welcome"));
+const Virtual = lazy(() => import("./pages/VirtualAssistant/VirtualAssitantHomepage"));
+const Recommend = lazy(() => import("./components/AI-Assistant/Recommend"));
+const Recommended = lazy(() => import("./pages/VirtualAssistant/ShowVirtualAssistantRecommendations"));
+const SmartAssistant = lazy(() => import("./pages/VirtualAssistant/VirtualAssistantWelcomeBackPage"));
+const FullMenu = lazy(() => import("./pages/FullMenu"));
+const OrderStatus = lazy(() => import("./pages/OrderStatus"));
+const Step1 = lazy(() => import("./pages/VirtualAssistant/ChooseFeeling"));
+const Step2Budget = lazy(() => import("./pages/VirtualAssistant/ChooseBudget"));
+const Step3Party = lazy(() => import("./pages/VirtualAssistant/ChoosePopulation"));
+const Step4FoodType = lazy(() => import("./pages/VirtualAssistant/ChooseFoodType"));
+const Generating = lazy(() => import("./pages/VirtualAssistant/GenerateAIRecommendations"));
+const ConfirmLink = lazy(() => import("./pages/auth/ConfirmLink"));
+const ResetEmailSent = lazy(() => import("./pages/auth/ResetEmailSent"));
+const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
+const SetLocation = lazy(() => import("./pages/SetLocation"));
+const SelectRestaurant = lazy(() => import("./pages/SelectRestaurant"));
+const SetCustomLocation = lazy(() => import("./pages/SetCustomLocation"));
+const Checkout1 = lazy(() => import("./pages/OrderCheckout"));
+const Rewards = lazy(() => import("./pages/Rewards"));
+const History = lazy(() => import("./pages/OrderHistory"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Help = lazy(() => import("./pages/Help"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
   const location = useLocation();
@@ -135,7 +138,8 @@ function App() {
               showSidebar ? (sidebarOpen ? "md:ml-[260px]" : "md:ml-36") : ""
             }`}
           >
-            <Routes>
+            <Suspense fallback={<Loader />}>
+              <Routes>
               <Route path="/" element={<Splash />} />
               <Route path="/get-started" element={<GetStarted />} />
 
@@ -355,6 +359,7 @@ function App() {
                 }
               />
             </Routes>
+          </Suspense>
           </div>
         </div>
       </OrderProvider>
