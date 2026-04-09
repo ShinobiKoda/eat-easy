@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 export interface PriceOption {
@@ -12,186 +12,153 @@ export interface PriceOption {
 
 interface PriceSelectorProps {
   options: PriceOption[];
-  selectedValue: number;
-  onSelectionChange: (value: number) => void;
+  /** [minValue, maxValue] — null means nothing selected */
+  selectedRange: [number, number] | null;
+  onSelectionChange: (range: [number, number]) => void;
   className?: string;
 }
 
 export function PriceSelector({
   options,
-  selectedValue,
+  selectedRange,
   onSelectionChange,
-  className = ""
+  className = "",
 }: PriceSelectorProps) {
-  const selectedIndex = options.findIndex((opt) => opt.value === selectedValue);
-  
-  const [gradientPosition, setGradientPosition] = useState<{ x: number; y: number } | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const circleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const shouldReduceMotion = useReducedMotion();
 
-  // Ensure minimum of 3 options
-  const validOptions = options.length >= 3 ? options : options.slice(0, Math.max(3, options.length));
+  const minIndex = selectedRange
+    ? options.findIndex((o) => o.value === selectedRange[0])
+    : -1;
+  const maxIndex = selectedRange
+    ? options.findIndex((o) => o.value === selectedRange[1])
+    : -1;
 
-  // Update gradient position when selection changes
-  useEffect(() => {
-    const circleElement = circleRefs.current[selectedIndex];
-    const containerElement = containerRef.current;
+  const isInRange = (index: number) =>
+    minIndex >= 0 && maxIndex >= 0 && index >= minIndex && index <= maxIndex;
 
-    if (selectedIndex >= 0 && circleElement && containerElement) {
-      const circleRect = circleElement.getBoundingClientRect();
-      const containerRect = containerElement.getBoundingClientRect();
-      
-      // Calculate position relative to container
-      const relativeX = circleRect.left + (circleRect.width / 2) - containerRect.left;
-      const relativeY = circleRect.top + (circleRect.height / 2) - containerRect.top;
-      
-      setGradientPosition({ x: relativeX, y: relativeY });
-    } else {
-      setGradientPosition(null);
+  const isLineLitUp = (lineIndex: number) =>
+    minIndex >= 0 && maxIndex >= 0 && lineIndex >= minIndex && lineIndex < maxIndex;
+
+  const handleCircleClick = (option: PriceOption, index: number) => {
+    // Nothing selected yet → start a range anchored at this node
+    if (!selectedRange || minIndex === -1 || maxIndex === -1) {
+      onSelectionChange([option.value, option.value]);
+      return;
     }
-  }, [selectedIndex, options]);
 
-  const handleCircleClick = (option: PriceOption, _index: number) => {
-    onSelectionChange(option.value);
+    // Clicking the same single-node selection → deselect (reset)
+    if (minIndex === maxIndex && index === minIndex) {
+      onSelectionChange([option.value, option.value]);
+      return;
+    }
+
+    if (index <= minIndex) {
+      // Extend / move the lower bound
+      onSelectionChange([option.value, selectedRange[1]]);
+    } else if (index >= maxIndex) {
+      // Extend / move the upper bound
+      onSelectionChange([selectedRange[0], option.value]);
+    } else {
+      // Between handles → move whichever is closer
+      const distToMin = index - minIndex;
+      const distToMax = maxIndex - index;
+      if (distToMin <= distToMax) {
+        onSelectionChange([option.value, selectedRange[1]]);
+      } else {
+        onSelectionChange([selectedRange[0], option.value]);
+      }
+    }
   };
 
-  // Create orbital dots around a circle - dots match the circle's color
+  // Orbital dots shown on selected endpoints
   const createOrbitalDots = (count: number, radius: number, color: string) => {
     const dots = [];
     for (let i = 0; i < count; i++) {
       const angle = (i / count) * 2 * Math.PI;
       const x = Math.cos(angle) * radius;
       const y = Math.sin(angle) * radius;
-      
+
       dots.push(
         <motion.div
           key={i}
           className="absolute w-1 h-1 rounded-full"
-          initial={{ 
-            opacity: 0, 
-            scale: 0.3,
-            rotate: shouldReduceMotion ? 0 : -90,
-            x: x - 2, // Account for half the dot width
-            y: y - 2  // Account for half the dot height
-          }}
-          animate={{ 
-            opacity: 1, 
-            scale: 1,
-            rotate: 0,
-            x: x - 2,
-            y: y - 2
-          }}
+          initial={{ opacity: 0, scale: 0.3, rotate: shouldReduceMotion ? 0 : -90, x: x - 2, y: y - 2 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0, x: x - 2, y: y - 2 }}
           transition={{
             duration: shouldReduceMotion ? 0.2 : 0.6,
             delay: shouldReduceMotion ? 0 : i * 0.03,
             type: "spring",
             stiffness: 400,
             damping: 25,
-            ease: [0.04, 0.62, 0.23, 0.98] as unknown as any
           }}
-          style={{
-            backgroundColor: color,
-            left: '50%',
-            top: '50%',
-          }}
+          style={{ backgroundColor: color, left: "50%", top: "50%" }}
         />
       );
     }
     return dots;
   };
 
-  const getCircleSize = (index: number) => {
-    if (index === 0) return "w-3 h-3";
-    if (index === 1) return "w-3.5 h-3.5";
-    return "w-4 h-4";
-  };
-
-  const getLineStyle = (lineIndex: number) => {
-    const isLitUp = selectedIndex > lineIndex; // Line lights up when you progress past it
-    const currentOption = validOptions[lineIndex];
-    const nextOption = validOptions[lineIndex + 1];
-    
-    if (isLitUp) {
-      // Fully lit with gradient
-      return {
-        background: `linear-gradient(to right, ${currentOption.gradientFrom}, ${nextOption?.gradientTo || currentOption.gradientTo})`
-      };
-    } else {
-      return {
-        background: `var(--color-gray-500, #9ca3af)`
-      };
+  const getLineStyle = (lineIndex: number): React.CSSProperties => {
+    if (!isLineLitUp(lineIndex)) {
+      return { background: "var(--color-gray-300, #d1d5db)" };
     }
+    const from = options[lineIndex];
+    const to = options[lineIndex + 1];
+    return {
+      background: `linear-gradient(to right, ${from.gradientFrom}, ${to?.gradientTo ?? from.gradientTo})`,
+    };
   };
 
-  const cn = (...classes: (string | undefined | false | null)[]) => {
-    return classes.filter(Boolean).join(" ");
-  };
+  const cn = (...classes: (string | undefined | false | null)[]) =>
+    classes.filter(Boolean).join(" ");
 
   return (
-    <div 
-      ref={containerRef}
-      className={cn("relative flex flex-col items-center gap-8 py-8 overflow-hidden", className)}
-    >
-      {/* Radial gradient overlay */}
-      {selectedIndex >= 0 && gradientPosition && (
-        <div 
-          className="absolute inset-0 pointer-events-none z-0"
-          style={{
-            background: `radial-gradient(circle at ${gradientPosition.x}px ${gradientPosition.y + 40}px, ${validOptions[selectedIndex].color}18 0%, ${validOptions[selectedIndex].color}10 30%, transparent 70%)`,
-          }}
-        />
-      )}
-      
-      <div className="relative z-10 flex items-center justify-between w-full border border-gray-300 dark:border-gray-600 bg-[#FFFFFF] dark:bg-[#32324D] rounded-full px-6 py-4">
-        {validOptions.map((option, index) => (
+    <div className={cn("flex flex-col items-center gap-8 py-6", className)}>
+      {/* Track */}
+      <div className="relative flex items-center justify-between w-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-[#32324D] rounded-full px-6 py-4">
+        {options.map((option, index) => (
           <React.Fragment key={option.id}>
-            {/* Circle */}
-            <div 
+            {/* Node circle */}
+            <div
               ref={(el) => { circleRefs.current[index] = el; }}
-              className={cn(
-                "relative cursor-pointer transition-all duration-200 hover:scale-110 shrink-0 z-20",
-                getCircleSize(index),
-                "rounded-full border-2 border-transparent"
-              )}
+              className="relative w-3.5 h-3.5 rounded-full cursor-pointer shrink-0 z-20 transition-all duration-200 hover:scale-125"
               onClick={() => handleCircleClick(option, index)}
               style={{
-                backgroundColor: selectedIndex >= index ? option.color : 'var(--color-gray-500, #9ca3af)',
-                boxShadow: selectedIndex >= index 
-                  ? `0 0 10px ${option.color}40, 0 0 20px ${option.color}20`
-                  : 'none'
+                backgroundColor: isInRange(index)
+                  ? option.color
+                  : "var(--color-gray-300, #d1d5db)",
+                boxShadow: isInRange(index)
+                  ? `0 0 8px ${option.color}60, 0 0 16px ${option.color}30`
+                  : "none",
               }}
             >
-              {selectedIndex === index && createOrbitalDots(12, 16, option.color)}
+              {/* Orbital dots on both endpoints */}
+              {(index === minIndex || index === maxIndex) &&
+                minIndex !== -1 &&
+                createOrbitalDots(10, 14, option.color)}
             </div>
-            
-            {/* Line (don't render after last circle) */}
-            {index < validOptions.length - 1 && (
-              <div 
-                className={cn("flex-1 rounded-full transition-all duration-300 mx-1", 
-                  index === 0 ? "h-1.5" : 
-                  index === 1 ? "h-1.75" : 
-                  index === 2 ? "h-2" : "h-2.25"
-                )}
+
+            {/* Connector line */}
+            {index < options.length - 1 && (
+              <div
+                className="flex-1 h-0.5 rounded-full transition-all duration-300 mx-1"
                 style={getLineStyle(index)}
               />
             )}
           </React.Fragment>
         ))}
       </div>
-      
+
       {/* Labels */}
-      <div className="relative z-10 flex items-center justify-between w-full px-2 -mt-4">
-        {validOptions.map((option, index) => (
-          <span 
+      <div className="flex items-center justify-between w-full px-2 -mt-4">
+        {options.map((option, index) => (
+          <span
             key={`label-${option.id}`}
-            className={cn(
-              "text-sm font-medium transition-colors duration-200 cursor-pointer",
-              selectedIndex >= index ? "text-gray-900 dark:text-white" : "text-[#8E8EA9]"
-            )}
+            className="text-sm font-semibold transition-colors duration-200 cursor-pointer"
             onClick={() => handleCircleClick(option, index)}
             style={{
-              color: selectedIndex >= index ? option.color : undefined
+              color: isInRange(index) ? option.color : "#8E8EA9",
             }}
           >
             {option.label}

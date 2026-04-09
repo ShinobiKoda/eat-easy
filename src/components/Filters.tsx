@@ -80,29 +80,45 @@ const Ratings = [
 
 const priceOptions: PriceOption[] = [
   {
-    id: "10",
-    label: "$10",
-    value: 10,
+    id: "1",
+    label: "$1",
+    value: 1,
+    color: "#a3e635",
+    gradientFrom: "#a3e635",
+    gradientTo: "#84cc16",
+  },
+  {
+    id: "8",
+    label: "$8",
+    value: 8,
     color: "#facc15",
+    gradientFrom: "#84cc16",
+    gradientTo: "#facc15",
+  },
+  {
+    id: "15",
+    label: "$15",
+    value: 15,
+    color: "#fbbf24",
     gradientFrom: "#facc15",
     gradientTo: "#fbbf24",
   },
   {
-    id: "20",
-    label: "$20",
-    value: 20,
-    color: "#fbbf24",
+    id: "22",
+    label: "$22",
+    value: 22,
+    color: "#f97316",
     gradientFrom: "#fbbf24",
-    gradientTo: "#f59e0b",
+    gradientTo: "#f97316",
   },
   {
     id: "30",
     label: "$30+",
     value: 30,
-    color: "#f59e0b",
-    gradientFrom: "#f59e0b",
+    color: "#ea580c",
+    gradientFrom: "#f97316",
     gradientTo: "#ea580c",
-  }
+  },
 ];
 
 const DRAG_DISMISS_THRESHOLD = 120;
@@ -156,11 +172,10 @@ const Filters: React.FC<FiltersProps> = ({
   const [pendingRatings, setPendingRatings] = useState<number[]>(
     initialFilters?.ratings || [],
   );
-  const [pendingMinValue, setPendingMinValue] = useState<number>(
-    initialFilters?.priceRange[0] || 0,
-  );
-  const [pendingMaxValue, setPendingMaxValue] = useState<number>(
-    initialFilters?.priceRange[1] || 30,
+  const [pendingPriceRange, setPendingPriceRange] = useState<[number, number] | null>(
+    initialFilters?.priceRange
+      ? [initialFilters.priceRange[0], initialFilters.priceRange[1]]
+      : null,
   );
 
   const toggleProductType = (name: string) => {
@@ -177,18 +192,15 @@ const Filters: React.FC<FiltersProps> = ({
     );
   };
 
-  // slider state management
-  const handlePriceChange = (value: number) => {
-    // If we only have max values driving this, min value is always 0
-    setPendingMinValue(0);
-    setPendingMaxValue(value);
+  const handlePriceChange = (range: [number, number]) => {
+    setPendingPriceRange(range);
   };
 
   const handleApply = () => {
     onApply?.({
       productTypes: pendingProductTypes,
       ratings: pendingRatings,
-      priceRange: [pendingMinValue, pendingMaxValue],
+      priceRange: pendingPriceRange ?? [0, 30],
     });
     onClose();
   };
@@ -279,9 +291,9 @@ const Filters: React.FC<FiltersProps> = ({
 
             <PriceSelector
               options={priceOptions}
-              selectedValue={pendingMaxValue}
+              selectedRange={pendingPriceRange}
               onSelectionChange={handlePriceChange}
-              className="w-full max-w-sm mx-auto"
+              className="w-full"
             />
           </div>
         </div>

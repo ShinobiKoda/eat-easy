@@ -98,7 +98,7 @@ const History: React.FC = () => {
             <div className="rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between mb-8 overflow-hidden max-h-[240px]">
               <div className="flex items-center gap-5 md:gap-8">
                 {/* Food image */}
-                <div className="relative -ml-9 sm:mr-0 flex items-center justify-center">
+                <div className="relative -ml-9 sm:mr-0 hidden sm:flex items-center justify-center">
                   <img
                     src="/images/active-bg.png"
                     alt=""
@@ -116,8 +116,8 @@ const History: React.FC = () => {
                 </div>
                 {/* Order info */}
                 <div className="space-y-2 p-6 md:p-8">
-                  <span className="inline-block text-xs md:text-sm lg:text-base font-medium text-(--orange-1) bg-(--orange-1)/15 px-3 py-1 rounded-full">
-                    Active Order
+                  <span className="inline-block text-xs md:text-sm lg:text-base font-medium text-(--neutral-150) dark:text-(--orange-1) bg-(--neutral-150)/20 dark:bg-(--orange-1)/15 px-3 py-1 rounded-[9px]">
+                    Active Restaurant
                   </span>
                   <h3 className="text-white dark:text-(--neutral-800) font-bold text-[20px] md:text-[24px] lg:text-[32px] heading-font">
                     {selectedRestaurant?.name || "Gram Bistro"}
