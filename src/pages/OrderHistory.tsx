@@ -27,7 +27,9 @@ const filterTabs = [
 const History: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState("All your orders");
   const [orders, setOrders] = useState<OrderRecord[]>([]);
-  const [restaurantImages, setRestaurantImages] = useState<Record<string, string>>({});
+  const [restaurantImages, setRestaurantImages] = useState<
+    Record<string, string>
+  >({});
   const [loading, setLoading] = useState(true);
   const { theme } = useTheme();
   const { selectedRestaurant } = useRestaurant();
