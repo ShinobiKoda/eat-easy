@@ -51,6 +51,7 @@ const Sidebar: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const { orderItems, setShowOrder } = useOrder();
   const location = useLocation();
+  const [cartDropdownOpen, setCartDropdownOpen] = useState(false);
 
   const { user } = useAuth();
   const cartCount = orderItems.length;
@@ -276,7 +277,10 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <NavLink to="/smart-assistant">
                     <motion.button
-                      onClick={() => { setSelectedItem(1); setIsOpen(false); }}
+                      onClick={() => {
+                        setSelectedItem(1);
+                        setIsOpen(false);
+                      }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
@@ -303,7 +307,10 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <NavLink to="/FullMenu">
                     <motion.button
-                      onClick={() => { setSelectedItem(7); setIsOpen(false); }}
+                      onClick={() => {
+                        setSelectedItem(7);
+                        setIsOpen(false);
+                      }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
@@ -327,73 +334,129 @@ const Sidebar: React.FC = () => {
                   </NavLink>
                 </div>
 
-                {/* Cart — only visible on mobile */}
+                {/* Cart & Order Status — combined dropdown on mobile */}
                 {isMobile && (
-                  <div className="space-y-4">
+                  <div className="space-y-1">
+                    {/* Combined trigger button */}
                     <motion.button
-                      onClick={() => {
-                        setShowOrder(true);
-                        setIsOpen(false);
-                      }}
                       whileTap={{ scale: 0.95 }}
+                      onClick={() => setCartDropdownOpen((v) => !v)}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
-                      <div className="p-3 rounded-2xl relative bg-white/15">
-                        <IoCartOutline className="text-white" size={24} />
-                      </div>
-                      <p
-                        className={`text-white text-base ${effectiveIsOpen ? "flex items-center gap-2" : "hidden"}`}
+                      <div
+                        className={`p-3 rounded-2xl ${
+                          selectedItem === 8 || cartDropdownOpen
+                            ? "bg-(--yellow-1)"
+                            : "bg-white/15"
+                        } relative`}
                       >
-                        My Cart
+                        <IoCartOutline className="text-white" size={24} />
                         {cartCount > 0 && (
-                          <span className="ml-auto px-2 py-0.5 rounded-full bg-(--orange-1) text-white text-[11px] font-bold">
+                          <span className="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center rounded-full bg-(--orange-1) text-white text-[9px] font-bold">
                             {cartCount}
                           </span>
                         )}
-                      </p>
-                    </motion.button>
-                  </div>
-                )}
-
-                {/* Order Status — only visible on mobile */}
-                {isMobile && (
-                  <div className="space-y-4">
-                    <NavLink to="/OrderStatus">
-                      <motion.button
-                        onClick={() => {
-                          setSelectedItem(8);
-                          setIsOpen(false);
-                        }}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
+                      </div>
+                      <p
+                        className={`text-white text-base flex-1 text-left ${effectiveIsOpen ? "flex items-center" : "hidden"}`}
                       >
-                        <div
-                          className={`p-3 rounded-2xl ${
-                            selectedItem === 8
-                              ? "bg-(--yellow-1)"
-                              : "bg-white/15"
-                          }`}
+                        Cart
+                      </p>
+                      {effectiveIsOpen && (
+                        <motion.span
+                          animate={{ rotate: cartDropdownOpen ? 90 : 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="text-white"
                         >
-                          <RiShoppingBag3Line className="text-white" size={24} />
-                        </div>
-                        <p
-                          className={`${
-                            selectedItem === 8
-                              ? "text-(--yellow-1) font-bold"
-                              : "text-white"
-                          } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
+                          <MdChevronRight size={20} />
+                        </motion.span>
+                      )}
+                    </motion.button>
+
+                    {/* Dropdown items */}
+                    <AnimatePresence>
+                      {cartDropdownOpen && effectiveIsOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.22, ease: "easeInOut" }}
+                          className="overflow-hidden pl-4"
                         >
-                          Order Status
-                        </p>
-                      </motion.button>
-                    </NavLink>
+                          {/* My Cart */}
+                          <motion.button
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => {
+                              setShowOrder(true);
+                              setCartDropdownOpen(false);
+                              setIsOpen(false);
+                            }}
+                            className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
+                          >
+                            <div className="p-2.5 rounded-xl bg-white/10">
+                              <IoCartOutline className="text-white" size={20} />
+                            </div>
+                            <p className="text-white/80 text-sm flex items-center gap-2">
+                              My Cart
+                              {cartCount > 0 && (
+                                <span className="px-1.5 py-0.5 rounded-full bg-(--orange-1) text-white text-[10px] font-bold">
+                                  {cartCount}
+                                </span>
+                              )}
+                            </p>
+                          </motion.button>
+
+                          {/* Order Status */}
+                          <NavLink to="/OrderStatus">
+                            <motion.button
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => {
+                                setSelectedItem(8);
+                                setCartDropdownOpen(false);
+                                setIsOpen(false);
+                              }}
+                              className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
+                            >
+                              <div
+                                className={`p-2.5 rounded-xl ${
+                                  selectedItem === 8
+                                    ? "bg-(--yellow-1)/30"
+                                    : "bg-white/10"
+                                }`}
+                              >
+                                <RiShoppingBag3Line
+                                  className={
+                                    selectedItem === 8
+                                      ? "text-(--yellow-1)"
+                                      : "text-white"
+                                  }
+                                  size={20}
+                                />
+                              </div>
+                              <p
+                                className={`text-sm ${
+                                  selectedItem === 8
+                                    ? "text-(--yellow-1) font-semibold"
+                                    : "text-white/80"
+                                }`}
+                              >
+                                Order Status
+                              </p>
+                            </motion.button>
+                          </NavLink>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 )}
 
                 <div className="space-y-4">
                   <NavLink to="/history">
                     <motion.button
-                      onClick={() => { setSelectedItem(2); setIsOpen(false); }}
+                      onClick={() => {
+                        setSelectedItem(2);
+                        setIsOpen(false);
+                      }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
@@ -420,7 +483,10 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <NavLink to="/locations">
                     <motion.button
-                      onClick={() => { setSelectedItem(3); setIsOpen(false); }}
+                      onClick={() => {
+                        setSelectedItem(3);
+                        setIsOpen(false);
+                      }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
@@ -448,7 +514,10 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <NavLink to="/set-restaurant">
                     <motion.button
-                      onClick={() => { setSelectedItem(6); setIsOpen(false); }}
+                      onClick={() => {
+                        setSelectedItem(6);
+                        setIsOpen(false);
+                      }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
@@ -489,7 +558,10 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <NavLink to="/rewards">
                     <motion.button
-                      onClick={() => { setSelectedItem(4); setIsOpen(false); }}
+                      onClick={() => {
+                        setSelectedItem(4);
+                        setIsOpen(false);
+                      }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
@@ -518,7 +590,10 @@ const Sidebar: React.FC = () => {
                   <div className="space-y-4">
                     <NavLink to="/admin">
                       <motion.button
-                        onClick={() => { setSelectedItem(99); setIsOpen(false); }}
+                        onClick={() => {
+                          setSelectedItem(99);
+                          setIsOpen(false);
+                        }}
                         whileTap={{ scale: 0.95 }}
                         className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                       >
@@ -548,7 +623,10 @@ const Sidebar: React.FC = () => {
                 <div className="space-y-4">
                   <NavLink to="/help">
                     <motion.button
-                      onClick={() => { setSelectedItem(5); setIsOpen(false); }}
+                      onClick={() => {
+                        setSelectedItem(5);
+                        setIsOpen(false);
+                      }}
                       whileTap={{ scale: 0.95 }}
                       className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
                     >
