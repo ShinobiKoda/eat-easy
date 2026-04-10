@@ -90,25 +90,21 @@ const ProductCarousel = () => {
   const variants = {
     center: {
       x: "0%",
-      scale: 1,
       opacity: 1,
       transition: { duration: 0.8, ease: easeInOut },
     },
     left: {
       x: "-97%",
-      scale: 0.85,
       opacity: 0.4,
       transition: { duration: 0.8, ease: easeInOut },
     },
     right: {
       x: "97%",
-      scale: 0.85,
       opacity: 0.4,
       transition: { duration: 0.8, ease: easeInOut },
     },
     hidden: {
       x: "0%",
-      scale: 0,
       opacity: 0,
       transition: { duration: 0.4, ease: easeInOut },
     },
@@ -180,7 +176,7 @@ const ProductCarousel = () => {
 
         return (
           <motion.div
-            initial="hidden"
+            initial={false}
             animate={pos}
             variants={variants}
             key={id}
