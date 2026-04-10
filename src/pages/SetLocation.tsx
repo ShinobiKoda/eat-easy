@@ -25,7 +25,7 @@ const SetLocation = () => {
           <h1 className="font-medium text-[22px] text-(--neutral-800) text-center heading-font dark:text-white">
             Set your location
           </h1>
-        </div>
+        </SlideIn>
 
         <div className="grid grid-cols-1 gap-6 mt-6 px-6">
           <motion.div

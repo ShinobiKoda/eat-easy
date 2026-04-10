@@ -1,4 +1,4 @@
-const easeInOut: [number, number, number, number] = [0.22, 1, 0.36, 1]
+const easeInOut: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 // Product grid and card animation variants
 export const productGridStagger = {
@@ -51,7 +51,6 @@ export const ScaleButton = ({
 );
 import React, { type ReactNode } from "react";
 import { motion, type Variants } from "motion/react";
-import { useState, useEffect } from "react";
 
 export const staggerContainer: Variants = {
   hidden: { opacity: 0 },
@@ -130,13 +129,6 @@ export const MotionContainer = ({
   variants = staggerContainer,
   style,
 }: MotionWrapperProps) => {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setReady(true), 10);
-    return () => clearTimeout(timeout);
-  }, []);
-
   return (
     <motion.div
       className={className}
