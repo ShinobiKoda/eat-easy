@@ -52,7 +52,7 @@ const Step2Budget: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <div>
         <Header
           title="Food Menu"
@@ -130,3 +130,4 @@ const Step2Budget: React.FC = () => {
 };
 
 export default Step2Budget;
+

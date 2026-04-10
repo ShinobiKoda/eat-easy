@@ -52,10 +52,10 @@ function ForgotPassword() {
       <div className="absolute top-2 right-2 z-50">
         <ThemeSwitchButton />
       </div>
-      <div className="w-full min-h-screen lg:grid lg:grid-cols-2 lg:gap-6">
+      <div className="w-full min-h-dvh lg:grid lg:grid-cols-2 lg:gap-6">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full min-h-screen max-w-[480px] mx-auto flex flex-col pt-[72px] lg:pt-[100px] px-6"
+          className="w-full min-h-dvh max-w-[480px] mx-auto flex flex-col pt-[72px] lg:pt-[100px] px-6"
         >
           <motion.div
             variants={popIn}
@@ -125,3 +125,4 @@ function ForgotPassword() {
 }
 
 export default ForgotPassword;
+

@@ -91,7 +91,7 @@ const Generating: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <Header
         title="Food Menu"
         description="Virtual Assistant"
@@ -201,3 +201,4 @@ const Generating: React.FC = () => {
 };
 
 export default Generating;
+

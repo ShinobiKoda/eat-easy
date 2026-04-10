@@ -18,7 +18,7 @@ const Success: React.FC<SuccessProps> = ({ isOpen }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="hidden sm:flex fixed inset-0 bg-black/60 z-100 backdrop-blur-md min-h-screen"
+            className="hidden sm:flex fixed inset-0 bg-black/60 z-100 backdrop-blur-md min-h-dvh"
           />
 
           {/* Modal / Full-screen Container */}
@@ -87,3 +87,4 @@ const Success: React.FC<SuccessProps> = ({ isOpen }) => {
 };
 
 export default Success;
+

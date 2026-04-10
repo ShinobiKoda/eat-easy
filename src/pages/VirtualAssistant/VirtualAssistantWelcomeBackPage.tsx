@@ -26,7 +26,7 @@ const SmartAssistant: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <SEO
         title="Virtual Assistant | EatEasy"
         description="Let our smart virtual assistant help you find the perfect dish."
@@ -39,7 +39,7 @@ const SmartAssistant: React.FC = () => {
         />
         {loading ? (
           <div className="pt-20 md:py-30 lg:pt-30 lg:pb-20 max-w-[1440px] mx-auto flex flex-col items-center py-6 px-6 sm:px-20 lg:px-6">
-            <div className="flex flex-col items-center text-center max-w-xl mb-20 md:mb-10 w-full mt-[5vh] lg:mt-[10vh]">
+            <div className="flex flex-col items-center text-center max-w-xl mb-20 md:mb-10 w-full mt-[5dvh] lg:mt-[10dvh]">
               <h1 className="text-[22px] md:text-[32px] lg:text-[40px] text-(--neutral-800) dark:text-[#FFFFFF] font-medium mb-2">
                 It seems like we already know <br /> each other 🤝
               </h1>

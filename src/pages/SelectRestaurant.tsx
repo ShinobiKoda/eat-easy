@@ -48,7 +48,7 @@ const SelectRestaurant = () => {
   };
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <Header title="Food Menu" description="Set Restaurant" />
       <div className="w-full px-6">
         <MotionContainer className="md:hidden pt-28">
@@ -206,3 +206,4 @@ const SelectRestaurant = () => {
 };
 
 export default SelectRestaurant;
+

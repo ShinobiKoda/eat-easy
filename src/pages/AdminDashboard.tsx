@@ -91,7 +91,7 @@ const AdminDashboard: React.FC = () => {
   );
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <MotionContainer className="transition-all duration-300">
         <Header description="Control Panel" navbarTitle="Admin Dashboard" />
 
@@ -358,3 +358,4 @@ const AdminDashboard: React.FC = () => {
 };
 
 export default AdminDashboard;
+

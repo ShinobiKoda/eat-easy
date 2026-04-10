@@ -40,7 +40,7 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
         transition: { duration: 0.25 },
       }}
       exit={{ x: "100vw", opacity: 0 }}
-      className="z-50 top-0 fixed right-0 w-full h-screen flex flex-col sm:w-[55%] md:w-[45%] lg:w-[450px] sm:rounded-l-2xl vieworder-bg"
+      className="z-50 top-0 fixed right-0 w-full h-dvh flex flex-col sm:w-[55%] md:w-[45%] lg:w-[450px] sm:rounded-l-2xl vieworder-bg"
     >
       {/* header for mobile */}
       <div className="flex sm:hidden items-center justify-between px-6 py-4">
@@ -284,3 +284,4 @@ const ViewOrder: React.FC<ViewOrderProps> = ({
 };
 
 export default ViewOrder;
+

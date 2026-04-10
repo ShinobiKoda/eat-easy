@@ -50,7 +50,7 @@ const Step3Party: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <div>
         <Header
           title="Food Menu"
@@ -126,3 +126,4 @@ const Step3Party: React.FC = () => {
 };
 
 export default Step3Party;
+

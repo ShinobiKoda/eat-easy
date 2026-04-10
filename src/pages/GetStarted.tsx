@@ -21,7 +21,7 @@ function GetStarted() {
   };
 
   return (
-    <MotionContainer className="relative w-full min-h-screen">
+    <MotionContainer className="relative w-full min-h-dvh">
       <SEO
         title="Get Started | EatEasy"
         description="Join EatEasy to have a full digital experience in our restaurant."
@@ -29,8 +29,8 @@ function GetStarted() {
       <div className="absolute top-2 right-2 z-50">
         <ThemeSwitchButton />
       </div>
-      <div className="w-full min-h-screen lg:grid lg:grid-cols-2 lg:gap-6">
-        <div className="lg:hidden w-full flex flex-col items-center justify-center min-h-screen max-w-[480px] mx-auto">
+      <div className="w-full min-h-dvh lg:grid lg:grid-cols-2 lg:gap-6">
+        <div className="lg:hidden w-full flex flex-col items-center justify-center min-h-dvh max-w-[480px] mx-auto">
           <SlideIn direction="up">
             <div className="w-full overflow-hidden">
               <img
@@ -84,7 +84,7 @@ function GetStarted() {
           </div>
         </div>
 
-        <div className="w-full flex-col items-center justify-center min-h-screen max-w-[480px] mx-auto space-y-[42px] hidden lg:flex">
+        <div className="w-full flex-col items-center justify-center min-h-dvh max-w-[480px] mx-auto space-y-[42px] hidden lg:flex">
           <PopIn className="w-full text-center px-6 space-y-3.5">
             <h1 className="text-(--neutral-800) dark:text-white font-medium text-[22px] lg:text-[40px] heading-font">
               Let's Get Started 😎{" "}
@@ -115,3 +115,4 @@ function GetStarted() {
 }
 
 export default GetStarted;
+

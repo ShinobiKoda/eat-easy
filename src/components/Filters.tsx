@@ -36,13 +36,13 @@ const display = (isDesktop: boolean): Variants => {
 
   // MOBILE — slide from bottom
   return {
-    hidden: { y: "100vh", opacity: 0 },
+    hidden: { y: "100dvh", opacity: 0 },
     visible: {
       y: "0",
       opacity: 1,
       transition: { duration: 0.25 },
     },
-    exit: { y: "100vh", opacity: 0 },
+    exit: { y: "100dvh", opacity: 0 },
   };
 };
 
@@ -213,7 +213,7 @@ const Filters: React.FC<FiltersProps> = ({
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="z-50 fixed right-0 w-full sm:min-h-screen sm:w-[55%] md:w-[45%] lg:w-[450px] top-[7%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl bg-[#f7f7f7] dark:bg-[#32324D]"
+      className="z-50 fixed right-0 w-full sm:min-h-dvh sm:w-[55%] md:w-[45%] lg:w-[450px] top-[7%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl bg-[#f7f7f7] dark:bg-[#32324D]"
     >
       <div className="flex flex-col h-full px-6 py-4">
         {/* Drag handle – touch-drag down to close on mobile */}

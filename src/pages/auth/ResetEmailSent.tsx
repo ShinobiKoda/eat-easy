@@ -12,8 +12,8 @@ const ResetEmailSent = () => {
 
   return (
     <MotionContainer className="w-full">
-      <div className="w-full min-h-screen lg:grid lg:grid-cols-2 lg:gap-6">
-        <div className="w-full px-6 py-4 min-h-screen lg:flex">
+      <div className="w-full min-h-dvh lg:grid lg:grid-cols-2 lg:gap-6">
+        <div className="w-full px-6 py-4 min-h-dvh lg:flex">
           <div className="absolute top-2 right-2 z-50">
             <ThemeSwitchButton />
           </div>
@@ -62,3 +62,4 @@ const ResetEmailSent = () => {
 };
 
 export default ResetEmailSent;
+

@@ -180,8 +180,8 @@ const ConfirmLink = () => {
 
   return (
     <MotionContainer className="w-full">
-      <div className="w-full min-h-screen lg:grid lg:grid-cols-2 lg:gap-6">
-        <div className="w-full px-6 py-4 min-h-screen lg:flex">
+      <div className="w-full min-h-dvh lg:grid lg:grid-cols-2 lg:gap-6">
+        <div className="w-full px-6 py-4 min-h-dvh lg:flex">
           <button
             className="px-3 py-3 rounded-2xl bg-white shadow-md max-w-11 dark:bg-(--neutral-700) lg:hidden"
             onClick={() => navigate(-1) || navigate("/signup")}
@@ -309,3 +309,4 @@ const ConfirmLink = () => {
 };
 
 export default ConfirmLink;
+

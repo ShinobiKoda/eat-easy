@@ -251,7 +251,7 @@ const Checkout1: React.FC = () => {
   }, [isModalOpen]);
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       {showLoader && <Loader />}
 
       <div
@@ -640,3 +640,4 @@ const Checkout1: React.FC = () => {
 };
 
 export default Checkout1;
+

@@ -113,7 +113,7 @@ const Recommended: React.FC = () => {
   }, [locationState.state?.itemIds]);
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <SEO
         title="Your Recommendations | EatEasy"
         description="View the dishes specially selected for you by EatEasy's smart assistant."
@@ -268,3 +268,4 @@ const Recommended: React.FC = () => {
 };
 
 export default Recommended;
+

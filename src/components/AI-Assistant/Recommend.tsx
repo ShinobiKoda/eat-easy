@@ -48,7 +48,7 @@ const Recommend: React.FC<RecommendProps> = ({ hideHeader }) => {
   };
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <SEO
         title="Get Recommendations | EatEasy"
         description="Configure your food preferences and get personalized recommendations from EatEasy."
@@ -145,3 +145,4 @@ const Recommend: React.FC<RecommendProps> = ({ hideHeader }) => {
 };
 
 export default Recommend;
+

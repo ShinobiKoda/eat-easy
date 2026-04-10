@@ -207,7 +207,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
         animate={{ opacity: 0.5 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 dark:bg-black/50 bg-gray-500 z-40 backdrop-blur-sm min-h-screen"
+        className="fixed inset-0 dark:bg-black/50 bg-gray-500 z-40 backdrop-blur-sm min-h-dvh"
       />
 
       <motion.div
@@ -215,7 +215,7 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="z-50 fixed right-0 w-full sm:min-h-screen sm:w-[55%] md:w-[45%] lg:w-[450px] top-[10%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-3xl sm:rounded-tr-none sm:rounded-l-3xl bg-(--neutral-100) dark:bg-(--neutral-800) shadow-2xl flex flex-col"
+        className="z-50 fixed right-0 w-full sm:min-h-dvh sm:w-[55%] md:w-[45%] lg:w-[450px] top-[10%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-3xl sm:rounded-tr-none sm:rounded-l-3xl bg-(--neutral-100) dark:bg-(--neutral-800) shadow-2xl flex flex-col"
       >
         {/* Mobile Pull Indicator */}
         <div
@@ -395,3 +395,4 @@ const Newcard: React.FC<NewcardProps> = ({ onClose, onAddCard }) => {
 };
 
 export default Newcard;
+

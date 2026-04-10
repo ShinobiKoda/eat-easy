@@ -24,13 +24,13 @@ function SignUpMethod() {
   };
 
   return (
-    <MotionContainer className="relative min-h-screen">
+    <MotionContainer className="relative min-h-dvh">
       <div className="absolute top-2 right-2 z-50">
         <ThemeSwitchButton />
       </div>
 
-      <div className="w-full min-h-screen lg:grid lg:grid-cols-2 lg:gap-6">
-        <div className="w-full space-y-8 flex flex-col items-center justify-center min-h-screen max-w-[480px] mx-auto relative">
+      <div className="w-full min-h-dvh lg:grid lg:grid-cols-2 lg:gap-6">
+        <div className="w-full space-y-8 flex flex-col items-center justify-center min-h-dvh max-w-[480px] mx-auto relative">
           <SlideIn direction="up" className="px-6">
             <div className="w-full flex flex-col text-center gap-3.5">
               <h1 className="text-(--neutral-800) font-medium text-[26px] lg:text-[40px] dark:text-white heading-font">
@@ -102,4 +102,5 @@ function SignUpMethod() {
 }
 
 export default SignUpMethod;
+
 

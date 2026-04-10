@@ -135,7 +135,7 @@ function App() {
   return (
     <RestaurantProvider>
       <OrderProvider>
-        <div className="w-full min-h-screen" style={{ backgroundImage }}>
+        <div className="w-full min-h-dvh" style={{ backgroundImage }}>
           <OrderBatchMonitor />
           <OrderReadyToast />
           {showSidebar && (
