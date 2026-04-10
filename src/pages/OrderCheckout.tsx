@@ -11,7 +11,10 @@ import { useOrder } from "../hooks/useOrder";
 import wallet from "/images/wallet.png";
 import Newcard from "../components/Checkout/Newcard";
 import CvvModal from "../components/Checkout/CvvModal";
-import { SlickPrevArrow, SlickNextArrow } from "../components/Checkout/SliderArrows";
+import {
+  SlickPrevArrow,
+  SlickNextArrow,
+} from "../components/Checkout/SliderArrows";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -94,9 +97,9 @@ const Checkout1: React.FC = () => {
 
   const handlePay = async () => {
     if (!cvv) return;
-    
+
     setIsProcessing(true);
-    
+
     // Use CVV for payment processing here
     // console.log("Processing payment...");
     setCvv("");
@@ -226,20 +229,26 @@ const Checkout1: React.FC = () => {
     discountAmountRef.current = discountAmount;
   }, [orderTotal, total, discountAmount]);
 
-  // stop background scroll effect when any of this is open
+  // stop background scroll effect when any of this is open (desktop only)
   const isModalOpen =
-    Boolean(showNewCard) || Boolean(showCvvModal) || Boolean(showSuccessModal) || Boolean(isProcessing);
+    Boolean(showNewCard) ||
+    Boolean(showCvvModal) ||
+    Boolean(showSuccessModal) ||
+    Boolean(isProcessing);
 
   useEffect(() => {
-    if (isModalOpen) {
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+
+    if (isModalOpen && isDesktop) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
+
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
-  }, [showNewCard, showCvvModal, showSuccessModal, isProcessing]);
+  }, [isModalOpen]);
 
   return (
     <div className="w-full min-h-screen">
@@ -373,7 +382,7 @@ const Checkout1: React.FC = () => {
                   </div>
 
                   <div className="bg-[#FFF8E1] dark:bg-(--neutral-400) border border-[#FFB01D]/20 rounded-2xl p-6 flex gap-4 md:gap-8 items-center w-full mt-auto">
-                    <div className="min-w-[40px] h-[40px]">
+                    <div className="min-w-10 h-10">
                       <img
                         src={wallet}
                         className="w-full h-full object-contain"
@@ -586,7 +595,7 @@ const Checkout1: React.FC = () => {
               whileTap={cards.length > 0 && cvvConfirmed ? { scale: 0.98 } : {}}
               disabled={cards.length === 0 || !cvvConfirmed}
               onClick={handlePay}
-              className={`w-full max-w-[320px] py-4 rounded-[16px] text-white font-medium text-[20px] flex justify-center items-center gap-3 shadow-inner ${
+              className={`w-full max-w-[320px] py-4 rounded-2xl text-white font-medium text-[20px] flex justify-center items-center gap-3 shadow-inner ${
                 cards.length > 0 && cvvConfirmed
                   ? "bg-(--purple-2) cursor-pointer"
                   : "bg-(--purple-4) cursor-not-allowed"

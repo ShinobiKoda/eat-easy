@@ -168,18 +168,8 @@ const Sidebar: React.FC = () => {
     setIsOpen(false);
   }, [location.pathname]);
 
-  // Lock body scroll on mobile when sidebar is open
-  useEffect(() => {
-    const isMobile = window.matchMedia("(max-width: 767px)").matches;
-    if (isOpen && isMobile) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
+  // Do not lock body scroll here; App handles overall layout,
+  // and a mobile overlay is used to prevent background interaction.
 
   return (
     <>

@@ -33,18 +33,21 @@ const Recommended: React.FC = () => {
     // handleSend,
   } = useOrder();
 
-  // stop background scroll when modals are open
+  // stop background scroll when modals are open (desktop only)
   const isModalOpen = Boolean(selectedItem || showOrder);
   useEffect(() => {
-    if (isModalOpen) {
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+
+    if (isModalOpen && isDesktop) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
+
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
-  }, [selectedItem, showOrder]);
+  }, [isModalOpen]);
 
   // Load recommended items either from route state or from latest DB recommendation
   useEffect(() => {
