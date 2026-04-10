@@ -94,12 +94,12 @@ const ProductCarousel = () => {
       transition: { duration: 0.8, ease: easeInOut },
     },
     left: {
-      x: "-97%",
+      x: "-115%",
       opacity: 0.4,
       transition: { duration: 0.8, ease: easeInOut },
     },
     right: {
-      x: "97%",
+      x: "115%",
       opacity: 0.4,
       transition: { duration: 0.8, ease: easeInOut },
     },
