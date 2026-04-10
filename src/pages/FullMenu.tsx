@@ -53,6 +53,7 @@ const FullMenu: React.FC = () => {
   const [allItems, setAllItems] = useState<(PropType & { category: string })[]>(
     [],
   );
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     async function fetchMenu() {
@@ -75,6 +76,14 @@ const FullMenu: React.FC = () => {
     ratings: number[];
     priceRange: [number, number];
   }>({ productTypes: [], ratings: [], priceRange: [0, 30] });
+
+  // Simple transition flag to show skeletons during category/search/filter changes
+  useEffect(() => {
+    if (loading) return;
+    setIsTransitioning(true);
+    const timeout = setTimeout(() => setIsTransitioning(false), 300);
+    return () => clearTimeout(timeout);
+  }, [mainCategory, debouncedSearch, appliedFilters, loading]);
 
   // Filter dishes based on selected tag, search input, and applied filters
   const filteredDishes = useMemo(() => {
@@ -203,66 +212,63 @@ const FullMenu: React.FC = () => {
               {mainCategory}
             </h1>
 
-            <AnimatePresence mode="wait">
-              {loading ? (
-                <div className="items-center gap-[30px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-                  {Array.from({ length: 15 }).map((_, index) => (
-                    <div
-                      key={index}
-                      className="bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative"
-                    >
-                      <SkeletonCard variant="vertical" />
+            {loading || isTransitioning ? (
+              <div className="items-center gap-[30px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+                {Array.from({ length: 15 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative"
+                  >
+                    <SkeletonCard variant="vertical" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <motion.div
+                key={`${mainCategory}-${debouncedSearch}-${JSON.stringify(appliedFilters)}-${allItems.length}`}
+                className="items-center gap-[30px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5"
+                variants={productGridStagger}
+                initial="hidden"
+                animate="show"
+              >
+                {filteredDishes.map((dish) => (
+                  <motion.div
+                    key={dish.id}
+                    whileTap={{ scale: 0.98 }}
+                    variants={productCardFade}
+                    className="bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative cursor-pointer"
+                    onClick={() => setSelectedItem(dish)}
+                  >
+                    <div className="rounded-[50%] mb-2 max-w-[100px] h-[100px]">
+                      <img
+                        src={dish.image}
+                        className="rounded-[50%] w-full h-full object-cover"
+                        alt=""
+                      />
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <motion.div
-                  key={`${mainCategory}-${debouncedSearch}-${JSON.stringify(appliedFilters)}-${allItems.length}`}
-                  className="items-center gap-[30px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5"
-                  variants={productGridStagger}
-                  initial="hidden"
-                  animate="show"
-                  exit="exit"
-                >
-                  {filteredDishes.map((dish) => (
-                    <motion.div
-                      key={dish.id}
-                      whileTap={{ scale: 0.98 }}
-                      variants={productCardFade}
-                      className="bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative cursor-pointer"
-                      onClick={() => setSelectedItem(dish)}
-                    >
-                      <div className="rounded-[50%] mb-2 max-w-[100px] h-[100px]">
-                        <img
-                          src={dish.image}
-                          className="rounded-[50%] w-full h-full object-cover"
-                          alt=""
-                        />
-                      </div>
 
-                      <p className="text-[14px] lg:text-[18px] text-center font-semibold text-(--neutral-800) dark:text-white">
-                        {dish.name}
+                    <p className="text-[14px] lg:text-[18px] text-center font-semibold text-(--neutral-800) dark:text-white">
+                      {dish.name}
+                    </p>
+
+                    <div className="space-x-1 py-1 px-1.5 flex items-center absolute top-2 right-2 bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
+                      {dish.rating < 4.5 ? (
+                        <img src={StarHalf} className="w-4 h-4" alt="" />
+                      ) : (
+                        <img src={StarFull} className="w-4 h-4" alt="" />
+                      )}
+                      <p className="text-[11px] md:text-[14px]">
+                        {dish.rating.toFixed(1)}
                       </p>
+                    </div>
 
-                      <div className="space-x-1 py-1 px-1.5 flex items-center absolute top-2 right-2 bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
-                        {dish.rating < 4.5 ? (
-                          <img src={StarHalf} className="w-4 h-4" alt="" />
-                        ) : (
-                          <img src={StarFull} className="w-4 h-4" alt="" />
-                        )}
-                        <p className="text-[11px] md:text-[14px]">
-                          {dish.rating.toFixed(1)}
-                        </p>
-                      </div>
-
-                      <p className="text-(--orange-1) text-[14px] lg:text-[18px] font-extrabold">
-                        ${dish.price.toFixed(2)}
-                      </p>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                    <p className="text-(--orange-1) text-[14px] lg:text-[18px] font-extrabold">
+                      ${dish.price.toFixed(2)}
+                    </p>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
           </div>
         </div>
 

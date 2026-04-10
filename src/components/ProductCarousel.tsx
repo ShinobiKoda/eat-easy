@@ -1,28 +1,84 @@
-import Choice from '/images/choiceimg.webp';
-import { useState, useEffect, useMemo } from 'react';
-import { motion, easeInOut } from 'framer-motion'
+import Choice from "/images/choiceimg.webp";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { motion, easeInOut } from "framer-motion";
 
 const Product = [
-  { id: 1, name: "Avocado Chicken Salad", price: "$10.00", image: Choice, description: "Product of the day" },
-  { id: 2, name: "Grilled Salmon Bowl", price: "$12.50", image: Choice, description: "Chef's special" },
-  { id: 3, name: "Vegan Buddha Bowl", price: "$9.80", image: Choice, description: "Healthy pick" },
-  { id: 4, name: "Quinoa Power Salad", price: "$11.20", image: Choice, description: "Energizer" },
+  {
+    id: 1,
+    name: "Avocado Chicken Salad",
+    price: "$10.00",
+    image: Choice,
+    description: "Product of the day",
+  },
+  {
+    id: 2,
+    name: "Grilled Salmon Bowl",
+    price: "$12.50",
+    image: Choice,
+    description: "Chef's special",
+  },
+  {
+    id: 3,
+    name: "Vegan Buddha Bowl",
+    price: "$9.80",
+    image: Choice,
+    description: "Healthy pick",
+  },
+  {
+    id: 4,
+    name: "Quinoa Power Salad",
+    price: "$11.20",
+    image: Choice,
+    description: "Energizer",
+  },
 ];
 
 const ProductCarousel = () => {
-
   const [index, setIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isUserPaused, setIsUserPaused] = useState(false);
+  const idleTimeoutRef = useRef<number | null>(null);
+  const pointerStartXRef = useRef<number | null>(null);
+
+  const startIdleTimer = () => {
+    if (idleTimeoutRef.current !== null) {
+      window.clearTimeout(idleTimeoutRef.current);
+    }
+    idleTimeoutRef.current = window.setTimeout(() => {
+      setIsUserPaused(false);
+    }, 8000); // resume auto-slide after 8 seconds of no interaction
+  };
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % Product.length);
-    }, 4000);
-    return () => clearInterval(timer);
+    return () => {
+      if (idleTimeoutRef.current !== null) {
+        window.clearTimeout(idleTimeoutRef.current);
+      }
+    };
   }, []);
 
-  const prevIndex = useMemo(() => (index === 0 ? Product.length - 1 : index - 1), [index]);
-  const nextIndex = useMemo(() => (index === Product.length - 1 ? 0 : index + 1), [index]);
-  const visibleIndices = useMemo(() => new Set([prevIndex, index, nextIndex]), [prevIndex, index, nextIndex]);
+  useEffect(() => {
+    if (isHovered || isUserPaused) return;
+
+    const timer = window.setInterval(() => {
+      setIndex((prev) => (prev + 1) % Product.length);
+    }, 4000);
+
+    return () => window.clearInterval(timer);
+  }, [isHovered, isUserPaused]);
+
+  const prevIndex = useMemo(
+    () => (index === 0 ? Product.length - 1 : index - 1),
+    [index],
+  );
+  const nextIndex = useMemo(
+    () => (index === Product.length - 1 ? 0 : index + 1),
+    [index],
+  );
+  const visibleIndices = useMemo(
+    () => new Set([prevIndex, index, nextIndex]),
+    [prevIndex, index, nextIndex],
+  );
 
   const getPosition = (itemIndex: number) => {
     if (itemIndex === index) return "center";
@@ -58,8 +114,61 @@ const ProductCarousel = () => {
     },
   };
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    if (idleTimeoutRef.current !== null) {
+      window.clearTimeout(idleTimeoutRef.current);
+      idleTimeoutRef.current = null;
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    startIdleTimer();
+  };
+
+  const handleUserTap = () => {
+    setIsUserPaused(true);
+    startIdleTimer();
+  };
+
+  const goToNext = () => {
+    setIndex((prev) => (prev + 1) % Product.length);
+  };
+
+  const goToPrev = () => {
+    setIndex((prev) => (prev - 1 + Product.length) % Product.length);
+  };
+
+  const handlePointerDown = (clientX: number) => {
+    pointerStartXRef.current = clientX;
+    handleUserTap();
+  };
+
+  const handlePointerUp = (clientX: number) => {
+    if (pointerStartXRef.current === null) return;
+    const deltaX = clientX - pointerStartXRef.current;
+    const threshold = 40; // px swipe threshold
+
+    if (deltaX > threshold) {
+      goToPrev();
+    } else if (deltaX < -threshold) {
+      goToNext();
+    }
+
+    pointerStartXRef.current = null;
+  };
+
   return (
-    <div className="py-4 flex items-center justify-center overflow-hidden w-full relative h-[145px] md:h-[250px] ">
+    <div
+      className="py-4 flex items-center justify-center overflow-hidden w-full relative h-[145px] md:h-[250px] "
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onMouseDown={(e) => handlePointerDown(e.clientX)}
+      onMouseUp={(e) => handlePointerUp(e.clientX)}
+      onTouchStart={(e) => handlePointerDown(e.touches[0]?.clientX ?? 0)}
+      onTouchEnd={(e) => handlePointerUp(e.changedTouches[0]?.clientX ?? 0)}
+    >
       {/* products */}
       {Product.map(({ id, name, price, image, description }, i) => {
         if (!visibleIndices.has(i)) return null;
@@ -106,6 +215,6 @@ const ProductCarousel = () => {
       })}
     </div>
   );
-}
+};
 
-export default ProductCarousel
+export default ProductCarousel;
