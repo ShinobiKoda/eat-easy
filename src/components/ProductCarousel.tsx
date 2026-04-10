@@ -1,5 +1,5 @@
 import Choice from '/images/choiceimg.svg';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, easeInOut } from 'framer-motion'
 
 const Product = [
@@ -18,21 +18,16 @@ const ProductCarousel = () => {
       setIndex((prev) => (prev + 1) % Product.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, [Product.length]);
+  }, []);
+
+  const prevIndex = useMemo(() => (index === 0 ? Product.length - 1 : index - 1), [index]);
+  const nextIndex = useMemo(() => (index === Product.length - 1 ? 0 : index + 1), [index]);
+  const visibleIndices = useMemo(() => new Set([prevIndex, index, nextIndex]), [prevIndex, index, nextIndex]);
 
   const getPosition = (itemIndex: number) => {
     if (itemIndex === index) return "center";
-
-    // for the leaving card
-    const prevIndex = index === 0 ? Product.length - 1 : index - 1;
-
     if (itemIndex === prevIndex) return "left";
-
-    // for the entering card
-    const nextIndex = index === Product.length - 1 ? 0 : index + 1;
-
     if (itemIndex === nextIndex) return "right";
-
     return "hidden";
   };
 
@@ -67,11 +62,13 @@ const ProductCarousel = () => {
     <div className="py-4 flex items-center justify-center overflow-hidden w-full relative h-[145px] md:h-[250px] ">
       {/* products */}
       {Product.map(({ id, name, price, image, description }, i) => {
+        if (!visibleIndices.has(i)) return null;
+
         const pos = getPosition(i);
         let zIndex = 0;
         if (pos === "center") zIndex = 10;
         else if (pos === "left" || pos === "right") zIndex = 5;
-        else zIndex = 0;
+
         return (
           <motion.div
             initial="hidden"
@@ -98,7 +95,9 @@ const ProductCarousel = () => {
             <div className="h-full -mr-9 sm:mr-0 max-w-[141px] sm:max-w-[200px] md:max-w-[50%]">
               <img
                 src={image}
-                alt="Avocado Chicken Salad"
+                alt={name}
+                loading={pos === "center" ? "eager" : "lazy"}
+                decoding="async"
                 className="h-full w-full object-cover"
               />
             </div>

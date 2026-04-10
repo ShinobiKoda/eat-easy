@@ -65,7 +65,7 @@ const SelectRestaurant = () => {
             </p>
           </SlideIn>
 
-          <div className="mt-6 flex flex-col gap-6">
+          <div className="mt-6 max-w-[480px] mx-auto flex flex-col gap-6">
             {loading ? (
               <div className="flex justify-center py-10">
                 <div className="w-8 h-8 border-4 border-(--purple-2) border-t-transparent rounded-full animate-spin"></div>
@@ -90,11 +90,13 @@ const SelectRestaurant = () => {
                         {restaurant.location}
                       </span>
                     </p>
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                      selectedId === restaurant.id
-                        ? "border-(--yellow-1)"
-                        : "border-(--yellow-1) dark:border-(--neutral-500)"
-                    }`}>
+                    <div
+                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                        selectedId === restaurant.id
+                          ? "border-(--yellow-1)"
+                          : "border-(--yellow-1) dark:border-(--neutral-500)"
+                      }`}
+                    >
                       {selectedId === restaurant.id && (
                         <div className="w-2.5 h-2.5 rounded-full bg-(--yellow-1)" />
                       )}
@@ -172,11 +174,13 @@ const SelectRestaurant = () => {
                       </span>
                     </p>
                   </div>
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                    selectedId === restaurant.id
-                      ? "border-(--yellow-1)"
-                      : "border-(--yellow-1) dark:border-(--neutral-500)"
-                  }`}>
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                      selectedId === restaurant.id
+                        ? "border-(--yellow-1)"
+                        : "border-(--yellow-1) dark:border-(--neutral-500)"
+                    }`}
+                  >
                     {selectedId === restaurant.id && (
                       <div className="w-2.5 h-2.5 rounded-full bg-(--yellow-1)" />
                     )}

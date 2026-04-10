@@ -10,11 +10,8 @@ import {
   PopIn,
   ScaleButton,
 } from "../components/animations/motion";
-import {
-  orderService,
-  type OrderRecord,
-  // type OrderItem,
-} from "../services/orderService";
+import { orderService, type OrderRecord } from "../services/orderService";
+import { restaurantService } from "../services/restaurantService";
 import { useTheme } from "../hooks/useTheme";
 import { useRestaurant } from "../context/RestaurantContext";
 import { motion, AnimatePresence } from "motion/react";
@@ -30,23 +27,38 @@ const filterTabs = [
 const History: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState("All your orders");
   const [orders, setOrders] = useState<OrderRecord[]>([]);
+  const [restaurantImages, setRestaurantImages] = useState<
+    Record<string, string>
+  >({});
   const [loading, setLoading] = useState(true);
   const { theme } = useTheme();
   const { selectedRestaurant } = useRestaurant();
   const isDark = theme === "dark";
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchData = async () => {
       try {
-        const data = await orderService.getUserOrders();
-        setOrders(data);
+        setLoading(true);
+        const [ordersData, restaurantsData] = await Promise.all([
+          orderService.getUserOrders(),
+          restaurantService.getAllRestaurants(),
+        ]);
+
+        setOrders(ordersData);
+
+        // Map restaurant names to images
+        const imageMap: Record<string, string> = {};
+        restaurantsData.forEach((r) => {
+          imageMap[r.name] = r.image;
+        });
+        setRestaurantImages(imageMap);
       } catch (error) {
-        console.error("Failed to fetch orders:", error);
+        console.error("Failed to fetch data:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchOrders();
+    fetchData();
   }, []);
 
   // Filter orders by date range
@@ -88,22 +100,26 @@ const History: React.FC = () => {
             <div className="rounded-3xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between mb-8 overflow-hidden max-h-[240px]">
               <div className="flex items-center gap-5 md:gap-8">
                 {/* Food image */}
-                <div className="relative -ml-9 sm:mr-0 flex items-center justify-center">
+                <div className="relative -ml-9 sm:mr-0 hidden sm:flex items-center justify-center">
                   <img
                     src="/images/active-bg.png"
                     alt=""
                     className="w-full h-full block"
                   />
                   <img
-                    src="/images/active.png"
-                    alt=""
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[192px] h-[192px] object-contain z-10"
+                    src={
+                      (selectedRestaurant?.name &&
+                        restaurantImages[selectedRestaurant.name]) ||
+                      "/images/active.png"
+                    }
+                    alt={selectedRestaurant?.name || "Active Order"}
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[192px] h-[192px] rounded-full object-cover z-10"
                   />
                 </div>
                 {/* Order info */}
                 <div className="space-y-2 p-6 md:p-8">
-                  <span className="inline-block text-xs md:text-sm lg:text-base font-medium text-(--orange-1) bg-(--orange-1)/15 px-3 py-1 rounded-full">
-                    Active Order
+                  <span className="inline-block text-xs md:text-sm lg:text-base font-medium text-(--neutral-150) dark:text-(--orange-1) bg-(--neutral-150)/20 dark:bg-(--orange-1)/15 px-3 py-1 rounded-[9px]">
+                    Active Restaurant
                   </span>
                   <h3 className="text-white dark:text-(--neutral-800) font-bold text-[20px] md:text-[24px] lg:text-[32px] heading-font">
                     {selectedRestaurant?.name || "Gram Bistro"}
@@ -176,7 +192,11 @@ const History: React.FC = () => {
                           className="w-full h-full block z-20"
                         />
                         <img
-                          src={order.items[0]?.image || "/images/food-1.jpg"}
+                          src={
+                            restaurantImages[order.restaurantName] ||
+                            order.items[0]?.image ||
+                            "/images/food-1.jpg"
+                          }
                           alt={order.restaurantName}
                           className="absolute top-1/2 -left-1/10 -translate-y-1/2 w-[65%] h-[60%] rounded-full overflow-hidden object-cover z-10"
                         />

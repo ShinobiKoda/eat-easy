@@ -121,7 +121,7 @@ const NotFound: React.FC = () => {
               Eat
             </span>
             <span className="font-bold text-(--orange-1)">Easy</span> &middot;
-            Making meals effortless
+            Ordering meals made easy
           </p>
         </FadeIn>
       </MotionContainer>
