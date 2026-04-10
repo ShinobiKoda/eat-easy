@@ -13,7 +13,7 @@ import { RestaurantProvider } from "./context/RestaurantContext";
 import { OrderProvider } from "./context/OrderContext";
 
 // Lazy-loaded components
-const Splash = lazy(() => import("./pages/Splash"));
+import Splash from "./pages/Splash";
 const GetStarted = lazy(() => import("./pages/GetStarted"));
 const SignUpMethod = lazy(() => import("./pages/auth/SignUpMethod"));
 const Signup = lazy(() => import("./pages/auth/SignUp"));

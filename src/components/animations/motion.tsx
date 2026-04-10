@@ -142,7 +142,7 @@ export const MotionContainer = ({
       className={className}
       style={style}
       initial="hidden"
-      animate={ready ? "show" : "hidden"}
+      animate="show"
       viewport={{ once: false, amount: 0.15 }}
       variants={variants}
     >

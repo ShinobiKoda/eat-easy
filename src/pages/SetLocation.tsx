@@ -25,7 +25,7 @@ const SetLocation = () => {
           <h1 className="font-medium text-[22px] text-(--neutral-800) text-center heading-font dark:text-white">
             Set your location
           </h1>
-        </SlideIn>
+        </div>
 
         <div className="grid grid-cols-1 gap-6 mt-6 px-6">
           <motion.div
@@ -70,7 +70,7 @@ const SetLocation = () => {
       </MotionContainer>
 
       <MotionContainer className="w-full h-screen flex-col items-center justify-center max-w-[700px] mx-auto hidden md:flex px-6">
-        <SlideIn direction="down" className="w-full text-center space-y-4">
+        <div className="w-full text-center space-y-4">
           <h1 className="heading-font text-(--neutral-800) font-medium text-[40px] dark:text-white">
             Start the Smart Menu Experience
           </h1>
@@ -78,7 +78,7 @@ const SetLocation = () => {
             Please enter your location or use your current location and enjoy
             custom experience in any of our restuarants.
           </p>
-        </SlideIn>
+        </div>
 
         <PopIn className="w-full mt-[42px] bg-white dark:bg-(--neutral-700) p-6 rounded-[20px] space-y-5">
           <FadeIn>
