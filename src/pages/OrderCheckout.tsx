@@ -145,9 +145,7 @@ const Checkout1: React.FC = () => {
     localStorage.removeItem(getStorageKey("eat-easy-order-batches"));
     localStorage.removeItem(getStorageKey("countdown_start"));
 
-    // Only clear the cart if this checkout was for cart items (no orderFromState).
-    // When paying for a kitchen order (from OrderStatus), leave the cart alone
-    // so independently-added items aren't wiped.
+    // When paying from OrderStatus, don't clear the recently added items in the cart
     if (!orderFromState) {
       localStorage.removeItem(getStorageKey("eat-easy-cart"));
       setOrderItems([]);
