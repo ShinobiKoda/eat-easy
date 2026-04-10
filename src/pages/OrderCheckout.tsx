@@ -140,14 +140,18 @@ const Checkout1: React.FC = () => {
 
     setShowSuccessModal(true);
 
-    // Clear order from localStorage after payment (scoped to current restaurant)
+    // Clear kitchen-order data from localStorage (scoped to current restaurant)
     localStorage.removeItem(getStorageKey("eat-easy-last-order"));
     localStorage.removeItem(getStorageKey("eat-easy-order-batches"));
     localStorage.removeItem(getStorageKey("countdown_start"));
-    localStorage.removeItem(getStorageKey("eat-easy-cart"));
 
-    // Also clear the React state so the useOrder hook doesn't re-persist the cart
-    setOrderItems([]);
+    // Only clear the cart if this checkout was for cart items (no orderFromState).
+    // When paying for a kitchen order (from OrderStatus), leave the cart alone
+    // so independently-added items aren't wiped.
+    if (!orderFromState) {
+      localStorage.removeItem(getStorageKey("eat-easy-cart"));
+      setOrderItems([]);
+    }
   };
 
   const getCardTypeIcon = (number: string) => {
