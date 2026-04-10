@@ -34,15 +34,15 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const [selectedItem, setSelectedItem] = useState<number | null>(() => {
     const path = typeof window !== "undefined" ? window.location.pathname : "";
-    if (path.includes("/smart-assistant") || path.includes("/welcome"))
-      return 1;
+    if (path.includes("/smart-assistant")) return 1;
     if (path.includes("/FullMenu")) return 7;
     if (path.includes("/history")) return 2;
     if (path.includes("/locations")) return 3;
     if (path.includes("/rewards")) return 4;
     if (path.includes("/set-restaurant")) return 6;
     if (path.includes("/admin")) return 99;
-    if (path.includes("/OrderStatus") || path.includes("/orderStatus")) return 8;
+    if (path.includes("/OrderStatus") || path.includes("/orderStatus"))
+      return 8;
     return null;
   });
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -140,7 +140,7 @@ const Sidebar: React.FC = () => {
   // Sync selection with current route
   useEffect(() => {
     const path = location.pathname;
-    if (path.includes("/smart-assistant") || path.includes("/welcome")) {
+    if (path.includes("/smart-assistant")) {
       setSelectedItem(1);
     } else if (path.includes("/history")) {
       setSelectedItem(2);

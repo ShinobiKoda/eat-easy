@@ -34,7 +34,7 @@ function Splash() {
     >
       {/* Rotating + 3D Wobble SVG */}
       <motion.img
-        src="/images/splash-img-1.svg"
+        src="/images/splash-img-1.webp"
         alt="Spinning Circle"
         className="absolute left-10 -translate-x-1/2 -translate-y-1/2"
         animate={{
@@ -51,7 +51,7 @@ function Splash() {
 
       {/* Optional second image */}
       <motion.img
-        src="/images/splash-img-2.svg"
+        src="/images/splash-img-2.webp"
         alt="Base Background"
         className="absolute bottom-10 right-0 opacity-70"
         initial={{ scale: 0.9, opacity: 0 }}

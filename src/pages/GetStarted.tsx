@@ -34,7 +34,7 @@ function GetStarted() {
           <SlideIn direction="up">
             <div className="w-full overflow-hidden">
               <img
-                src="/images/mobile-onboarding-illustration.svg"
+                src="/images/mobile-onboarding-illustration.webp"
                 alt="Onboarding Illustration"
                 className="w-full"
               />
@@ -74,7 +74,7 @@ function GetStarted() {
             <PopIn>
               <motion.button
                 onClick={handleGetStarted}
-                className="px-6 py-4 bg-(--purple-2) text-white font-semibold text-base rounded-2xl w-full"
+                className="px-6 py-4 bg-(--purple-2) text-white font-semibold text-base rounded-2xl w-full cursor-pointer"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >

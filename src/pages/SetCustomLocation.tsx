@@ -40,8 +40,8 @@ function SetCustomLocation() {
         style={{
           backgroundImage:
             theme === "dark"
-              ? "url('/images/set-custom-location-map-dark.svg')"
-              : "url('/images/set-custom-location-map.svg')",
+              ? "url('/images/set-custom-location-map-dark.webp')"
+              : "url('/images/set-custom-location-map.webp')",
         }}
       >
         <Navbar />

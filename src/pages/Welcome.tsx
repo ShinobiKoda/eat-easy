@@ -60,7 +60,7 @@ const Welcome: React.FC = () => {
           description="Browse Our Food Menu"
           navbarTitle={restaurantName}
         />
-        <div className="w-full pt-[60px] md:pt-30 md:pb-10 lg:pt-[120px] px-6 lg:px-[42px]">
+        <div className="w-full pt-[72px] md:pt-30 md:pb-10 lg:pt-[120px] px-6 lg:px-[42px]">
           <PopIn className="heading-font text-(--neutral-800) font-medium text-[22px] text-center dark:text-white md:hidden">
             Let's find the perfect dish for you
           </PopIn>

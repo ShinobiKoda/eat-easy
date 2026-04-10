@@ -1,4 +1,4 @@
-import Choice from '/images/choiceimg.svg';
+import Choice from '/images/choiceimg.webp';
 import { useState, useEffect, useMemo } from 'react';
 import { motion, easeInOut } from 'framer-motion'
 

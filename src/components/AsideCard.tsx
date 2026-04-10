@@ -12,7 +12,7 @@ const AsideCard = () => {
         <PopIn>
           <div className="w-full max-w-[400px] mx-auto">
             <img
-              src="/images/desktop-onboarding-illustration.svg"
+              src="/images/desktop-onboarding-illustration.webp"
               alt="Onboarding Illustration"
               className="w-full"
             />

@@ -41,7 +41,7 @@ const SetLocation = () => {
                 className="w-[70px] h-[70px]"
               >
                 <img
-                  src="/images/qr-code.svg"
+                  src="/images/qr-code.webp"
                   alt="Location Icon"
                   className="w-full"
                 />
@@ -87,8 +87,8 @@ const SetLocation = () => {
               style={{
                 backgroundImage:
                   theme === "dark"
-                    ? "url('/images/dark-map.svg')"
-                    : "url('/images/Map.svg')",
+                    ? "url('/images/dark-map.webp')"
+                    : "url('/images/Map.webp')",
               }}
             ></div>
           </FadeIn>
