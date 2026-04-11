@@ -21,6 +21,7 @@ const Recommend: React.FC<RecommendProps> = ({ hideHeader }) => {
   const restaurantName = selectedRestaurant?.name || "Gram Bistro";
   const [lastRec, setLastRec] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(true);
+  const [usedToday, setUsedToday] = useState(false);
 
   useEffect(() => {
     async function fetchLastRec() {
@@ -29,6 +30,16 @@ const Recommend: React.FC<RecommendProps> = ({ hideHeader }) => {
         const rec = await getLatestRecommendation();
         setLastRec(rec);
         console.debug("[Recommend] Latest rec:", rec?.id || "none");
+
+        // Check daily limit
+        if (rec) {
+          const recDate = new Date(rec.created_at);
+          const todayStart = new Date();
+          todayStart.setHours(0, 0, 0, 0);
+          if (recDate >= todayStart) {
+            setUsedToday(true);
+          }
+        }
       } catch (err) {
         console.error("[Recommend] Error fetching recommendation:", err);
       } finally {
@@ -77,18 +88,30 @@ const Recommend: React.FC<RecommendProps> = ({ hideHeader }) => {
           <div className="gap-6 flex flex-col items-center mb-50 md:mb-20 w-full sm:w-[480px]">
             {/* New recommendation card */}
             <motion.div
-              whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/step1")}
-              className="bg-white dark:bg-(--neutral-700) rounded-2xl w-full mx-auto p-7 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex justify-between items-center cursor-pointer"
+              whileTap={usedToday ? undefined : { scale: 0.98 }}
+              onClick={() => !usedToday && navigate("/step1")}
+              className={`bg-white dark:bg-(--neutral-700) rounded-2xl w-full mx-auto p-7 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex justify-between items-center ${
+                usedToday
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
             >
-              <p className="text-[14px] lg:text-[18px] text-(--neutral-900) dark:text-white font-semibold">
-                New recommendation
-              </p>
+              <div>
+                <p className="text-[14px] lg:text-[18px] text-(--neutral-900) dark:text-white font-semibold">
+                  New recommendation
+                </p>
+                {usedToday && (
+                  <p className="text-xs text-(--orange-1) font-medium mt-1">
+                    Limit reached — try again tomorrow
+                  </p>
+                )}
+              </div>
               <motion.button
-                whileTap={{ scale: 0.9 }}
+                whileTap={usedToday ? undefined : { scale: 0.9 }}
                 className="w-6 h-6 cursor-pointer"
+                disabled={usedToday}
               >
-                <FaArrowRight size={20} className="text-(--yellow-1)" />
+                <FaArrowRight size={20} className={usedToday ? "text-(--neutral-300)" : "text-(--yellow-1)"} />
               </motion.button>
             </motion.div>
 
@@ -131,11 +154,16 @@ const Recommend: React.FC<RecommendProps> = ({ hideHeader }) => {
 
           <div className="text-[16px] lg:text-[20px] font-600 space-y-4 w-full lg:w-xl flex flex-col items-center">
             <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate("/step1")}
-              className="rounded-2xl text-white bg-(--purple-2) dark:bg-[#615793] p-4 cursor-pointer w-full md:w-[480px] mx-auto"
+              whileTap={usedToday ? undefined : { scale: 0.95 }}
+              onClick={() => !usedToday && navigate("/step1")}
+              disabled={usedToday}
+              className={`rounded-2xl text-white p-4 w-full md:w-[480px] mx-auto ${
+                usedToday
+                  ? "bg-(--neutral-400) cursor-not-allowed"
+                  : "bg-(--purple-2) dark:bg-[#615793] cursor-pointer"
+              }`}
             >
-              Start New Recommendation
+              {usedToday ? "1 recommendation per day" : "Start New Recommendation"}
             </motion.button>
           </div>
         </div>
@@ -145,4 +173,3 @@ const Recommend: React.FC<RecommendProps> = ({ hideHeader }) => {
 };
 
 export default Recommend;
-

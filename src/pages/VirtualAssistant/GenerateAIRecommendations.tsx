@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { generateRecommendations } from "../../services/recommendationService";
 import { saveRecommendation } from "../../services/recommendationHistoryService";
 import { getMenuItems } from "../../services/menuService";
+import { supabase } from "../../config/supabaseClient";
 import Header from "../../components/layout/Header";
 
 const statusMessages = [
@@ -42,6 +43,31 @@ const Generating: React.FC = () => {
 
     async function generate() {
       try {
+        // ─── Daily limit: 1 AI recommendation per day ───
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const todayStart = new Date();
+          todayStart.setHours(0, 0, 0, 0);
+
+          const { data: todayRecs } = await supabase
+            .from("recommendations")
+            .select("id, item_ids")
+            .eq("user_id", user.id)
+            .gte("created_at", todayStart.toISOString())
+            .order("created_at", { ascending: false })
+            .limit(1);
+
+          if (todayRecs && todayRecs.length > 0) {
+            // Already generated today — redirect to existing results
+            console.debug("[Generating] Daily limit reached, using existing recommendation");
+            navigate("/recommended", {
+              replace: true,
+              state: { itemIds: todayRecs[0].item_ids, fromGeneration: true },
+            });
+            return;
+          }
+        }
+
         console.debug("[Generating] Starting AI recommendation with:", {
           moods,
           budgetRange,

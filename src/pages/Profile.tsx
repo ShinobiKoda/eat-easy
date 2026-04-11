@@ -16,10 +16,11 @@ import { ClipLoader } from "react-spinners";
 import { IoCameraOutline, IoCheckmark, IoClose } from "react-icons/io5";
 import { MdOutlineEdit } from "react-icons/md";
 import { RiShieldUserLine } from "react-icons/ri";
-import { LuMail, LuUser, LuPhone, LuCalendar, LuMapPin } from "react-icons/lu";
+import { LuMail, LuUser, LuPhone, LuCalendar, LuMapPin, LuTicket } from "react-icons/lu";
 import { HiOutlineSparkles } from "react-icons/hi2";
-import { PiMedalThin } from "react-icons/pi";
 import { MdOutlineHistory } from "react-icons/md";
+import { orderService } from "../services/orderService";
+import { couponService } from "../services/couponService";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -267,6 +268,37 @@ const Profile: React.FC = () => {
     string | null
   >(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // ─── Live stats ─────────────────────────────────────────────────────────
+  const [totalOrders, setTotalOrders] = useState<number | null>(null);
+  const [totalCoupons, setTotalCoupons] = useState<number | null>(null);
+  const [aiAssists, setAiAssists] = useState<number | null>(null);
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const [orders, coupons] = await Promise.all([
+          orderService.getUserOrders(),
+          couponService.getUserCoupons(),
+        ]);
+        setTotalOrders(orders.length);
+        setTotalCoupons(coupons.length);
+
+        // AI assists = recommendation count
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (authUser) {
+          const { count } = await supabase
+            .from("recommendations")
+            .select("id", { count: "exact", head: true })
+            .eq("user_id", authUser.id);
+          setAiAssists(count ?? 0);
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile stats:", err);
+      }
+    }
+    fetchStats();
+  }, []);
 
   const meta = (user?.user_metadata as any) || {};
   const provider = user?.app_metadata?.provider || "email";
@@ -519,19 +551,19 @@ const Profile: React.FC = () => {
                   <StatCard
                     icon={<MdOutlineHistory size={20} />}
                     label="Total Orders"
-                    value="—"
+                    value={totalOrders ?? "—"}
                     accent="purple"
                   />
                   <StatCard
-                    icon={<PiMedalThin size={20} />}
-                    label="Reward Points"
-                    value="—"
+                    icon={<LuTicket size={20} />}
+                    label="Total Coupons"
+                    value={totalCoupons ?? "—"}
                     accent="yellow"
                   />
                   <StatCard
                     icon={<HiOutlineSparkles size={20} />}
                     label="AI Assists"
-                    value="—"
+                    value={aiAssists ?? "—"}
                     accent="orange"
                   />
                 </motion.div>
