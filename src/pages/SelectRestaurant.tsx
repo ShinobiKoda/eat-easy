@@ -1,6 +1,5 @@
 import { MotionContainer, SlideIn, PopIn } from "../components/animations/motion";
 import { motion } from "motion/react";
-import Header from "../components/layout/Header";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../hooks/useTheme";
 import { useState, useEffect } from "react";
@@ -49,7 +48,7 @@ const SelectRestaurant = () => {
 
   return (
     <div className="w-full min-h-screen">
-      <Header title="Food Menu" description="Set Restaurant" />
+      {/* <Header title="Food Menu" description="Set Restaurant" /> */}
       <div className="w-full px-6">
         <MotionContainer className="md:hidden pt-28">
           <SlideIn

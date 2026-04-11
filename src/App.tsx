@@ -55,6 +55,7 @@ const History = lazy(() => import("./pages/OrderHistory"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Help = lazy(() => import("./pages/Help"));
+const ChangeLocation = lazy(() => import("./pages/ChangeLocation"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
@@ -384,6 +385,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <Help />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="locations"
+                  element={
+                    <ProtectedRoute>
+                      <ChangeLocation />
                     </ProtectedRoute>
                   }
                 />
