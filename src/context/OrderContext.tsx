@@ -107,6 +107,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({
   const handleSend = (sent: any) => {
     try {
       const lastOrderKey = getStorageKey("eat-easy-last-order");
+      const batchesKey = getStorageKey("eat-easy-order-batches");
 
       const existingBatchesRaw = localStorage.getItem(batchesKey);
       const existingBatches = existingBatchesRaw ? JSON.parse(existingBatchesRaw) : [];
