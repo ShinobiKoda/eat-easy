@@ -110,7 +110,7 @@ const SelectRestaurant = () => {
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={handleContinue}
-              className="w-full px-6 py-4 rounded-2xl bg-(--purple-2) text-white text-semibold text-base"
+              className="w-full px-6 py-4 rounded-2xl bg-(--purple-2) text-white font-semibold text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
               disabled={!selectedId || loading}
             >
               Continue
@@ -192,7 +192,7 @@ const SelectRestaurant = () => {
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={handleContinue}
-              className="w-full px-6 py-4 rounded-2xl bg-(--purple-2) text-white text-semibold text-base cursor-pointer"
+              className="w-full px-6 py-4 rounded-2xl bg-(--purple-2) text-white font-semibold text-base cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
               disabled={!selectedId || loading}
             >
               Continue

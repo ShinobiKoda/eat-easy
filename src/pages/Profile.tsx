@@ -561,52 +561,7 @@ const Profile: React.FC = () => {
                 </div>
               </FadeIn>
 
-              {/* Save toast */}
-              <AnimatePresence>
-                {saveSuccess && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-(--neutral-900) dark:bg-white text-white dark:text-(--neutral-800) px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-sm font-semibold"
-                  >
-                    <span className="w-6 h-6 rounded-full bg-(--yellow-1) flex items-center justify-center shrink-0">
-                      <IoCheckmark size={14} className="text-white" />
-                    </span>
-                    Profile updated successfully!
-                  </motion.div>
-                )}
-              </AnimatePresence>
 
-              {/* Password Reset Toast */}
-              <AnimatePresence>
-                {passwordResetStatus === "success" && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-60 bg-(--neutral-900) dark:bg-white text-white dark:text-(--neutral-800) px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-sm font-semibold whitespace-nowrap"
-                  >
-                    <span className="w-6 h-6 rounded-full bg-(--yellow-1) flex items-center justify-center shrink-0">
-                      <IoCheckmark size={14} className="text-white" />
-                    </span>
-                    Password reset email sent! Check your inbox.
-                  </motion.div>
-                )}
-                {passwordResetStatus === "error" && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-60 bg-red-600 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-sm font-semibold whitespace-nowrap"
-                  >
-                    <span className="w-6 h-6 rounded-full bg-white flex items-center justify-center shrink-0">
-                      <IoClose size={14} className="text-red-600" />
-                    </span>
-                    {passwordResetMessage || "Failed to send reset email."}
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
 
             {/* ── Right column ───────────────────────────────────────── */}
@@ -672,6 +627,130 @@ const Profile: React.FC = () => {
           </div>
         </div>
       </MotionContainer>
+
+      {/* ── Toasts (outside layout flow to prevent shifts) ──────── */}
+      <AnimatePresence>
+        {saveSuccess && (
+          <motion.div
+            key="save-toast"
+            initial={{ y: -120, opacity: 0, scale: 0.9 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: -120, opacity: 0, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-9999 w-[92%] max-w-[420px]"
+          >
+            <div
+              className="flex items-center gap-4 px-5 py-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(34,197,94,0.15) 0%, rgba(16,185,129,0.08) 100%)",
+                border: "1px solid rgba(34,197,94,0.3)",
+                backdropFilter: "blur(20px)",
+              }}
+            >
+              <motion.div
+                initial={{ rotate: -30, scale: 0 }}
+                animate={{ rotate: 0, scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 15, delay: 0.15 }}
+                className="shrink-0"
+              >
+                <div className="w-11 h-11 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                  <IoCheckmark size={22} className="text-emerald-500" />
+                </div>
+              </motion.div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-[15px] text-emerald-600 dark:text-emerald-400">
+                  Profile Updated
+                </p>
+                <p className="text-[13px] text-gray-600 dark:text-gray-300 mt-0.5">
+                  Your changes have been saved successfully.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {passwordResetStatus === "success" && (
+          <motion.div
+            key="pw-success-toast"
+            initial={{ y: -120, opacity: 0, scale: 0.9 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: -120, opacity: 0, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-9999 w-[92%] max-w-[420px]"
+          >
+            <div
+              className="flex items-center gap-4 px-5 py-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(34,197,94,0.15) 0%, rgba(16,185,129,0.08) 100%)",
+                border: "1px solid rgba(34,197,94,0.3)",
+                backdropFilter: "blur(20px)",
+              }}
+            >
+              <motion.div
+                initial={{ rotate: -30, scale: 0 }}
+                animate={{ rotate: 0, scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 15, delay: 0.15 }}
+                className="shrink-0"
+              >
+                <div className="w-11 h-11 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                  <IoCheckmark size={22} className="text-emerald-500" />
+                </div>
+              </motion.div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-[15px] text-emerald-600 dark:text-emerald-400">
+                  Reset Email Sent! ✉️
+                </p>
+                <p className="text-[13px] text-gray-600 dark:text-gray-300 mt-0.5">
+                  Check your inbox for the password reset link.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+        {passwordResetStatus === "error" && (
+          <motion.div
+            key="pw-error-toast"
+            initial={{ y: -120, opacity: 0, scale: 0.9 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: -120, opacity: 0, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-9999 w-[92%] max-w-[420px]"
+          >
+            <div
+              className="flex items-center gap-4 px-5 py-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(220,38,38,0.08) 100%)",
+                border: "1px solid rgba(239,68,68,0.3)",
+                backdropFilter: "blur(20px)",
+              }}
+            >
+              <motion.div
+                initial={{ rotate: -30, scale: 0 }}
+                animate={{ rotate: 0, scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 15, delay: 0.15 }}
+                className="shrink-0"
+              >
+                <div className="w-11 h-11 rounded-full bg-red-500/20 flex items-center justify-center">
+                  <IoClose size={22} className="text-red-500" />
+                </div>
+              </motion.div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-[15px] text-red-600 dark:text-red-400">
+                  Reset Failed
+                </p>
+                <p className="text-[13px] text-gray-600 dark:text-gray-300 mt-0.5">
+                  {passwordResetMessage || "Failed to send reset email."}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
