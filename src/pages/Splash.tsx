@@ -26,68 +26,54 @@ function Splash() {
 
   return (
     <motion.div
-      className="relative w-full h-screen overflow-hidden flex items-center justify-center"
+      className="relative flex h-screen w-full items-center justify-center overflow-hidden"
       style={{ backgroundImage }}
       initial={{ opacity: 1 }}
       animate={{ opacity: [1, 1, 0] }}
-      transition={{ duration: 1, delay: 3 }}
+      transition={{ duration: 0.8, delay: 3.2 }}
     >
-      {/* Rotating + 3D Wobble SVG */}
-      <motion.img
-        src="/images/splash-img-1.webp"
-        alt="Spinning Circle"
-        className="absolute left-10 -translate-x-1/2 -translate-y-1/2"
-        animate={{
-          rotate: 360,
-          rotateX: [0, 10, 0, -10, 0],
-          rotateY: [0, -10, 0, 10, 0],
-        }}
-        transition={{
-          rotate: { repeat: Infinity, duration: 10, ease: "linear" },
-          rotateX: { repeat: Infinity, duration: 6, ease: "easeInOut" },
-          rotateY: { repeat: Infinity, duration: 6, ease: "easeInOut" },
-        }}
-      />
-
-      {/* Optional second image */}
-      <motion.img
-        src="/images/splash-img-2.webp"
-        alt="Base Background"
-        className="absolute bottom-10 right-0 opacity-70"
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.5, duration: 1 }}
-      />
-
-      {/* Text Animation */}
       <motion.div
-        className="absolute bottom-10 left-10"
-        initial={{ opacity: 0, y: 40 }}
+        className="relative z-10 flex flex-col items-center gap-4 px-6 text-center"
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.8 }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
-        <h1 className="text-[67px] leading-tight">
+        <p className="text-xs uppercase tracking-[0.28em] text-(--neutral-500) dark:text-(--neutral-300)">
+          Welcome to
+        </p>
+        <h1 className="heading-font text-4xl font-semibold leading-tight sm:text-[40px]">
           <span className="font-medium text-(--neutral-700) dark:text-(--neutral-150)">
             Eat
           </span>{" "}
-          <br />
           <motion.span
-            className="font-bold text-(--orange-text) inline-block"
-            initial={{ scale: 0.8 }}
-            animate={{ scale: [0.8, 1, 1.05, 1] }}
-            transition={{
-              delay: 1.5,
-              duration: 1,
-              ease: [0.22, 1, 0.36, 1],
-            }}
+            className="inline-block font-bold text-(--orange-text)"
+            initial={{ scale: 0.96 }}
+            animate={{ scale: [0.96, 1.02, 1] }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
           >
             Easy
           </motion.span>
         </h1>
+        <p className="max-w-xs text-sm text-(--neutral-550) dark:text-(--neutral-300)">
+          Curating the perfect bite for you.
+        </p>
+
+        <motion.div
+          className="mt-4 h-[3px] w-40 overflow-hidden rounded-full bg-(--light-progress-bg) dark:bg-(--neutral-700)"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.4 }}
+        >
+          <motion.div
+            className="h-full w-full rounded-full bg-(--orange-text)"
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            transition={{ duration: 3.2, ease: [0.25, 0.8, 0.25, 1] }}
+          />
+        </motion.div>
       </motion.div>
     </motion.div>
   );
 }
 
 export default Splash;
-
