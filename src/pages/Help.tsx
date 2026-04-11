@@ -169,7 +169,7 @@ const Help: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <SEO
         title="Help & FAQ | EatEasy"
         description="Find answers to frequently asked questions and learn more about EatEasy."
@@ -357,3 +357,4 @@ const Help: React.FC = () => {
 };
 
 export default Help;
+

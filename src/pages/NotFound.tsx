@@ -16,7 +16,7 @@ const NotFound: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center px-6 py-12">
+    <div className="w-full min-h-dvh flex items-center justify-center px-6 py-12">
       <SEO
         title="404 — Page Not Found | EatEasy"
         description="The page you're looking for doesn't exist."
@@ -130,3 +130,4 @@ const NotFound: React.FC = () => {
 };
 
 export default NotFound;
+

@@ -7,7 +7,7 @@ const AsideCard = () => {
   useEffect(() => setAnimateBar(true), []);
 
   return (
-    <div className="min-h-screen p-[30px] hidden lg:block">
+    <div className="min-h-dvh p-[30px] hidden lg:block">
       <MotionContainer className="min-h-full lg:flex bg-white dark:bg-(--neutral-700) rounded-3xl flex-col align-center justify-center">
         <PopIn>
           <div className="w-full max-w-[400px] mx-auto">
@@ -58,3 +58,4 @@ const AsideCard = () => {
 };
 
 export default AsideCard;
+

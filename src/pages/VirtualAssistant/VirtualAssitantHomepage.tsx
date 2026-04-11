@@ -14,7 +14,7 @@ const Virtual: React.FC<VirtualProps> = ({ hideHeader }) => {
   const restaurantName = selectedRestaurant?.name || "Gram Bistro";
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <SEO
         title="Virtual Assistant | EatEasy"
         description="Let our smart virtual assistant help you find the perfect dish."
@@ -72,3 +72,4 @@ const Virtual: React.FC<VirtualProps> = ({ hideHeader }) => {
 };
 
 export default Virtual;
+

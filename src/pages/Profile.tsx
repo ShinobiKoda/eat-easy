@@ -416,7 +416,7 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <SEO
         title="My Profile | EatEasy"
         description="Manage your EatEasy profile, preferences, and account details."
@@ -708,3 +708,4 @@ const Profile: React.FC = () => {
 };
 
 export default Profile;
+

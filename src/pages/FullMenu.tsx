@@ -151,7 +151,7 @@ const FullMenu: React.FC = () => {
   }, [isModalOpen]);
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <div className={``}>
         <Header
           title="Full Menu"
@@ -319,3 +319,4 @@ const FullMenu: React.FC = () => {
 };
 
 export default FullMenu;
+

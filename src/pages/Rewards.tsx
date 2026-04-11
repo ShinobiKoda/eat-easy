@@ -110,7 +110,7 @@ const Rewards: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <MotionContainer className="transition-all duration-300">
         <Header description="My Rewards" navbarTitle="My Rewards" />
 
@@ -429,3 +429,4 @@ const Rewards: React.FC = () => {
 };
 
 export default Rewards;
+

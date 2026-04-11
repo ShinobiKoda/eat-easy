@@ -26,7 +26,7 @@ function Splash() {
 
   return (
     <motion.div
-      className="relative flex h-screen w-full items-center justify-center overflow-hidden"
+      className="relative w-full h-dvh overflow-hidden flex items-center justify-center"
       style={{ backgroundImage }}
       initial={{ opacity: 1 }}
       animate={{ opacity: [1, 1, 0] }}

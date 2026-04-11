@@ -189,7 +189,7 @@ const Sidebar: React.FC = () => {
           transitionDuration: "300ms",
           transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
         }}
-        className={`aside h-screen rounded-r-3xl fixed left-0 top-0 z-50 w-[260px] ${effectiveIsOpen ? "md:w-[260px]" : "md:w-36"}`}
+        className={`aside h-dvh rounded-r-3xl fixed left-0 top-0 z-50 w-[260px] ${effectiveIsOpen ? "md:w-[260px]" : "md:w-36"}`}
       >
         <motion.div
           onClick={handleToggle}
@@ -751,3 +751,4 @@ const Sidebar: React.FC = () => {
 };
 
 export default Sidebar;
+

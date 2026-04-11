@@ -36,7 +36,7 @@ function SetCustomLocation() {
   return (
     <div className="w-full">
       <div
-        className="w-full min-h-screen bg-cover bg-no-repeat bg-center"
+        className="w-full min-h-dvh bg-cover bg-no-repeat bg-center"
         style={{
           backgroundImage:
             theme === "dark"
@@ -46,7 +46,7 @@ function SetCustomLocation() {
       >
         <Navbar />
 
-        <div className="w-full px-4 min-h-screen pt-10 lg:pt-[70px] max-w-[700px] mx-auto">
+        <div className="w-full px-4 min-h-dvh pt-10 lg:pt-[70px] max-w-[700px] mx-auto">
           <div className="bg-white rounded-[20px] shadow-md p-6 space-y-5 w-full dark:bg-(--neutral-700)">
             <h1 className="text-center heading-font font-medium text-[22px] text-(--neutral-800) dark:text-white flex items-center justify-center gap-2">
               Set Your Location{" "}
@@ -113,3 +113,4 @@ function SetCustomLocation() {
 }
 
 export default SetCustomLocation;
+

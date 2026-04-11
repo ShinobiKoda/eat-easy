@@ -15,7 +15,7 @@ const ProcessingPayment: React.FC<ProcessingPaymentProps> = ({ isOpen }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 min-h-screen bg-black/70 z-100 backdrop-blur-md"
+            className="fixed inset-0 min-h-dvh bg-black/70 z-100 backdrop-blur-md"
           />
 
           {/* Content */}
@@ -92,3 +92,4 @@ const ProcessingPayment: React.FC<ProcessingPaymentProps> = ({ isOpen }) => {
 };
 
 export default ProcessingPayment;
+

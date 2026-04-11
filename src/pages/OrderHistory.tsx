@@ -90,7 +90,7 @@ const History: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <MotionContainer className="transition-all duration-300">
         <Header description="Order History" navbarTitle="Order History" />
 
@@ -284,7 +284,7 @@ const History: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+                <div className="space-y-4 max-h-[50svh] overflow-y-auto pr-2 custom-scrollbar">
                   {selectedOrder.items.map((item, idx) => (
                     <div
                       key={idx}

@@ -224,6 +224,16 @@ const Checkout1: React.FC = () => {
         updatedBatches = [...existingBatches, newBatch];
       }
 
+    // Clear kitchen-order data from localStorage (scoped to current restaurant)
+    localStorage.removeItem(getStorageKey("eat-easy-last-order"));
+    localStorage.removeItem(getStorageKey("eat-easy-order-batches"));
+    localStorage.removeItem(getStorageKey("countdown_start"));
+
+    // When paying from OrderStatus, don't clear the recently added items in the cart
+    if (!orderFromState) {
+      localStorage.removeItem(getStorageKey("eat-easy-cart"));
+      setOrderItems([]);
+    }
       localStorage.setItem(batchesKey, JSON.stringify(updatedBatches));
 
       const allItems = updatedBatches.flatMap((b: any) => b.items);
@@ -362,7 +372,7 @@ const Checkout1: React.FC = () => {
   }, [isModalOpen]);
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       {showLoader && <Loader />}
 
       <div
@@ -751,3 +761,4 @@ const Checkout1: React.FC = () => {
 };
 
 export default Checkout1;
+

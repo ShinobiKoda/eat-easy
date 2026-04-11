@@ -46,7 +46,7 @@ const Welcome: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <WelcomeDiscountModal
         isOpen={showWelcomeDiscount}
         onClose={() => setShowWelcomeDiscount(false)}
@@ -148,3 +148,4 @@ const Welcome: React.FC = () => {
 };
 
 export default Welcome;
+

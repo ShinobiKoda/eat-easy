@@ -7,6 +7,7 @@ const TOAST_DURATION = 5000; // 5 seconds
 
 const OrderReadyToast: React.FC = () => {
   const [visible, setVisible] = useState(false);
+  const [restaurantName, setRestaurantName] = useState("");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -15,7 +16,11 @@ const OrderReadyToast: React.FC = () => {
     audioRef.current = new Audio(DING_SOUND_URL);
     audioRef.current.volume = 0.7;
 
-    const handleReady = () => {
+    const handleReady = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const name = detail?.restaurantName || "Gram Bistro";
+      setRestaurantName(name);
+
       // Play ding
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
@@ -80,7 +85,7 @@ const OrderReadyToast: React.FC = () => {
             {/* Text */}
             <div className="flex-1 min-w-0">
               <p className="font-bold text-[15px] text-emerald-600 dark:text-emerald-400">
-                Order Ready! 🎉
+                {restaurantName}: Order Ready! 🎉
               </p>
               <p className="text-[13px] text-gray-600 dark:text-gray-300 mt-0.5">
                 Your food is ready — enjoy your meal!

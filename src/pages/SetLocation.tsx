@@ -214,8 +214,7 @@ const SetLocation = () => {
         </div>
       </MotionContainer>
 
-      {/* ── Desktop View ── */}
-      <MotionContainer className="w-full h-screen flex-col items-center justify-center max-w-[700px] mx-auto hidden md:flex px-6">
+      <MotionContainer className="w-full h-dvh flex-col items-center justify-center max-w-[700px] mx-auto hidden md:flex px-6">
         <div className="w-full text-center space-y-4">
           <h1 className="heading-font text-(--neutral-800) font-medium text-[40px] dark:text-white">
             Start the Smart Menu Experience
@@ -285,3 +284,4 @@ const SetLocation = () => {
 };
 
 export default SetLocation;
+

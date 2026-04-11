@@ -40,7 +40,7 @@ const OrderStatus: React.FC = () => {
   const formattedTime = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       {showLoader && <Loader />}
 
       <div
@@ -216,3 +216,4 @@ const OrderStatus: React.FC = () => {
 };
 
 export default OrderStatus;
+

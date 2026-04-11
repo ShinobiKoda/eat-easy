@@ -57,7 +57,7 @@ const Step4FoodType: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       <div>
         <Header
           title="Food Menu"
@@ -119,3 +119,4 @@ const Step4FoodType: React.FC = () => {
 };
 
 export default Step4FoodType;
+
