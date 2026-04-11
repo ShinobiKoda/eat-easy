@@ -130,11 +130,13 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
   };
 
 
-  const toppingsTotal = item.toppings.reduce((sum, t) => {
-    const qty = toppingCounts[t.id] || 0;
-    if (!selectedToppings.has(t.id)) return sum;
-    return sum + t.price * qty;
-  }, 0);
+  const toppingsTotal = (item.toppings?.length > 0)
+    ? item.toppings.reduce((sum, t) => {
+        const qty = toppingCounts[t.id] || 0;
+        if (!selectedToppings.has(t.id)) return sum;
+        return sum + t.price * qty;
+      }, 0)
+    : 0;
 
   return (
     <motion.div
@@ -203,120 +205,126 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
             </p>
 
             {/* nutrients */}
-            <div className="p-2.5 space-x-2.5 flex justify-between bg-[#FFFFFF] dark:bg-(--neutral-700)  rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
-              {item.nutrients.map((nut, idx) => (
-                <div key={idx} className="px-2 text-center">
-                  <p className="text-[14px] font-semibold text-(--purple-1) dark:text-white">
-                    {nut.amount}
-                  </p>
-                  <p className="text-[12px] font-600 text-(--neutral-800) dark:text-(--neutral-150)">
-                    {nut.unit}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* ingredients */}
-            <div>
-              <h1 className="text-(--neutral-600) text-[18px] dark:text-(--neutral-200) font-semibold">
-                Ingredients
-              </h1>
-              <div className="py-2.5 space-x-2.5 flex flex-nowrap overflow-x-auto scrollbar-hidden">
-                {item.ingredients.map((ingredient, idx) => (
-                  <div
-                    key={idx}
-                    className="py-3 min-w-20 space-y-2.5 text-center flex flex-col items-center bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]"
-                  >
-                    <img src={ingredient.ingimage} alt="" />
-                    <p className="text-[12px] text-(--neutral-600) dark:text-(--neutral-150) font-600 p-1 w-18 truncate">
-                      {ingredient.ingname}
+            {item.nutrients?.length > 0 && (
+              <div className="p-2.5 space-x-2.5 flex justify-between bg-[#FFFFFF] dark:bg-(--neutral-700)  rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
+                {item.nutrients.map((nut, idx) => (
+                  <div key={idx} className="px-2 text-center">
+                    <p className="text-[14px] font-semibold text-(--purple-1) dark:text-white">
+                      {nut.amount}
+                    </p>
+                    <p className="text-[12px] font-600 text-(--neutral-800) dark:text-(--neutral-150)">
+                      {nut.unit}
                     </p>
                   </div>
                 ))}
               </div>
-            </div>
+            )}
+
+            {/* ingredients */}
+            {item.ingredients?.length > 0 && (
+              <div>
+                <h1 className="text-(--neutral-600) text-[18px] dark:text-(--neutral-200) font-semibold">
+                  Ingredients
+                </h1>
+                <div className="py-2.5 space-x-2.5 flex flex-nowrap overflow-x-auto scrollbar-hidden">
+                  {item.ingredients.map((ingredient, idx) => (
+                    <div
+                      key={idx}
+                      className="py-3 min-w-20 space-y-2.5 text-center flex flex-col items-center bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]"
+                    >
+                      <img src={ingredient.ingimage} alt="" />
+                      <p className="text-[12px] text-(--neutral-600) dark:text-(--neutral-150) font-600 p-1 w-18 truncate">
+                        {ingredient.ingname}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* add toppings */}
-            <div>
-              <h1 className="text-(--neutral-600) text-[18px] dark:text-(--neutral-200) font-semibold">
-                Add toppings
-              </h1>
-              <div className="py-2.5 space-y-2.5 flex flex-col">
-                {item.toppings.map((top) => {
-                  const topCount = toppingCounts[top.id] || 1;
-                  return (
-                    <div
-                      key={`${top.id}`}
-                      className="flex bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]"
-                    >
-                      <div className="p-3.5 text-center flex w-full items-center justify-between ">
-                        <div className="flex space-x-2 items-center">
-                          <motion.div
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => {
-                              toggleCheck(top.id);
-                              // when selecting a topping initialize its count to 1 if not present
-                              if (!selectedToppings.has(top.id))
-                                setToppingCounts((prev) => ({
-                                  ...prev,
-                                  [top.id]: prev[top.id] || 0 || 1,
-                                }));
-                            }}
-                            className={`w-4 h-4 border rounded-sm cursor-pointer flex items-center justify-center ${selectedToppings.has(top.id) ? "bg-(--yellow-1) border-(--yellow-1)" : "border-(--neutral-300) dark:border-(--neutral-150)"}`}
-                          >
-                            <FaCheck
-                              className={`text-white dark:text-(--neutral-700) ${selectedToppings.has(top.id) ? "w-full h-full " : "hidden"}`}
-                            />
-                          </motion.div>
+            {item.toppings?.length > 0 && (
+              <div>
+                <h1 className="text-(--neutral-600) text-[18px] dark:text-(--neutral-200) font-semibold">
+                  Add toppings
+                </h1>
+                <div className="py-2.5 space-y-2.5 flex flex-col">
+                  {item.toppings.map((top) => {
+                    const topCount = toppingCounts[top.id] || 1;
+                    return (
+                      <div
+                        key={`${top.id}`}
+                        className="flex bg-[#FFFFFF] dark:bg-(--neutral-700) rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]"
+                      >
+                        <div className="p-3.5 text-center flex w-full items-center justify-between ">
+                          <div className="flex space-x-2 items-center">
+                            <motion.div
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => {
+                                toggleCheck(top.id);
+                                // when selecting a topping initialize its count to 1 if not present
+                                if (!selectedToppings.has(top.id))
+                                  setToppingCounts((prev) => ({
+                                    ...prev,
+                                    [top.id]: prev[top.id] || 0 || 1,
+                                  }));
+                              }}
+                              className={`w-4 h-4 border rounded-sm cursor-pointer flex items-center justify-center ${selectedToppings.has(top.id) ? "bg-(--yellow-1) border-(--yellow-1)" : "border-(--neutral-300) dark:border-(--neutral-150)"}`}
+                            >
+                              <FaCheck
+                                className={`text-white dark:text-(--neutral-700) ${selectedToppings.has(top.id) ? "w-full h-full " : "hidden"}`}
+                              />
+                            </motion.div>
 
-                          <p className="text-[12px] md:text-[16px] text-(--neutral-600) dark:text-(--neutral-200) font-100">
-                            {top.name}
+                            <p className="text-[12px] md:text-[16px] text-(--neutral-600) dark:text-(--neutral-200) font-100">
+                              {top.name}
+                            </p>
+                          </div>
+                          <p className="text-(--orange-1) text-[14px] md:text-[16px] font-semibold">
+                            {!selectedToppings.has(top.id)
+                              ? formatPrice(top.price)
+                              : formatPrice(top.price * topCount)}
                           </p>
                         </div>
-                        <p className="text-(--orange-1) text-[14px] md:text-[16px] font-semibold">
-                          {!selectedToppings.has(top.id)
-                            ? formatPrice(top.price)
-                            : formatPrice(top.price * topCount)}
-                        </p>
-                      </div>
 
-                      <div
-                        className={`${selectedToppings.has(top.id) ? "w-[98px] rounded-r-xl flex items-center justify-center gap-2 bg-(--neutral-150) dark:bg-(--neutral-900) p-2" : "hidden"}`}
-                      >
-                        {/* minus top */}
-                        <button
-                          onClick={() => decrementTopping(top.id)}
-                          type="button"
-                          disabled={topCount === 1}
-                          className={
-                            topCount === 1
-                              ? "cursor-not-allowed"
-                              : "cursor-pointer"
-                          }
+                        <div
+                          className={`${selectedToppings.has(top.id) ? "w-[98px] rounded-r-xl flex items-center justify-center gap-2 bg-(--neutral-150) dark:bg-(--neutral-900) p-2" : "hidden"}`}
                         >
-                          <FaMinus
-                            className={`${topCount === 1 ? "text-(--neutral-200)" : "text-(--neutral-500) dark:text-(--neutral-100)"}`}
-                          />
-                        </button>
+                          {/* minus top */}
+                          <button
+                            onClick={() => decrementTopping(top.id)}
+                            type="button"
+                            disabled={topCount === 1}
+                            className={
+                              topCount === 1
+                                ? "cursor-not-allowed"
+                                : "cursor-pointer"
+                            }
+                          >
+                            <FaMinus
+                              className={`${topCount === 1 ? "text-(--neutral-200)" : "text-(--neutral-500) dark:text-(--neutral-100)"}`}
+                            />
+                          </button>
 
-                        <p className="text-[14px] dark:text-white text-(--neutral-500) font-semibold">
-                          {topCount}
-                        </p>
+                          <p className="text-[14px] dark:text-white text-(--neutral-500) font-semibold">
+                            {topCount}
+                          </p>
 
-                        {/* add top */}
-                        <button
-                          onClick={() => incrementTopping(top.id)}
-                          type="button"
-                          className="cursor-pointer"
-                        >
-                          <FaPlus className="text-(--neutral-500) dark:text-(--neutral-100)" />
-                        </button>
+                          {/* add top */}
+                          <button
+                            onClick={() => incrementTopping(top.id)}
+                            type="button"
+                            className="cursor-pointer"
+                          >
+                            <FaPlus className="text-(--neutral-500) dark:text-(--neutral-100)" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* comment */}
             <div className="space-y-3 pb-12 lg:pb-0">
@@ -362,7 +370,7 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
             whileTap={{ scale: 0.96 }}
             onClick={() => {
               const selected = Array.from(selectedToppings).map((id) => {
-                const t = item.toppings.find((tt) => tt.id === id)!;
+                const t = (item.toppings ?? []).find((tt) => tt.id === id)!;
                 const qty = toppingCounts[id] || 0;
                 return {
                   id: t.id,
