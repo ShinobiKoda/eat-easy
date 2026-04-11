@@ -1,71 +1,216 @@
-import { motion } from "motion/react";
-import { MotionContainer, SlideIn, PopIn, FadeIn } from "../components/animations/motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  MotionContainer,
+  SlideIn,
+  PopIn,
+  FadeIn,
+} from "../components/animations/motion";
 import { HiOutlineLocationMarker } from "react-icons/hi";
+import { MdOutlineMyLocation } from "react-icons/md";
+import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import { useTheme } from "../hooks/useTheme";
 import { useLocation } from "../hooks/useLocation";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import Navbar from "../components/layout/Navbar";
 
 const SetLocation = () => {
   const { theme } = useTheme();
   const { getCurrentLocation, isLoading, error } = useLocation();
   const navigate = useNavigate();
+  const [denied, setDenied] = useState(false);
 
-  const handleUseCurrentLocation = async () => {
+
+
+
+  const handleDetectAndNavigate = async () => {
+    setDenied(false);
+
+    // Check permission state first if the API is available
+    if (navigator.permissions) {
+      try {
+        const status = await navigator.permissions.query({
+          name: "geolocation",
+        });
+        if (status.state === "denied") {
+          setDenied(true);
+          return;
+        }
+      } catch {
+        // permissions API not supported, proceed anyway
+      }
+    }
+
     await getCurrentLocation();
+
+    // Small delay to let state settle, then check
+    await new Promise((r) => setTimeout(r, 100));
+
+    // Re-check permission after the attempt
+    if (navigator.permissions) {
+      try {
+        const status = await navigator.permissions.query({
+          name: "geolocation",
+        });
+        if (status.state === "denied") {
+          setDenied(true);
+          return;
+        }
+      } catch {
+        // ignore
+      }
+    }
+
+    // If we got here without denial, navigate
     navigate("/set-restaurant");
   };
 
   return (
-    <div className="w-full h-full">
-      <Navbar />
-      <MotionContainer className="w-full mt-20 md:hidden">
-        <SlideIn direction="down" className="px-6">
-          <h1 className="font-medium text-[22px] text-(--neutral-800) text-center heading-font dark:text-white">
-            Set your location
-          </h1>
-        </SlideIn>
-
-        <div className="grid grid-cols-1 gap-6 mt-6 px-6">
+    <div className="w-full min-h-screen relative">
+      {/* ── Permission Denied Overlay ── */}
+      <AnimatePresence>
+        {denied && (
           <motion.div
-            whileTap={{ scale: 0.99 }}
-            onClick={handleUseCurrentLocation}
-            className="cursor-pointer"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/40 backdrop-blur-md"
           >
-            <PopIn className="flex flex-col p-5 gap-5 items-center justify-center text-center rounded-2xl shadow-md bg-white dark:bg-(--neutral-700)">
-              <motion.div
-                initial={{ y: 6, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.4 }}
-                className="w-[70px] h-[70px]"
-              >
-                <img
-                  src="/images/qr-code.webp"
-                  alt="Location Icon"
-                  className="w-full"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 350 }}
+              className="bg-white dark:bg-(--neutral-700) rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl"
+            >
+              <div className="w-16 h-16 rounded-2xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center mx-auto mb-5">
+                <IoShieldCheckmarkOutline
+                  size={32}
+                  className="text-red-500 dark:text-red-400"
                 />
-              </motion.div>
-              <p className="font-semibold text-base text-(--neutral-900) dark:text-white">
+              </div>
+
+              <h2 className="heading-font font-bold text-[20px] text-(--neutral-800) dark:text-white mb-2">
+                Location Access Required
+              </h2>
+              <p className="text-sm font-medium text-(--neutral-500) dark:text-(--neutral-300) leading-relaxed mb-6">
+                EatEasy needs access to your location to find restaurants near
+                you. Please enable location permissions in your browser settings
+                and try again.
+              </p>
+
+              <div className="space-y-3">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleDetectAndNavigate}
+                  disabled={isLoading}
+                  className="w-full py-3.5 rounded-2xl bg-(--purple-2) text-white font-semibold text-sm cursor-pointer disabled:opacity-60"
+                >
+                  {isLoading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <AiOutlineLoading3Quarters
+                        size={16}
+                        className="animate-spin"
+                      />
+                      Checking...
+                    </span>
+                  ) : (
+                    "Try Again"
+                  )}
+                </motion.button>
+
+                <Link
+                  to="/set-custom-location"
+                  className="block no-underline"
+                >
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    className="w-full py-3.5 rounded-2xl bg-(--neutral-100) dark:bg-(--neutral-600) text-(--neutral-800) dark:text-white font-semibold text-sm cursor-pointer"
+                  >
+                    Enter Location Manually
+                  </motion.button>
+                </Link>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Mobile View ── */}
+      <MotionContainer className="w-full pt-60 pb-10 px-6 md:hidden">
+        <div className="flex flex-col items-center text-center">
+          <PopIn>
+            <div className="w-20 h-20 rounded-2xl bg-(--purple-2)/10 flex items-center justify-center mb-6">
+              <HiOutlineLocationMarker
+                size={36}
+                className="text-(--purple-2)"
+              />
+            </div>
+          </PopIn>
+
+          <SlideIn direction="down">
+            <h1 className="heading-font font-bold text-[24px] text-(--neutral-800) dark:text-white leading-tight mb-2">
+              Set your location
+            </h1>
+          </SlideIn>
+
+          <FadeIn>
+            <p className="font-medium text-sm text-(--neutral-500) dark:text-(--neutral-300) max-w-xs mb-8 leading-relaxed">
+              We need your location to find the best restaurants near you and
+              deliver your food.
+            </p>
+          </FadeIn>
+
+          <div className="w-full space-y-3">
+            {/* Auto-detect CTA */}
+            <FadeIn>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={handleDetectAndNavigate}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-(--purple-2) text-white font-semibold text-base cursor-pointer disabled:opacity-60 shadow-lg shadow-(--purple-2)/20"
+              >
+                {isLoading ? (
+                  <AiOutlineLoading3Quarters
+                    size={20}
+                    className="animate-spin"
+                  />
+                ) : (
+                  <MdOutlineMyLocation size={20} />
+                )}
                 {isLoading
                   ? "Getting your location..."
-                  : "Automatically use your current location"}
-              </p>
-              <p className="font-medium text-sm text-(--neutral-600) dark:text-(--neutral-300)">
-                Choose the simple way and automatically detect your current
-                location
-              </p>
-              {isLoading && (
-                <AiOutlineLoading3Quarters
-                  size={24}
-                  className="animate-spin text-(--purple-3)"
-                />
-              )}
-              {error && (
-                <p className="text-red-500 text-sm text-center">{error}</p>
-              )}
-            </PopIn>
-          </motion.div>
+                  : "Use my current location"}
+              </motion.button>
+            </FadeIn>
+
+            {/* Manual entry */}
+            <FadeIn>
+              <Link to="/set-custom-location" className="block no-underline">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-white dark:bg-(--neutral-700) text-(--neutral-800) dark:text-white font-semibold text-base cursor-pointer border border-(--neutral-200) dark:border-(--neutral-600)"
+                >
+                  <HiOutlineLocationMarker size={20} />
+                  Enter location manually
+                </motion.button>
+              </Link>
+            </FadeIn>
+          </div>
+
+          {error && !denied && (
+            <FadeIn>
+              <div className="mt-4 px-4 py-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 w-full">
+                <p className="text-sm font-semibold text-red-600 dark:text-red-400 text-center">
+                  {error}
+                </p>
+              </div>
+            </FadeIn>
+          )}
         </div>
       </MotionContainer>
 
@@ -76,7 +221,7 @@ const SetLocation = () => {
           </h1>
           <p className="font-medium text-(--neutral-600) text-base dark:text-(--neutral-150)">
             Please enter your location or use your current location and enjoy
-            custom experience in any of our restuarants.
+            custom experience in any of our restaurants.
           </p>
         </div>
 
@@ -94,13 +239,13 @@ const SetLocation = () => {
           </FadeIn>
 
           <div className="w-full flex flex-col items-center gap-4 justify-center">
-            {error && (
+            {error && !denied && (
               <p className="text-red-500 text-sm text-center">{error}</p>
             )}
             <div className="flex items-center gap-4">
               <motion.button
                 whileTap={{ scale: 0.97 }}
-                onClick={handleUseCurrentLocation}
+                onClick={handleDetectAndNavigate}
                 disabled={isLoading}
                 className="flex items-center gap-1 text-(--purple-3) cursor-pointer dark:text-(--purple-5) disabled:opacity-50"
               >

@@ -8,6 +8,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { TfiBook } from "react-icons/tfi";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { MdOutlineHistory } from "react-icons/md";
+import { HiOutlineHome } from "react-icons/hi2";
 import {
   IoLocationOutline,
   IoRestaurantOutline,
@@ -38,6 +39,7 @@ const Sidebar: React.FC = () => {
     if (path.includes("/FullMenu")) return 7;
     if (path.includes("/history")) return 2;
     if (path.includes("/locations")) return 3;
+    if (path.includes("/welcome")) return 0;
     if (path.includes("/rewards")) return 4;
     if (path.includes("/set-restaurant")) return 6;
     if (path.includes("/admin")) return 99;
@@ -144,6 +146,8 @@ const Sidebar: React.FC = () => {
       setSelectedItem(1);
     } else if (path.includes("/history")) {
       setSelectedItem(2);
+    } else if (path.includes("/welcome")) {
+      setSelectedItem(0);
     } else if (path.includes("/locations")) {
       setSelectedItem(3);
     } else if (path.includes("/rewards")) {
@@ -264,6 +268,36 @@ const Sidebar: React.FC = () => {
               </h1>
 
               <div className="w-full space-y-4 mt-4">
+                <div className="space-y-4">
+                  <NavLink to="/welcome">
+                    <motion.button
+                      onClick={() => {
+                        setSelectedItem(0);
+                        setIsOpen(false);
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2.5 w-full py-1.5 cursor-pointer"
+                    >
+                      <div
+                        className={`p-3 rounded-2xl ${
+                          selectedItem === 0 ? "bg-(--yellow-1)" : "bg-white/15"
+                        }`}
+                      >
+                        <HiOutlineHome className="text-white" size={24} />
+                      </div>
+                      <p
+                        className={`${
+                          selectedItem === 0
+                            ? "text-(--yellow-1) font-bold"
+                            : "text-white"
+                        } text-base ${effectiveIsOpen ? "flex" : "hidden"}`}
+                      >
+                        Home
+                      </p>
+                    </motion.button>
+                  </NavLink>
+                </div>
+
                 <div className="space-y-4">
                   <NavLink to="/smart-assistant">
                     <motion.button

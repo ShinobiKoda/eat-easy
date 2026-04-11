@@ -524,7 +524,7 @@ const Header: React.FC<HeaderProps> = ({
                     initial="hidden"
                     animate="show"
                     exit="exit"
-                    className="absolute top-full right-0 mt-2 w-[240px] bg-white dark:bg-(--neutral-700) rounded-2xl shadow-lg border border-(--neutral-150) dark:border-(--neutral-600) overflow-hidden z-50"
+                    className="absolute top-full right-0 mt-2 w-60 bg-white dark:bg-(--neutral-700) rounded-2xl shadow-lg border border-(--neutral-150) dark:border-(--neutral-600) overflow-hidden z-50"
                   >
                     <div className="p-2">
                       <motion.div

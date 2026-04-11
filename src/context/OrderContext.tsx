@@ -1,5 +1,11 @@
-
-import React, { createContext, useContext, useState, useEffect, useRef, type ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from "react";
 import type { PropType } from "../types";
 import { useNavigate } from "react-router-dom";
 import { useRestaurant } from "./RestaurantContext";
@@ -18,14 +24,18 @@ interface OrderContextType {
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
-export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const OrderProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const { selectedRestaurant, getStorageKey } = useRestaurant();
   const restaurantId = selectedRestaurant?.id ?? null;
 
   const [selectedItem, setSelectedItem] = useState<PropType | null>(null);
   const [orderItems, setOrderItems] = useState<PropType[]>(() => {
     try {
-      const key = restaurantId ? `${restaurantId}:eat-easy-cart` : "eat-easy-cart";
+      const key = restaurantId
+        ? `${restaurantId}:eat-easy-cart`
+        : "eat-easy-cart";
       const saved = localStorage.getItem(key);
       return saved ? JSON.parse(saved) : [];
     } catch {
@@ -92,10 +102,10 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     });
   };
 
-  // Send order handler
+  // Send order handler: move user to Checkout where they must pay
+  // before any batches are prepared.
   const handleSend = (sent: any) => {
     try {
-      const batchesKey = getStorageKey("eat-easy-order-batches");
       const lastOrderKey = getStorageKey("eat-easy-last-order");
 
       const existingBatchesRaw = localStorage.getItem(batchesKey);
@@ -177,11 +187,14 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       localStorage.setItem(lastOrderKey, JSON.stringify(combinedOrder));
 
       setOrderItems([]); // Clear cart after successful order
+      // Persist the current order snapshot for status/checkout continuity
+      localStorage.setItem(lastOrderKey, JSON.stringify(sent));
     } catch (e) {
-      console.error("Failed to save order to localStorage", e);
+      console.error("Failed to save order snapshot", e);
     }
+
     setShowOrder(false);
-    navigate("/orderStatus");
+    navigate("/Checkout", { state: { order: sent } });
   };
 
   return (

@@ -63,7 +63,7 @@ const Success: React.FC<SuccessProps> = ({ isOpen }) => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate("/welcome")}
+                  onClick={() => navigate("/OrderStatus")}
                   className="w-full py-4 rounded-2xl bg-[#615793] hover:bg-[#6c5dd3] text-white font-bold text-[16px] shadow-lg shadow-[#615793]/30 transition-all cursor-pointer"
                 >
                   Done

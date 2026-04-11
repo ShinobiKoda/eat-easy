@@ -139,6 +139,90 @@ const Checkout1: React.FC = () => {
     }
 
     setShowSuccessModal(true);
+    // After a successful payment, initialize local batches so preparation
+    // starts only now (not when the order was first sent).
+    try {
+      const batchesKey = getStorageKey("eat-easy-order-batches");
+      const lastOrderKey = getStorageKey("eat-easy-last-order");
+
+      const existingBatchesRaw = localStorage.getItem(batchesKey);
+      const existingBatches = existingBatchesRaw
+        ? JSON.parse(existingBatchesRaw)
+        : [];
+
+      const sentItems = groupedItems.map(({ item, qty }) => ({
+        id: item.id,
+        name: item.name,
+        image: item.image,
+        qty,
+        price: item.price ?? 0,
+      }));
+
+      const subtotal = currentOrderTotalRef.current;
+      const tax = subtotal * 0.11;
+      const total = currentTotalRef.current;
+      const qty = groupedItems.reduce((sum, g) => sum + g.qty, 0);
+
+      const sent = { items: sentItems, subtotal, tax, total, qty };
+
+      // Merge into an existing pending batch if present, otherwise create new
+      const pendingIdx = existingBatches.findIndex(
+        (b: any) => b.status === "pending",
+      );
+
+      let updatedBatches: any[];
+
+      if (pendingIdx !== -1) {
+        const pending = existingBatches[pendingIdx];
+        const mergedItems = [...pending.items];
+
+        for (const newItem of sent.items) {
+          const existingItemIdx = mergedItems.findIndex(
+            (i: any) => i.id === newItem.id,
+          );
+          if (existingItemIdx !== -1) {
+            mergedItems[existingItemIdx] = {
+              ...mergedItems[existingItemIdx],
+              qty: (mergedItems[existingItemIdx].qty ?? 1) + (newItem.qty ?? 1),
+            };
+          } else {
+            mergedItems.push(newItem);
+          }
+        }
+
+        const mergedSubtotal = pending.subtotal + sent.subtotal;
+        const mergedTax = pending.tax + sent.tax;
+        const mergedTotal = (pending.total || 0) + sent.total;
+        const mergedQty = pending.qty + sent.qty;
+
+        existingBatches[pendingIdx] = {
+          ...pending,
+          items: mergedItems,
+          subtotal: mergedSubtotal,
+          tax: mergedTax,
+          total: mergedTotal,
+          qty: mergedQty,
+        };
+
+        updatedBatches = existingBatches;
+      } else {
+        const isAnyPreparing = existingBatches.some(
+          (b: any) => b.status === "preparing",
+        );
+
+        const newBatch = {
+          id: Date.now().toString(),
+          items: sent.items,
+          subtotal: sent.subtotal,
+          tax: sent.tax,
+          total: sent.total,
+          qty: sent.qty,
+          status: !isAnyPreparing ? "preparing" : "pending",
+          timerStart: !isAnyPreparing ? Date.now() : null,
+        };
+
+        updatedBatches = [...existingBatches, newBatch];
+      }
 
     // Clear kitchen-order data from localStorage (scoped to current restaurant)
     localStorage.removeItem(getStorageKey("eat-easy-last-order"));
@@ -150,6 +234,41 @@ const Checkout1: React.FC = () => {
       localStorage.removeItem(getStorageKey("eat-easy-cart"));
       setOrderItems([]);
     }
+      localStorage.setItem(batchesKey, JSON.stringify(updatedBatches));
+
+      const allItems = updatedBatches.flatMap((b: any) => b.items);
+      const totalSubtotal = updatedBatches.reduce(
+        (acc: number, b: any) => acc + b.subtotal,
+        0,
+      );
+      const totalTax = updatedBatches.reduce(
+        (acc: number, b: any) => acc + b.tax,
+        0,
+      );
+      const totalTotal = updatedBatches.reduce(
+        (acc: number, b: any) => acc + (b.total || 0),
+        0,
+      );
+      const totalQty = updatedBatches.reduce(
+        (acc: number, b: any) => acc + b.qty,
+        0,
+      );
+
+      const combinedOrder = {
+        items: allItems,
+        subtotal: totalSubtotal,
+        tax: totalTax,
+        total: totalTotal,
+        qty: totalQty,
+      };
+
+      localStorage.setItem(lastOrderKey, JSON.stringify(combinedOrder));
+    } catch (err) {
+      console.error("Failed to initialize order batches after payment", err);
+    }
+
+    // Clear cart items after successful payment (order data stays for OrderStatus)
+    setOrderItems([]);
   };
 
   const getCardTypeIcon = (number: string) => {

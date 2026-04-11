@@ -55,6 +55,7 @@ const History = lazy(() => import("./pages/OrderHistory"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Help = lazy(() => import("./pages/Help"));
+const ChangeLocation = lazy(() => import("./pages/ChangeLocation"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
@@ -79,6 +80,9 @@ function App() {
     "/verify-url",
     "/reset-email-sent",
     "/reset-password",
+    "/set-location",
+    "/set-restaurant",
+    "/set-custom-location",
   ]);
   const excludedPrefixes: string[] = [
     // Add future sections to exclude by prefix here, e.g. "/auth"
@@ -87,9 +91,6 @@ function App() {
   // Known paths that should show the sidebar
   const knownSidebarPaths = new Set([
     "/welcome",
-    "/set-location",
-    "/set-restaurant",
-    "/set-custom-location",
     "/smart-assistant",
     "/virtual",
     "/recommend",
@@ -384,6 +385,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <Help />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="locations"
+                  element={
+                    <ProtectedRoute>
+                      <ChangeLocation />
                     </ProtectedRoute>
                   }
                 />
