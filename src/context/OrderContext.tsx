@@ -145,6 +145,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
         const newBatch = {
           id: Date.now().toString(),
+          restaurantName: selectedRestaurant?.name ?? "Gram Bistro",
           items: sent.items,
           subtotal: sent.subtotal,
           tax: sent.tax,
