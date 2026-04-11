@@ -47,10 +47,10 @@ const SelectRestaurant = () => {
   };
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-dvh">
       {/* <Header title="Food Menu" description="Set Restaurant" /> */}
-      <div className="w-full px-6">
-        <MotionContainer className="md:hidden pt-28">
+      <div className="w-full p-6">
+        <MotionContainer className="md:hidden">
           <SlideIn
             direction="down"
             className="w-full text-center max-w-[387px] mx-auto space-y-3.5"
@@ -119,7 +119,7 @@ const SelectRestaurant = () => {
         </MotionContainer>
       </div>
 
-      <div className="pt-20 md:py-30 lg:pt-50 lg:pb-20 max-w-[1440px] mx-auto hidden md:flex flex-col items-center py-6 px-6 sm:px-20 lg:px-6">
+      <div className="md:py-15 max-w-[1440px] mx-auto hidden md:flex flex-col items-center p-6 sm:px-20 lg:px-6">
         <div className="space-y-4 text-center">
           <h1 className="font-medium text-[40px] text-(--neutral-800) heading-font dark:text-white">
             Restaurants based on your selected location.

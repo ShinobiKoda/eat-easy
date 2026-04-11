@@ -20,7 +20,7 @@ import { LuMail, LuUser, LuPhone, LuCalendar, LuMapPin } from "react-icons/lu";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { PiMedalThin } from "react-icons/pi";
 import { MdOutlineHistory } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -81,57 +81,7 @@ const StatCard = ({
 
 // ─── Quick Link ───────────────────────────────────────────────────────────────
 
-const QuickLink = ({
-  to,
-  icon,
-  label,
-  description,
-}: {
-  to: string;
-  icon: React.ReactNode;
-  label: string;
-  description: string;
-}) => (
-  <motion.div variants={fadeIn}>
-    <NavLink to={to}>
-      <motion.div
-        whileHover={{ scale: 1.015, y: -2 }}
-        whileTap={{ scale: 0.985 }}
-        transition={{ type: "spring", stiffness: 380, damping: 22 }}
-        className="flex items-center gap-4 bg-white dark:bg-(--neutral-700) rounded-2xl px-5 py-4 shadow-sm cursor-pointer group"
-      >
-        <div className="w-11 h-11 rounded-xl bg-(--purple-2)/10 flex items-center justify-center shrink-0 group-hover:bg-(--purple-2) transition-colors duration-200">
-          <span className="text-(--purple-2) group-hover:text-white transition-colors duration-200">
-            {icon}
-          </span>
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-semibold text-sm text-(--neutral-800) dark:text-white">
-            {label}
-          </p>
-          <p className="font-medium text-xs text-(--neutral-500) dark:text-(--neutral-400) truncate">
-            {description}
-          </p>
-        </div>
-        <motion.div
-          className="w-7 h-7 rounded-lg bg-(--neutral-100) dark:bg-(--neutral-600) flex items-center justify-center shrink-0"
-          whileHover={{ x: 2 }}
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path
-              d="M5 3l4 4-4 4"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-(--neutral-500) dark:text-(--neutral-300)"
-            />
-          </svg>
-        </motion.div>
-      </motion.div>
-    </NavLink>
-  </motion.div>
-);
+
 
 // ─── Editable Field ───────────────────────────────────────────────────────────
 
@@ -607,49 +557,7 @@ const Profile: React.FC = () => {
             {/* ── Right column ───────────────────────────────────────── */}
             <div className="space-y-6">
 
-              {/* Quick navigation */}
-              <FadeIn>
-                <div className="space-y-3">
-                  <h2 className="heading-font font-semibold text-base text-(--neutral-800) dark:text-white px-1">
-                    Quick Navigation
-                  </h2>
-                  <motion.div
-                    variants={staggerContainer}
-                    initial="hidden"
-                    animate="show"
-                    className="space-y-2.5"
-                  >
-                    <QuickLink
-                      to="/smart-assistant"
-                      icon={<HiOutlineSparkles size={20} />}
-                      label="Smart Assistant"
-                      description="Let AI pick the perfect dish for you"
-                    />
-                    <QuickLink
-                      to="/history"
-                      icon={<MdOutlineHistory size={20} />}
-                      label="Order History"
-                      description="View all your past orders"
-                    />
-                    <QuickLink
-                      to="/rewards"
-                      icon={<PiMedalThin size={20} />}
-                      label="My Rewards"
-                      description="Check your points & redeem coupons"
-                    />
-                    <QuickLink
-                      to="/FullMenu"
-                      icon={
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M4 6h16M4 12h16M4 18h7" />
-                        </svg>
-                      }
-                      label="Browse Full Menu"
-                      description="Explore the complete food selection"
-                    />
-                  </motion.div>
-                </div>
-              </FadeIn>
+
 
               {/* Account security */}
               <FadeIn>
