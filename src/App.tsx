@@ -80,6 +80,9 @@ function App() {
     "/verify-url",
     "/reset-email-sent",
     "/reset-password",
+    "/set-location",
+    "/set-restaurant",
+    "/set-custom-location",
   ]);
   const excludedPrefixes: string[] = [
     // Add future sections to exclude by prefix here, e.g. "/auth"
@@ -88,9 +91,6 @@ function App() {
   // Known paths that should show the sidebar
   const knownSidebarPaths = new Set([
     "/welcome",
-    "/set-location",
-    "/set-restaurant",
-    "/set-custom-location",
     "/smart-assistant",
     "/virtual",
     "/recommend",
