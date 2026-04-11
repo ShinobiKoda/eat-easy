@@ -44,6 +44,7 @@ const Generating = lazy(
   () => import("./pages/VirtualAssistant/GenerateAIRecommendations"),
 );
 const ConfirmLink = lazy(() => import("./pages/auth/ConfirmLink"));
+const AuthCallback = lazy(() => import("./pages/auth/AuthCallback"));
 const ResetEmailSent = lazy(() => import("./pages/auth/ResetEmailSent"));
 const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
 const SetLocation = lazy(() => import("./pages/SetLocation"));
@@ -80,6 +81,7 @@ function App() {
     "/verify-url",
     "/reset-email-sent",
     "/reset-password",
+    "/auth/callback",
     "/set-location",
     "/set-restaurant",
     "/set-custom-location",
@@ -215,6 +217,7 @@ function App() {
                   }
                 />
                 <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
 
                 {/* Protected routes - require authentication */}
                 <Route

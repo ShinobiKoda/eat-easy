@@ -20,7 +20,6 @@ import { LuMail, LuUser, LuPhone, LuCalendar, LuMapPin } from "react-icons/lu";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { PiMedalThin } from "react-icons/pi";
 import { MdOutlineHistory } from "react-icons/md";
-import { NavLink } from "react-router-dom";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -64,7 +63,9 @@ const StatCard = ({
       variants={fadeIn}
       className="flex-1 min-w-[120px] bg-white dark:bg-(--neutral-700) rounded-2xl p-4 shadow-sm flex flex-col gap-3"
     >
-      <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center`}>
+      <div
+        className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center`}
+      >
         <span className={iconColor}>{icon}</span>
       </div>
       <div>
@@ -78,60 +79,6 @@ const StatCard = ({
     </motion.div>
   );
 };
-
-// ─── Quick Link ───────────────────────────────────────────────────────────────
-
-const QuickLink = ({
-  to,
-  icon,
-  label,
-  description,
-}: {
-  to: string;
-  icon: React.ReactNode;
-  label: string;
-  description: string;
-}) => (
-  <motion.div variants={fadeIn}>
-    <NavLink to={to}>
-      <motion.div
-        whileHover={{ scale: 1.015, y: -2 }}
-        whileTap={{ scale: 0.985 }}
-        transition={{ type: "spring", stiffness: 380, damping: 22 }}
-        className="flex items-center gap-4 bg-white dark:bg-(--neutral-700) rounded-2xl px-5 py-4 shadow-sm cursor-pointer group"
-      >
-        <div className="w-11 h-11 rounded-xl bg-(--purple-2)/10 flex items-center justify-center shrink-0 group-hover:bg-(--purple-2) transition-colors duration-200">
-          <span className="text-(--purple-2) group-hover:text-white transition-colors duration-200">
-            {icon}
-          </span>
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-semibold text-sm text-(--neutral-800) dark:text-white">
-            {label}
-          </p>
-          <p className="font-medium text-xs text-(--neutral-500) dark:text-(--neutral-400) truncate">
-            {description}
-          </p>
-        </div>
-        <motion.div
-          className="w-7 h-7 rounded-lg bg-(--neutral-100) dark:bg-(--neutral-600) flex items-center justify-center shrink-0"
-          whileHover={{ x: 2 }}
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path
-              d="M5 3l4 4-4 4"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-(--neutral-500) dark:text-(--neutral-300)"
-            />
-          </svg>
-        </motion.div>
-      </motion.div>
-    </NavLink>
-  </motion.div>
-);
 
 // ─── Editable Field ───────────────────────────────────────────────────────────
 
@@ -253,7 +200,10 @@ const EditableField = ({
                   onClick={handleCancel}
                   className="w-8 h-8 rounded-lg bg-(--neutral-100) dark:bg-(--neutral-600) flex items-center justify-center cursor-pointer"
                 >
-                  <IoClose size={16} className="text-(--neutral-500) dark:text-(--neutral-300)" />
+                  <IoClose
+                    size={16}
+                    className="text-(--neutral-500) dark:text-(--neutral-300)"
+                  />
                 </motion.button>
               </motion.div>
             ) : (
@@ -267,7 +217,10 @@ const EditableField = ({
                 onClick={() => setEditing(true)}
                 className="w-8 h-8 rounded-lg bg-(--neutral-100) dark:bg-(--neutral-600) flex items-center justify-center cursor-pointer"
               >
-                <MdOutlineEdit size={16} className="text-(--neutral-500) dark:text-(--neutral-300)" />
+                <MdOutlineEdit
+                  size={16}
+                  className="text-(--neutral-500) dark:text-(--neutral-300)"
+                />
               </motion.button>
             )}
           </AnimatePresence>
@@ -307,6 +260,12 @@ const Profile: React.FC = () => {
   const [saving, setSaving] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
   const [avatarLoading, setAvatarLoading] = useState(false);
+  const [passwordResetStatus, setPasswordResetStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [passwordResetMessage, setPasswordResetMessage] = useState<
+    string | null
+  >(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const meta = (user?.user_metadata as any) || {};
@@ -415,6 +374,24 @@ const Profile: React.FC = () => {
     }
   };
 
+  const handleChangePassword = async () => {
+    if (!email) return;
+    setPasswordResetStatus("loading");
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      setPasswordResetStatus("success");
+      setTimeout(() => setPasswordResetStatus("idle"), 5000);
+    } catch (err: any) {
+      console.error("Password reset error:", err);
+      setPasswordResetStatus("error");
+      setPasswordResetMessage(err?.message || "Failed to send reset email.");
+      setTimeout(() => setPasswordResetStatus("idle"), 5000);
+    }
+  };
+
   return (
     <div className="w-full min-h-dvh">
       <SEO
@@ -425,7 +402,6 @@ const Profile: React.FC = () => {
         <Header title="Account" description="My Profile" />
 
         <div className="w-full pt-[72px] md:pt-[88px] lg:pt-[100px] px-5 lg:px-[42px] pb-16 max-w-[860px] mx-auto lg:max-w-none">
-
           {/* ── Hero banner + avatar ───────────────────────────────── */}
           <SlideIn direction="down">
             <div className="relative w-full rounded-3xl overflow-hidden mb-8 mt-4 shadow-sm">
@@ -438,7 +414,8 @@ const Profile: React.FC = () => {
                 }}
               />
               {/* Decorative dots */}
-              <div className="absolute inset-0 opacity-20"
+              <div
+                className="absolute inset-0 opacity-20"
                 style={{
                   backgroundImage:
                     "radial-gradient(circle, #fff 1px, transparent 1px)",
@@ -529,10 +506,8 @@ const Profile: React.FC = () => {
           </SlideIn>
 
           <div className="lg:grid lg:grid-cols-[1fr_340px] gap-6 items-start">
-
             {/* ── Left column ────────────────────────────────────────── */}
             <div className="space-y-6">
-
               {/* Stats row */}
               <PopIn>
                 <motion.div
@@ -602,54 +577,41 @@ const Profile: React.FC = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
+
+              {/* Password Reset Toast */}
+              <AnimatePresence>
+                {passwordResetStatus === "success" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-60 bg-(--neutral-900) dark:bg-white text-white dark:text-(--neutral-800) px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-sm font-semibold whitespace-nowrap"
+                  >
+                    <span className="w-6 h-6 rounded-full bg-(--yellow-1) flex items-center justify-center shrink-0">
+                      <IoCheckmark size={14} className="text-white" />
+                    </span>
+                    Password reset email sent! Check your inbox.
+                  </motion.div>
+                )}
+                {passwordResetStatus === "error" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-60 bg-red-600 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-sm font-semibold whitespace-nowrap"
+                  >
+                    <span className="w-6 h-6 rounded-full bg-white flex items-center justify-center shrink-0">
+                      <IoClose size={14} className="text-red-600" />
+                    </span>
+                    {passwordResetMessage || "Failed to send reset email."}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* ── Right column ───────────────────────────────────────── */}
             <div className="space-y-6">
-
               {/* Quick navigation */}
-              <FadeIn>
-                <div className="space-y-3">
-                  <h2 className="heading-font font-semibold text-base text-(--neutral-800) dark:text-white px-1">
-                    Quick Navigation
-                  </h2>
-                  <motion.div
-                    variants={staggerContainer}
-                    initial="hidden"
-                    animate="show"
-                    className="space-y-2.5"
-                  >
-                    <QuickLink
-                      to="/smart-assistant"
-                      icon={<HiOutlineSparkles size={20} />}
-                      label="Smart Assistant"
-                      description="Let AI pick the perfect dish for you"
-                    />
-                    <QuickLink
-                      to="/history"
-                      icon={<MdOutlineHistory size={20} />}
-                      label="Order History"
-                      description="View all your past orders"
-                    />
-                    <QuickLink
-                      to="/rewards"
-                      icon={<PiMedalThin size={20} />}
-                      label="My Rewards"
-                      description="Check your points & redeem coupons"
-                    />
-                    <QuickLink
-                      to="/FullMenu"
-                      icon={
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M4 6h16M4 12h16M4 18h7" />
-                        </svg>
-                      }
-                      label="Browse Full Menu"
-                      description="Explore the complete food selection"
-                    />
-                  </motion.div>
-                </div>
-              </FadeIn>
 
               {/* Account security */}
               <FadeIn>
@@ -660,7 +622,10 @@ const Profile: React.FC = () => {
                   <div className="bg-white dark:bg-(--neutral-700) rounded-2xl p-5 shadow-sm space-y-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-(--purple-2)/10 flex items-center justify-center">
-                        <RiShieldUserLine size={20} className="text-(--purple-2)" />
+                        <RiShieldUserLine
+                          size={20}
+                          className="text-(--purple-2)"
+                        />
                       </div>
                       <div>
                         <p className="font-semibold text-sm text-(--neutral-800) dark:text-white">
@@ -678,14 +643,18 @@ const Profile: React.FC = () => {
                       <motion.button
                         whileHover={{ scale: 1.015 }}
                         whileTap={{ scale: 0.985 }}
-                        onClick={() =>
-                          supabase.auth.resetPasswordForEmail(email, {
-                            redirectTo: `${window.location.origin}/reset-password`,
-                          })
-                        }
-                        className="w-full py-3 rounded-xl border border-(--neutral-200) dark:border-(--neutral-600) text-sm font-semibold text-(--neutral-700) dark:text-white hover:bg-(--neutral-100) dark:hover:bg-(--neutral-600) transition-colors cursor-pointer"
+                        onClick={handleChangePassword}
+                        disabled={passwordResetStatus === "loading"}
+                        className="w-full py-3 rounded-xl border border-(--neutral-200) dark:border-(--neutral-600) text-sm font-semibold text-(--neutral-700) dark:text-white hover:bg-(--neutral-100) dark:hover:bg-(--neutral-600) transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                       >
-                        Change Password
+                        {passwordResetStatus === "loading" ? (
+                          <>
+                            <ClipLoader color="currentColor" size={16} />
+                            <span>Sending...</span>
+                          </>
+                        ) : (
+                          "Change Password"
+                        )}
                       </motion.button>
                     )}
 
@@ -708,4 +677,3 @@ const Profile: React.FC = () => {
 };
 
 export default Profile;
-
