@@ -31,8 +31,9 @@ const OrderStatus: React.FC = () => {
     }
   }, [getStorageKey]);
 
-  const { currentStatus, showRecommend, showSubmit, timeLeft, batches } =
-    OrderStatusSchema(selectedRestaurant?.id ?? null);
+  const { currentStatus, showRecommend, timeLeft, batches } = OrderStatusSchema(
+    selectedRestaurant?.id ?? null,
+  );
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
@@ -204,19 +205,6 @@ const OrderStatus: React.FC = () => {
                   className="p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[12px] text-white text-center cursor-pointer"
                 >
                   Ask for Recommendations
-                </motion.div>
-              )}
-
-              {showSubmit && order && (
-                <motion.div
-                  whileTap={{ scale: 0.96 }}
-                  onClick={() => navigate("/Checkout", { state: { order } })}
-                  className="w-full text-center sm:w-fit lg:w-[375px] p-3 rounded-2xl shadow-sm bg-[#32324D] dark:bg-[#615793] text-[16px] lg:text-[16px] text-white cursor-pointer gap-2 flex justify-center"
-                >
-                  <span>Pay</span>
-                  <span>
-                    <b>${(order.total ?? 0).toFixed(2)}</b>
-                  </span>
                 </motion.div>
               )}
             </div>

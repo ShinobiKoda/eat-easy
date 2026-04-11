@@ -2,18 +2,24 @@ import { useEffect, useState } from "react";
 import { getRestaurantStorageKey } from "../context/RestaurantContext";
 
 export type ContentStatus = {
-    text: string;
-    time?: string;
-    img: string;
-    action?: string;
+  text: string;
+  time?: string;
+  img: string;
+  action?: string;
 };
 
 export const OrderStatusSchema = (restaurantId: string | null = null) => {
-  const TOTAL_TIME = 2 * 60 * 1000; 
+  const TOTAL_TIME = 2 * 60 * 1000;
   const MID_TIME = 1 * 60 * 1000;
 
-  const batchesKey = getRestaurantStorageKey(restaurantId, "eat-easy-order-batches");
-  const lastOrderKey = getRestaurantStorageKey(restaurantId, "eat-easy-last-order");
+  const batchesKey = getRestaurantStorageKey(
+    restaurantId,
+    "eat-easy-order-batches",
+  );
+  const lastOrderKey = getRestaurantStorageKey(
+    restaurantId,
+    "eat-easy-last-order",
+  );
 
   const status: Record<string, ContentStatus> = {
     start: {
@@ -35,17 +41,18 @@ export const OrderStatusSchema = (restaurantId: string | null = null) => {
     end: {
       text: "Your order is ready,",
       time: "enjoy",
-      action: "Pay for your order now",
+      action: "Enjoy your meal. Would you like to order anything else?",
       img: "/images/ready.svg",
     },
   };
 
   const [batches, setBatches] = useState<any[]>([]);
-  const [currentStatus, setCurrentStatus] = useState<ContentStatus>(status.start);
+  const [currentStatus, setCurrentStatus] = useState<ContentStatus>(
+    status.start,
+  );
   const [showRecommend, setShowRecommend] = useState(true);
   const [showSubmit, setShowSubmit] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number>(0);
-
 
   useEffect(() => {
     const readState = () => {
@@ -64,12 +71,31 @@ export const OrderStatusSchema = (restaurantId: string | null = null) => {
       }
 
       // Find the active (preparing) batch
-      const prepIdx = currentBatches.findIndex((b: any) => b.status === "preparing");
+      const prepIdx = currentBatches.findIndex(
+        (b: any) => b.status === "preparing",
+      );
 
       if (prepIdx !== -1) {
         const activeBatch = currentBatches[prepIdx];
-        const elapsed = Date.now() - activeBatch.timerStart;
-        const remaining = Math.max(0, Math.floor((TOTAL_TIME - elapsed) / 1000));
+
+        // Ensure we always have a valid timerStart so the countdown works,
+        // even if older data had it missing or null.
+        const safeTimerStart =
+          typeof activeBatch.timerStart === "number" &&
+          Number.isFinite(activeBatch.timerStart)
+            ? activeBatch.timerStart
+            : Date.now();
+
+        if (safeTimerStart !== activeBatch.timerStart) {
+          activeBatch.timerStart = safeTimerStart;
+          localStorage.setItem(batchesKey, JSON.stringify(currentBatches));
+        }
+
+        const elapsed = Date.now() - safeTimerStart;
+        const remaining = Math.max(
+          0,
+          Math.floor((TOTAL_TIME - elapsed) / 1000),
+        );
 
         setTimeLeft(remaining);
 
@@ -84,13 +110,16 @@ export const OrderStatusSchema = (restaurantId: string | null = null) => {
         }
       } else {
         // No preparing batch — check if everything is done
-        const anyPending = currentBatches.some((b: any) => b.status === "pending");
+        const anyPending = currentBatches.some(
+          (b: any) => b.status === "pending",
+        );
         const anyReady = currentBatches.some((b: any) => b.status === "ready");
 
         if (!anyPending && anyReady) {
           setCurrentStatus(status.end);
-          setShowSubmit(true);
-          setShowRecommend(false);
+          // Payment now happens before preparation, so no pay CTA here.
+          setShowSubmit(false);
+          setShowRecommend(true);
           setTimeLeft(0);
         }
       }
@@ -106,4 +135,3 @@ export const OrderStatusSchema = (restaurantId: string | null = null) => {
 
   return { currentStatus, showRecommend, showSubmit, timeLeft, batches };
 };
-

@@ -15,8 +15,9 @@ export default function ThemeSwitchButton({
 }: Props) {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === "dark";
-  const SunIcon = motion(IoMdSunny);
-  const MoonIcon = motion(FaMoon);
+  // Use motion.create to avoid the deprecated motion() factory warning
+  const SunIcon = motion.create(IoMdSunny);
+  const MoonIcon = motion.create(FaMoon);
 
   return (
     <motion.button
