@@ -142,11 +142,13 @@ const ViewDish: React.FC<ViewDishProps> = ({ item, onClose, onAddToOrder }) => {
     <motion.div
       ref={panelRef}
       onClick={(e: MouseEvent) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
       variants={display(isDesktop)}
       initial="hidden"
       animate="visible"
       exit="exit"
       className="z-50 fixed right-0 w-full min-h-dvh sm:w-[55%] md:w-[45%] lg:w-[450px] top-[15%] bottom-0 sm:top-0 sm:bottom-0 rounded-t-2xl sm:rounded-tr-none sm:rounded-l-2xl vieworder-bg"
+      style={{ touchAction: "pan-y", overscrollBehavior: "contain" }}
     >
       <div className="flex flex-col h-full">
         {/* Drag handle – touch-drag down to close on mobile */}
