@@ -33,12 +33,10 @@ const Recommended: React.FC = () => {
     // handleSend,
   } = useOrder();
 
-  // stop background scroll when modals are open (desktop only)
+  // stop background scroll/interaction when modals are open
   const isModalOpen = Boolean(selectedItem || showOrder);
   useEffect(() => {
-    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-
-    if (isModalOpen && isDesktop) {
+    if (isModalOpen) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");

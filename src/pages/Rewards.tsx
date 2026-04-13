@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import Header from "../components/layout/Header";
-import { FaArrowRight, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { HiOutlineCalendar } from "react-icons/hi";
 import {
   MotionContainer,
   FadeIn,
   PopIn,
   ScaleButton,
+  fadeIn,
+  staggerContainer,
 } from "../components/animations/motion";
 import { motion } from "framer-motion";
 import Slider from "react-slick";
@@ -14,27 +16,22 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { couponService, type Coupon } from "../services/couponService";
 import CouponDetailModal from "../components/dashboard/CouponDetailModal";
+import { supabase } from "../config/supabaseClient";
+import { LuTicket, LuTicketCheck, LuFlame } from "react-icons/lu";
+import { IoSparkles } from "react-icons/io5";
+import SEO from "../components/SEO";
 
-// We can keep the dummy newRewards but remove the hardcoded rewardsHistory
-
-const newRewards = [
-  {
-    title: "Refer a friend",
-    description: "Share your promo code with a friend",
-  },
-  {
-    title: "2 for 1",
-    description: "Buy 2 dishes and get 1 for free",
-  },
-  {
-    title: "Credit Points",
-    description: "Transform your points in real USD",
-  },
+// ─── Milestone tiers (matches couponService logic) ───
+const MILESTONES = [
+  { orders: 15, percent: 5, label: "5% off" },
+  { orders: 30, percent: 10, label: "10% off" },
+  { orders: 50, percent: 15, label: "15% off" },
 ];
+
+const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 const Rewards: React.FC = () => {
   const sliderRef = useRef<Slider>(null);
-  const heroSliderRef = useRef<Slider>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slidesToShow, setSlidesToShow] = useState(4);
   const [isMounted, setIsMounted] = useState(false);
@@ -42,16 +39,68 @@ const Rewards: React.FC = () => {
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Stats
+  const [activeCoupons, setActiveCoupons] = useState(0);
+  const [usedCoupons, setUsedCoupons] = useState(0);
+  const [weeklyOrders, setWeeklyOrders] = useState(0);
+  const [luckyDay, setLuckyDay] = useState<string | null>(null);
+  const [isLuckyToday, setIsLuckyToday] = useState(false);
+
   useEffect(() => {
-    const fetchCoupons = async () => {
+    const fetchAll = async () => {
       try {
+        // Coupons
         const coupons = await couponService.getUserCoupons();
         setLiveCoupons(coupons);
+
+        const now = new Date();
+        const active = coupons.filter(
+          (c) => !c.isUsed && new Date(c.expiresAt) > now
+        );
+        const used = coupons.filter((c) => c.isUsed);
+        setActiveCoupons(active.length);
+        setUsedCoupons(used.length);
+
+        // Weekly orders count (same Monday-start logic as couponService)
+        const currentDay = now.getDay() || 7;
+        const monday = new Date(now);
+        monday.setHours(0, 0, 0, 0);
+        monday.setDate(monday.getDate() - currentDay + 1);
+
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (user) {
+          const { count } = await supabase
+            .from("eat_easy_orders")
+            .select("id", { count: "exact", head: true })
+            .eq("user_id", user.id)
+            .gte("created_at", monday.toISOString());
+
+          setWeeklyOrders(count ?? 0);
+
+          // Lucky day calculation (same deterministic logic as couponService)
+          const charSum = user.id
+            .split("")
+            .reduce((sum, char) => sum + char.charCodeAt(0), 0);
+          const oneJan = new Date(now.getFullYear(), 0, 1);
+          const weekNum = Math.ceil(
+            ((now.getTime() - oneJan.getTime()) / 86400000 +
+              oneJan.getDay() +
+              1) /
+              7
+          );
+          const luckyDayIndex = (charSum + weekNum) % 7;
+          setLuckyDay(DAY_NAMES[luckyDayIndex]);
+          setIsLuckyToday(now.getDay() === luckyDayIndex);
+        }
       } catch (err) {
-        console.error("Error fetching coupons", err);
+        console.error("Error fetching reward stats", err);
       }
     };
-    fetchCoupons();
+
+    fetchAll();
 
     setIsMounted(true);
     const handleResize = () => {
@@ -67,7 +116,6 @@ const Rewards: React.FC = () => {
     handleResize();
     window.addEventListener("resize", handleResize);
 
-    // Force a resize event after a short delay to fix react-slick width calculation issues
     const timer = setTimeout(() => {
       window.dispatchEvent(new Event("resize"));
     }, 100);
@@ -98,251 +146,280 @@ const Rewards: React.FC = () => {
     beforeChange: (_current: number, next: number) => setCurrentSlide(next),
   };
 
-  const heroSliderSettings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false,
-    centerMode: true,
-    centerPadding: "24px",
-  };
+  // Determine current milestone progress
+  const currentMilestone =
+    MILESTONES.find((m) => weeklyOrders < m.orders) || MILESTONES[MILESTONES.length - 1];
+  const prevThreshold =
+    MILESTONES.indexOf(currentMilestone) > 0
+      ? MILESTONES[MILESTONES.indexOf(currentMilestone) - 1].orders
+      : 0;
+  const progress =
+    weeklyOrders >= currentMilestone.orders
+      ? 100
+      : ((weeklyOrders - prevThreshold) /
+          (currentMilestone.orders - prevThreshold)) *
+        100;
+  const ordersRemaining = Math.max(0, currentMilestone.orders - weeklyOrders);
+  const allMilestonesReached = weeklyOrders >= 50;
 
   return (
     <div className="w-full min-h-dvh">
+      <SEO
+        title="My Rewards | EatEasy"
+        description="Track your rewards, coupons, and milestone progress on EatEasy."
+      />
       <MotionContainer className="transition-all duration-300">
         <Header description="My Rewards" navbarTitle="My Rewards" />
 
         <div className="w-full pt-18 md:pt-30 pb-7 overflow-hidden max-w-[1440px] mx-auto">
-          <div className="md:px-6 lg:px-[42px]">
-            {/* ─── Top Section: Hero + Points ─── */}
-            {/* Mobile-only heading */}
-            <h2 className="md:hidden text-(--neutral-400) dark:text-white font-bold text-[20px] heading-font mb-3 px-6">
-              Use your rewards or new ones
-            </h2>
-
-            {/* ─── Mobile: Center-mode Hero Carousel ─── */}
-            <div className="lg:hidden w-full">
-              <Slider
-                ref={heroSliderRef}
-                {...heroSliderSettings}
-                className="flex items-center justify-center"
+          <div className="px-6 lg:px-[42px]">
+            {/* ─── Stats Row ─── */}
+            <PopIn>
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                animate="show"
+                className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6"
               >
-                {/* Hero Banner Slide */}
-                <div className="px-2">
-                  <div className="overflow-hidden rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) flex items-center justify-between w-full h-[180px] relative">
-                    <div className="relative pl-6 min-w-[148px] space-y-1.5 z-10">
-                      <p className="text-(--neutral-400) dark:text-(--neutral-600) text-xs font-medium">
-                        New client
-                      </p>
-                      <h2 className="heading-font text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[20px] leading-tight max-w-[180px]">
-                        30% Discount for all the menu
-                      </h2>
-                      <ScaleButton className="bg-(--orange-1) text-white font-semibold text-xs px-3 py-2 rounded-2xl cursor-pointer">
-                        Claim reward
-                      </ScaleButton>
-                    </div>
-                    <div className="absolute -right-14 sm:-right-10 top-0 bottom-0 w-[200px] flex items-center justify-center">
-                      <img
-                        src="/images/reward.png"
-                        alt="Reward Badge"
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
+                {/* Active coupons */}
+                <motion.div
+                  variants={fadeIn}
+                  className="bg-white dark:bg-(--neutral-700) rounded-2xl p-5 shadow-sm flex items-center gap-4"
+                >
+                  <div className="w-11 h-11 rounded-xl bg-(--purple-2)/10 flex items-center justify-center shrink-0">
+                    <LuTicket size={22} className="text-(--purple-2)" />
                   </div>
-                </div>
-
-                {/* Points Card Slide */}
-                <div className="px-2">
-                  <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between overflow-hidden w-full h-[180px] relative">
-                    <div className="z-10">
-                      <p className="text-(--neutral-400) dark:text-(--neutral-800) text-[16px] font-semibold">
-                        Your points
-                      </p>
-                      <p className="text-(--orange-1) font-bold text-[40px] leading-none mt-1">
-                        300
-                      </p>
-                    </div>
-                    <div className="absolute -right-10 top-0 bottom-0 w-[160px] flex items-center justify-center">
-                      <img
-                        src="/images/reward-star.png"
-                        alt="Star"
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
+                  <div>
+                    <p className="text-2xl font-bold text-(--neutral-800) dark:text-white heading-font">
+                      {activeCoupons}
+                    </p>
+                    <p className="text-xs font-semibold text-(--neutral-500) dark:text-(--neutral-400)">
+                      Active Coupons
+                    </p>
                   </div>
-                </div>
+                </motion.div>
 
-                {/* 2x More Points Slide */}
-                <div className="px-2">
-                  <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between overflow-hidden w-full h-[180px] relative">
-                    <div className="max-w-[200px] flex flex-col justify-center z-10">
-                      <h3 className="text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[20px] heading-font">
-                        2x more points
-                      </h3>
-                      <p className="text-(--neutral-400) dark:text-(--neutral-600) text-[14px] font-medium mt-1">
-                        Your next <b>5 orders will double</b> your credit points
-                      </p>
-                    </div>
-                    <div className="absolute -right-10 sm:-right-8 top-0 bottom-0 w-[160px] flex items-center justify-center">
-                      <img
-                        src="/images/double-credit.png"
-                        alt="Star"
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
+                {/* Used coupons */}
+                <motion.div
+                  variants={fadeIn}
+                  className="bg-white dark:bg-(--neutral-700) rounded-2xl p-5 shadow-sm flex items-center gap-4"
+                >
+                  <div className="w-11 h-11 rounded-xl bg-(--yellow-1)/10 flex items-center justify-center shrink-0">
+                    <LuTicketCheck size={22} className="text-(--yellow-1)" />
                   </div>
-                </div>
-              </Slider>
-            </div>
-
-            {/* ─── Desktop: Original flex layout ─── */}
-            <div className="hidden lg:grid grid-cols-[2fr_1fr] gap-5 h-full items-stretch">
-              {/* Hero Banner */}
-              <FadeIn className="h-full bg-(--neutral-900) dark:bg-(--neutral-150) rounded-3xl flex items-center justify-between w-full">
-                <div className="relative px-10 space-y-4">
-                  <p className="text-(--neutral-400) dark:text-(--neutral-600) text-sm font-medium">
-                    New client
-                  </p>
-                  <h2 className="heading-font text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[32px] leading-tight max-w-[263px]">
-                    30% Discount for all the menu
-                  </h2>
-                  <ScaleButton className="bg-(--orange-1) text-white font-semibold text-sm px-6 py-4 rounded-2xl cursor-pointer">
-                    Claim reward
-                  </ScaleButton>
-                </div>
-                <div className="max-w-[335px] flex items-center justify-center">
-                  <img
-                    src="/images/reward.png"
-                    alt="Reward Badge"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-              </FadeIn>
-
-              {/* Right Column: Points + 2x */}
-              <div className="flex flex-col gap-5 justify-between w-full h-full">
-                {/* Points Card */}
-                <PopIn className="flex-1">
-                  <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between">
-                    <div>
-                      <p className="text-(--neutral-400) dark:text-(--neutral-800) text-[16px] font-semibold">
-                        Your points
-                      </p>
-                      <p className="text-(--orange-1) font-bold text-[40px] lg:text-[68px] leading-none mt-1">
-                        300
-                      </p>
-                    </div>
-                    <div className="w-[110.94px] h-[110.94px]">
-                      <img
-                        src="/images/reward-star.png"
-                        alt="Star"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
+                  <div>
+                    <p className="text-2xl font-bold text-(--neutral-800) dark:text-white heading-font">
+                      {usedCoupons}
+                    </p>
+                    <p className="text-xs font-semibold text-(--neutral-500) dark:text-(--neutral-400)">
+                      Used Coupons
+                    </p>
                   </div>
-                </PopIn>
+                </motion.div>
 
-                {/* 2x More Points */}
-                <PopIn className="flex-1">
-                  <div className="rounded-2xl bg-(--neutral-900) dark:bg-(--neutral-150) p-5 flex items-center justify-between">
-                    <div className="max-w-[211px] flex flex-col justify-center">
-                      <h3 className="text-(--neutral-400) dark:text-(--neutral-800) font-bold text-[22px] heading-font">
-                        2x more points
-                      </h3>
-                      <p className="text-(--neutral-400) dark:text-(--neutral-600) text-[16px] font-medium mt-1">
-                        Your next <b> 5 orders will double</b> your credit
-                        points
-                      </p>
-                    </div>
-                    {/* Mini chart line */}
-                    <div className="flex items-center justify-between w-[46%]">
-                      <img
-                        src="/images/double-credit.png"
-                        alt="Star"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
+                {/* Weekly orders */}
+                <motion.div
+                  variants={fadeIn}
+                  className="bg-white dark:bg-(--neutral-700) rounded-2xl p-5 shadow-sm flex items-center gap-4"
+                >
+                  <div className="w-11 h-11 rounded-xl bg-(--orange-1)/10 flex items-center justify-center shrink-0">
+                    <LuFlame size={22} className="text-(--orange-1)" />
                   </div>
-                </PopIn>
-              </div>
-            </div>
+                  <div>
+                    <p className="text-2xl font-bold text-(--neutral-800) dark:text-white heading-font">
+                      {weeklyOrders}
+                    </p>
+                    <p className="text-xs font-semibold text-(--neutral-500) dark:text-(--neutral-400)">
+                      Orders This Week
+                    </p>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </PopIn>
 
-            {/* ─── Get New Rewards ─── */}
-            <div className="px-6 md:px-0 mt-8">
+            {/* ─── Milestone Progress + Lucky Day ─── */}
+            <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 mb-8">
+              {/* Milestone progress */}
               <FadeIn>
-                <h3 className="heading-font font-semibold text-base text-(--neutral-800) dark:text-white mb-4">
-                  Get new rewards
-                </h3>
-              </FadeIn>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-stretch gap-4">
-                {newRewards.map((reward, index) => (
-                  <FadeIn key={index}>
-                    <div className="rounded-2xl shadow-md bg-(--neutral-100) dark:bg-(--neutral-700) p-5 flex items-center justify-between cursor-pointer h-full">
-                      <div className="space-y-4 max-w-[272px]">
-                        <h4 className="text-(--neutral-900) dark:text-white font-semibold text-[18px] heading-font">
-                          {reward.title}
-                        </h4>
-                        <p className="text-(--neutral-500) dark:text-(--neutral-300) text-[16px] font-medium">
-                          {reward.description}
+                <div className="bg-white dark:bg-(--neutral-700) rounded-2xl p-6 shadow-sm h-full">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-8 h-8 rounded-lg bg-(--purple-2)/10 flex items-center justify-center">
+                      <IoSparkles size={16} className="text-(--purple-2)" />
+                    </div>
+                    <h3 className="heading-font font-semibold text-base text-(--neutral-800) dark:text-white">
+                      Weekly Milestone
+                    </h3>
+                  </div>
+
+                  {allMilestonesReached ? (
+                    <div className="flex flex-col items-center py-4 text-center">
+                      <span className="text-3xl mb-2">🎉</span>
+                      <p className="font-bold text-(--neutral-800) dark:text-white heading-font">
+                        All milestones reached!
+                      </p>
+                      <p className="text-sm text-(--neutral-500) dark:text-(--neutral-400) mt-1">
+                        You've unlocked every reward this week. Keep it up!
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-end justify-between mb-2">
+                        <div>
+                          <p className="text-sm font-medium text-(--neutral-600) dark:text-(--neutral-300)">
+                            Next reward at{" "}
+                            <span className="font-bold text-(--purple-2)">
+                              {currentMilestone.orders} orders
+                            </span>
+                          </p>
+                          <p className="text-xs text-(--neutral-400) mt-0.5">
+                            {ordersRemaining} more order{ordersRemaining !== 1 ? "s" : ""} to unlock{" "}
+                            <span className="font-semibold text-(--orange-1)">
+                              {currentMilestone.label}
+                            </span>
+                          </p>
+                        </div>
+                        <p className="text-sm font-bold text-(--purple-2)">
+                          {weeklyOrders}/{currentMilestone.orders}
                         </p>
                       </div>
-                      <motion.div
-                        whileTap={{ scale: 0.9 }}
-                        className="flex items-center justify-center"
-                      >
-                        <FaArrowRight className="text-(--yellow-1) w-5 h-5" />
-                      </motion.div>
+
+                      {/* Progress bar */}
+                      <div className="w-full h-3 bg-(--neutral-100) dark:bg-(--neutral-600) rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${Math.min(progress, 100)}%` }}
+                          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+                          className="h-full rounded-full"
+                          style={{
+                            background:
+                              "linear-gradient(90deg, var(--purple-2), var(--orange-1))",
+                          }}
+                        />
+                      </div>
+
+                      {/* Milestone dots */}
+                      <div className="flex items-center justify-between mt-3 px-1">
+                        {MILESTONES.map((m) => (
+                          <div
+                            key={m.orders}
+                            className="flex flex-col items-center gap-1"
+                          >
+                            <div
+                              className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
+                                weeklyOrders >= m.orders
+                                  ? "bg-(--purple-2) text-white"
+                                  : "bg-(--neutral-150) dark:bg-(--neutral-600) text-(--neutral-400)"
+                              }`}
+                            >
+                              {weeklyOrders >= m.orders ? "✓" : m.orders}
+                            </div>
+                            <span
+                              className={`text-[10px] font-semibold ${
+                                weeklyOrders >= m.orders
+                                  ? "text-(--purple-2)"
+                                  : "text-(--neutral-400)"
+                              }`}
+                            >
+                              {m.label}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </FadeIn>
+
+              {/* Lucky day card */}
+              <FadeIn>
+                <div className="bg-white dark:bg-(--neutral-700) rounded-2xl p-6 shadow-sm h-full flex flex-col">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-8 h-8 rounded-lg bg-(--yellow-1)/10 flex items-center justify-center">
+                      <span className="text-base">🍀</span>
                     </div>
-                  </FadeIn>
-                ))}
-              </div>
+                    <h3 className="heading-font font-semibold text-base text-(--neutral-800) dark:text-white">
+                      Lucky Day
+                    </h3>
+                  </div>
+
+                  <div className="flex-1 flex flex-col justify-center">
+                    {luckyDay ? (
+                      <>
+                        <p className="text-sm text-(--neutral-500) dark:text-(--neutral-400) mb-2">
+                          Your lucky day this week is
+                        </p>
+                        <p className="text-2xl font-bold heading-font text-(--neutral-800) dark:text-white">
+                          {luckyDay}
+                          {isLuckyToday && (
+                            <span className="ml-2 text-base">🎯</span>
+                          )}
+                        </p>
+                        {isLuckyToday ? (
+                          <p className="text-xs font-medium text-(--orange-1) mt-2">
+                            That's today! Order 3+ items for a free drink coupon 🥤
+                          </p>
+                        ) : (
+                          <p className="text-xs text-(--neutral-400) mt-2">
+                            Order 3+ items on {luckyDay} for a chance at a free drink!
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <div className="flex items-center gap-2 text-(--neutral-400)">
+                        <div className="w-4 h-4 border-2 border-(--neutral-300) border-t-transparent rounded-full animate-spin" />
+                        <span className="text-sm">Loading...</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </FadeIn>
             </div>
           </div>
 
-          {/* ─── Rewards History ─── */}
-          <div className="mt-8">
+          {/* ─── Coupons ─── */}
+          <div>
             <FadeIn>
               <div className="px-6 lg:px-[42px] flex items-center justify-between mb-4">
                 <h3 className="heading-font font-semibold text-base text-(--neutral-800) dark:text-white">
-                  Rewards History
+                  Your Coupons
                 </h3>
-                <div className="flex gap-2">
-                  <ScaleButton
-                    onClick={handlePrev}
-                    className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200 ${
-                      currentSlide === 0
-                        ? "bg-(--neutral-200) dark:bg-(--neutral-700) text-(--neutral-400)"
-                        : "text-white bg-(--yellow-2)"
-                    }`}
-                  >
-                    <FaChevronLeft className="text-xs" />
-                  </ScaleButton>
-                  <ScaleButton
-                    onClick={handleNext}
-                    className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200 ${
-                      currentSlide >= maxStart
-                        ? "bg-(--neutral-200) dark:bg-(--neutral-700) text-(--neutral-400)"
-                        : " text-white bg-(--yellow-2)"
-                    }`}
-                  >
-                    <FaChevronRight className="text-xs" />
-                  </ScaleButton>
-                </div>
+                {liveCoupons.length > 0 && (
+                  <div className="flex gap-2">
+                    <ScaleButton
+                      onClick={handlePrev}
+                      className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200 ${
+                        currentSlide === 0
+                          ? "bg-(--neutral-200) dark:bg-(--neutral-700) text-(--neutral-400)"
+                          : "text-white bg-(--yellow-2)"
+                      }`}
+                    >
+                      <FaChevronLeft className="text-xs" />
+                    </ScaleButton>
+                    <ScaleButton
+                      onClick={handleNext}
+                      className={`w-[36px] h-[36px] rounded-full flex items-center justify-center cursor-pointer transition-colors duration-200 ${
+                        currentSlide >= maxStart
+                          ? "bg-(--neutral-200) dark:bg-(--neutral-700) text-(--neutral-400)"
+                          : " text-white bg-(--yellow-2)"
+                      }`}
+                    >
+                      <FaChevronRight className="text-xs" />
+                    </ScaleButton>
+                  </div>
+                )}
               </div>
             </FadeIn>
 
             <div className="w-full mb-8">
               {isMounted && (
-                <div className="">
+                <div>
                   {liveCoupons.length === 0 ? (
-                    <FadeIn className="flex flex-col items-center justify-center py-16 px-6 text-center bg-(--neutral-50) dark:bg-(--neutral-800)/50 rounded-3xl border border-(--neutral-200) dark:border-(--neutral-700) mx-6 sm:mx-0">
+                    <FadeIn className="flex flex-col items-center justify-center py-16 px-6 text-center bg-(--neutral-50) dark:bg-(--neutral-800)/50 rounded-3xl border border-(--neutral-200) dark:border-(--neutral-700) mx-6 lg:mx-[42px]">
                       <div className="w-20 h-20 bg-white dark:bg-(--neutral-700) rounded-full flex items-center justify-center mb-5 shadow-sm">
                         <span className="text-3xl">🎁</span>
                       </div>
                       <h3 className="text-[22px] font-bold text-(--neutral-900) dark:text-white mb-2 heading-font">
-                        No rewards just yet
+                        No coupons yet
                       </h3>
                       <p className="text-(--neutral-500) dark:text-(--neutral-400) text-base max-w-sm">
                         Keep ordering your favorite meals to unlock special
@@ -350,7 +427,6 @@ const Rewards: React.FC = () => {
                       </p>
                     </FadeIn>
                   ) : (
-                    /* Negative margin to offset item padding */
                     <Slider
                       ref={sliderRef}
                       {...sliderSettings}
@@ -401,7 +477,7 @@ const Rewards: React.FC = () => {
                                   <HiOutlineCalendar className="text-(--orange-1) text-[16px]" />
                                   <span className="text-(--neutral-500) dark:text-(--neutral-300) text-[16px] font-medium">
                                     {new Date(
-                                      coupon.expiresAt,
+                                      coupon.expiresAt
                                     ).toLocaleDateString()}
                                   </span>
                                 </div>
@@ -429,4 +505,3 @@ const Rewards: React.FC = () => {
 };
 
 export default Rewards;
-

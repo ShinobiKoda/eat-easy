@@ -1,6 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Profile from "/images/profile-img.png";
 import { IoIosLogOut } from "react-icons/io";
 import { PiMedalThin } from "react-icons/pi";
 import { MdChevronRight } from "react-icons/md";
@@ -26,6 +25,26 @@ import { useAuth } from "../../context/AuthContext";
 import { useOrder } from "../../hooks/useOrder";
 import { useNavigate } from "react-router-dom";
 
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+const avatarGradients = [
+  "linear-gradient(135deg, #615793, #ff7b2c)",
+  "linear-gradient(135deg, #32324d, #615793)",
+  "linear-gradient(135deg, #ffb01d, #ff7b2c)",
+  "linear-gradient(135deg, #615793, #ffb01d)",
+];
+
+function pickGradient(name: string) {
+  let code = 0;
+  for (let i = 0; i < name.length; i++) code += name.charCodeAt(i);
+  return avatarGradients[code % avatarGradients.length];
+}
+
 const Sidebar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +69,9 @@ const Sidebar: React.FC = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [username, setUsername] = useState<string>("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [initials, setInitials] = useState<string>("?");
+  const [avatarGradient, setAvatarGradient] = useState<string>(avatarGradients[0]);
   const [isAdmin, setIsAdmin] = useState(false);
   const { orderItems, setShowOrder } = useOrder();
   const location = useLocation();
@@ -75,8 +97,11 @@ const Sidebar: React.FC = () => {
     const fetchUser = async () => {
       if (user) {
         const meta = user.user_metadata as any;
-        let uname = meta?.username || user.email?.split("@")[0] || "User";
+        let uname = meta?.full_name || meta?.username || user.email?.split("@")[0] || "User";
         setUsername(uname);
+        setAvatarUrl(meta?.avatar_url || null);
+        setInitials(getInitials(uname));
+        setAvatarGradient(pickGradient(uname));
 
         // Also check admin status
         try {
@@ -227,12 +252,23 @@ const Sidebar: React.FC = () => {
                 !effectiveIsOpen ? "flex-row md:flex-col items-center" : ""
               }`}
             >
-              <div className="shrink-0 flex items-center justify-center">
-                <img
-                  src={Profile}
-                  className="w-[68px] h-[68px] rounded-full object-cover"
-                  alt="Profile Picture Image"
-                />
+              <div className="shrink-0 flex items-center justify-center relative w-[68px] h-[68px]">
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    className="w-[68px] h-[68px] rounded-full object-cover border-2 border-white/10 shadow-md"
+                    alt="Profile Picture Image"
+                  />
+                ) : (
+                  <div
+                    className="w-full h-full rounded-full border-2 border-white/10 shadow-md flex items-center justify-center select-none"
+                    style={{ background: avatarGradient }}
+                  >
+                    <span className="text-white font-bold text-xl heading-font tracking-wide">
+                      {initials}
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div className="text-white space-y-1.5 w-full">

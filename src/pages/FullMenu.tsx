@@ -4,12 +4,12 @@ import { FaFilter } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
 import { motion } from "framer-motion";
 import { AnimatePresence } from "motion/react";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 
 import SkeletonCard from "../components/SkeletonCard";
 import ProductCarousel from "../components/ProductCarousel";
 import Filters from "../components/Filters";
 import ViewDish from "../components/dashboard/ViewDish";
-// import ViewOrder from "../dashboard/ViewOrder";
 import {
   productGridStagger,
   productCardFade,
@@ -20,6 +20,8 @@ import type { PropType } from "../types";
 import { useRestaurant } from "../context/RestaurantContext";
 import StarHalf from "/images/star-half-icon.png";
 import StarFull from "/images/star.svg";
+
+const ITEMS_PER_PAGE = 12;
 
 const FullMenu: React.FC = () => {
   const { selectedRestaurant } = useRestaurant();
@@ -33,7 +35,7 @@ const FullMenu: React.FC = () => {
     } else {
       const handler = setTimeout(() => {
         setDebouncedSearch(search);
-      }, 500); // 500ms debounce
+      }, 500);
       return () => clearTimeout(handler);
     }
   }, [search]);
@@ -49,11 +51,13 @@ const FullMenu: React.FC = () => {
     "Eat",
   );
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+
   // All menu items from Supabase
   const [allItems, setAllItems] = useState<(PropType & { category: string })[]>(
     [],
   );
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     async function fetchMenu() {
@@ -77,13 +81,10 @@ const FullMenu: React.FC = () => {
     priceRange: [number, number];
   }>({ productTypes: [], ratings: [], priceRange: [0, 30] });
 
-  // Simple transition flag to show skeletons during category/search/filter changes
+  // Reset to page 1 whenever filters, search, or category change
   useEffect(() => {
-    if (loading) return;
-    setIsTransitioning(true);
-    const timeout = setTimeout(() => setIsTransitioning(false), 300);
-    return () => clearTimeout(timeout);
-  }, [mainCategory, debouncedSearch, appliedFilters, loading]);
+    setCurrentPage(1);
+  }, [mainCategory, debouncedSearch, appliedFilters]);
 
   // Filter dishes based on selected tag, search input, and applied filters
   const filteredDishes = useMemo(() => {
@@ -121,25 +122,25 @@ const FullMenu: React.FC = () => {
     return dishes;
   }, [mainCategory, debouncedSearch, appliedFilters, allItems]);
 
+  // Pagination derived values
+  const totalPages = Math.max(1, Math.ceil(filteredDishes.length / ITEMS_PER_PAGE));
+  const paginatedDishes = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredDishes.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredDishes, currentPage]);
+
   // Use shared order logic
   const {
     selectedItem,
     setSelectedItem,
-    // orderItems,
-    // setOrderItems,
     showOrder,
-    // setShowOrder,
     addToOrder,
-    // removeOrder,
-    // handleSend,
   } = useOrder();
 
-  // stop background scroll effect when any of this is open (desktop only)
+  // stop background scroll/interaction when any overlay is open
   const isModalOpen = Boolean(selectedItem || showOrder || filterButton);
   useEffect(() => {
-    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-
-    if (isModalOpen && isDesktop) {
+    if (isModalOpen) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
@@ -149,6 +150,12 @@ const FullMenu: React.FC = () => {
       document.body.classList.remove("overflow-hidden");
     };
   }, [isModalOpen]);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    // Scroll the dishes section into view
+    document.getElementById("dishes-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="w-full min-h-dvh">
@@ -210,14 +217,21 @@ const FullMenu: React.FC = () => {
           </div>
 
           {/* product/dishes listing section */}
-          <div className="px-6 py-4 md:py-8 md:px-10.5 flex flex-col gap-6">
-            <h1 className="text-[18px] text-(--neutral-600) dark:text-(--neutral-200) font-semibold">
-              {mainCategory}
-            </h1>
+          <div id="dishes-section" className="px-6 py-4 md:py-8 md:px-10.5 flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+              <h1 className="text-[18px] text-(--neutral-600) dark:text-(--neutral-200) font-semibold">
+                {mainCategory}
+              </h1>
+              {!loading && filteredDishes.length > 0 && (
+                <p className="text-sm font-medium text-(--neutral-400)">
+                  {filteredDishes.length} dish{filteredDishes.length !== 1 ? "es" : ""}
+                </p>
+              )}
+            </div>
 
-            {loading || isTransitioning ? (
+            {loading ? (
               <div className="items-center gap-[30px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-                {Array.from({ length: 15 }).map((_, index) => (
+                {Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
                   <div
                     key={index}
                     className="bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative"
@@ -227,49 +241,106 @@ const FullMenu: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <motion.div
-                key={`${mainCategory}-${debouncedSearch}-${JSON.stringify(appliedFilters)}-${allItems.length}`}
-                className="items-center gap-[30px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5"
-                variants={productGridStagger}
-                initial="hidden"
-                animate="show"
-              >
-                {filteredDishes.map((dish) => (
-                  <motion.div
-                    key={dish.id}
-                    whileTap={{ scale: 0.98 }}
-                    variants={productCardFade}
-                    className="bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative cursor-pointer"
-                    onClick={() => setSelectedItem(dish)}
-                  >
-                    <div className="rounded-[50%] mb-2 max-w-[100px] h-[100px]">
-                      <img
-                        src={dish.image}
-                        className="rounded-[50%] w-full h-full object-cover"
-                        alt=""
-                      />
-                    </div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`${mainCategory}-${debouncedSearch}-${JSON.stringify(appliedFilters)}-${currentPage}`}
+                  className="items-center gap-[30px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5"
+                  variants={productGridStagger}
+                  initial="hidden"
+                  animate="show"
+                  exit="exit"
+                >
+                  {paginatedDishes.map((dish) => (
+                    <motion.div
+                      key={dish.id}
+                      whileTap={{ scale: 0.98 }}
+                      variants={productCardFade}
+                      className="bg-white dark:bg-(--neutral-700) py-3 px-4 h-full w-full rounded-2xl gap-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.10)] flex flex-col items-center relative cursor-pointer"
+                      onClick={() => setSelectedItem(dish)}
+                    >
+                      <div className="rounded-[50%] mb-2 max-w-[100px] h-[100px]">
+                        <img
+                          src={dish.image}
+                          className="rounded-[50%] w-full h-full object-cover"
+                          alt=""
+                        />
+                      </div>
 
-                    <p className="text-[14px] lg:text-[18px] text-center font-semibold text-(--neutral-800) dark:text-white">
-                      {dish.name}
-                    </p>
-
-                    <div className="space-x-1 py-1 px-1.5 flex items-center absolute top-2 right-2 bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
-                      {dish.rating < 4.5 ? (
-                        <img src={StarHalf} className="w-4 h-4" alt="" />
-                      ) : (
-                        <img src={StarFull} className="w-4 h-4" alt="" />
-                      )}
-                      <p className="text-[11px] md:text-[14px]">
-                        {dish.rating.toFixed(1)}
+                      <p className="text-[14px] lg:text-[18px] text-center font-semibold text-(--neutral-800) dark:text-white">
+                        {dish.name}
                       </p>
-                    </div>
 
-                    <p className="text-(--orange-1) text-[14px] lg:text-[18px] font-extrabold">
-                      ${dish.price.toFixed(2)}
-                    </p>
-                  </motion.div>
-                ))}
+                      <div className="space-x-1 py-1 px-1.5 flex items-center absolute top-2 right-2 bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.10)]">
+                        {dish.rating < 4.5 ? (
+                          <img src={StarHalf} className="w-4 h-4" alt="" />
+                        ) : (
+                          <img src={StarFull} className="w-4 h-4" alt="" />
+                        )}
+                        <p className="text-[11px] md:text-[14px]">
+                          {dish.rating.toFixed(1)}
+                        </p>
+                      </div>
+
+                      <p className="text-(--orange-1) text-[14px] lg:text-[18px] font-extrabold">
+                        ${dish.price.toFixed(2)}
+                      </p>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            )}
+
+            {/* Pagination */}
+            {!loading && totalPages > 1 && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="flex items-center justify-center gap-2 pt-4 pb-2"
+              >
+                {/* Previous arrow */}
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer transition-colors bg-white dark:bg-(--neutral-700) shadow-sm border border-(--neutral-150) dark:border-(--neutral-600) disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <IoChevronBack
+                    size={16}
+                    className="text-(--neutral-600) dark:text-(--neutral-200)"
+                  />
+                </motion.button>
+
+                {/* Page numbers */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
+                    <motion.button
+                      key={page}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => goToPage(page)}
+                      className={`w-10 h-10 rounded-xl text-sm font-semibold cursor-pointer transition-all shadow-sm flex items-center justify-center ${
+                        currentPage === page
+                          ? "bg-(--purple-2) text-white shadow-md"
+                          : "bg-white dark:bg-(--neutral-700) text-(--neutral-600) dark:text-(--neutral-200) border border-(--neutral-150) dark:border-(--neutral-600) hover:bg-(--neutral-100) dark:hover:bg-(--neutral-600)"
+                      }`}
+                    >
+                      {page}
+                    </motion.button>
+                  ),
+                )}
+
+                {/* Next arrow */}
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer transition-colors bg-white dark:bg-(--neutral-700) shadow-sm border border-(--neutral-150) dark:border-(--neutral-600) disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <IoChevronForward
+                    size={16}
+                    className="text-(--neutral-600) dark:text-(--neutral-200)"
+                  />
+                </motion.button>
               </motion.div>
             )}
           </div>
@@ -319,4 +390,3 @@ const FullMenu: React.FC = () => {
 };
 
 export default FullMenu;
-

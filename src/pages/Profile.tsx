@@ -16,11 +16,11 @@ import { ClipLoader } from "react-spinners";
 import { IoCameraOutline, IoCheckmark, IoClose } from "react-icons/io5";
 import { MdOutlineEdit } from "react-icons/md";
 import { RiShieldUserLine } from "react-icons/ri";
-import { LuMail, LuUser, LuPhone, LuCalendar, LuMapPin } from "react-icons/lu";
+import { LuMail, LuUser, LuPhone, LuCalendar, LuMapPin, LuTicket } from "react-icons/lu";
 import { HiOutlineSparkles } from "react-icons/hi2";
-import { PiMedalThin } from "react-icons/pi";
 import { MdOutlineHistory } from "react-icons/md";
-
+import { orderService } from "../services/orderService";
+import { couponService } from "../services/couponService";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -64,7 +64,9 @@ const StatCard = ({
       variants={fadeIn}
       className="flex-1 min-w-[120px] bg-white dark:bg-(--neutral-700) rounded-2xl p-4 shadow-sm flex flex-col gap-3"
     >
-      <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center`}>
+      <div
+        className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center`}
+      >
         <span className={iconColor}>{icon}</span>
       </div>
       <div>
@@ -78,10 +80,6 @@ const StatCard = ({
     </motion.div>
   );
 };
-
-// ─── Quick Link ───────────────────────────────────────────────────────────────
-
-
 
 // ─── Editable Field ───────────────────────────────────────────────────────────
 
@@ -203,7 +201,10 @@ const EditableField = ({
                   onClick={handleCancel}
                   className="w-8 h-8 rounded-lg bg-(--neutral-100) dark:bg-(--neutral-600) flex items-center justify-center cursor-pointer"
                 >
-                  <IoClose size={16} className="text-(--neutral-500) dark:text-(--neutral-300)" />
+                  <IoClose
+                    size={16}
+                    className="text-(--neutral-500) dark:text-(--neutral-300)"
+                  />
                 </motion.button>
               </motion.div>
             ) : (
@@ -217,7 +218,10 @@ const EditableField = ({
                 onClick={() => setEditing(true)}
                 className="w-8 h-8 rounded-lg bg-(--neutral-100) dark:bg-(--neutral-600) flex items-center justify-center cursor-pointer"
               >
-                <MdOutlineEdit size={16} className="text-(--neutral-500) dark:text-(--neutral-300)" />
+                <MdOutlineEdit
+                  size={16}
+                  className="text-(--neutral-500) dark:text-(--neutral-300)"
+                />
               </motion.button>
             )}
           </AnimatePresence>
@@ -257,7 +261,44 @@ const Profile: React.FC = () => {
   const [saving, setSaving] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
   const [avatarLoading, setAvatarLoading] = useState(false);
+  const [passwordResetStatus, setPasswordResetStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [passwordResetMessage, setPasswordResetMessage] = useState<
+    string | null
+  >(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // ─── Live stats ─────────────────────────────────────────────────────────
+  const [totalOrders, setTotalOrders] = useState<number | null>(null);
+  const [totalCoupons, setTotalCoupons] = useState<number | null>(null);
+  const [aiAssists, setAiAssists] = useState<number | null>(null);
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const [orders, coupons] = await Promise.all([
+          orderService.getUserOrders(),
+          couponService.getUserCoupons(),
+        ]);
+        setTotalOrders(orders.length);
+        setTotalCoupons(coupons.length);
+
+        // AI assists = recommendation count
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (authUser) {
+          const { count } = await supabase
+            .from("recommendations")
+            .select("id", { count: "exact", head: true })
+            .eq("user_id", authUser.id);
+          setAiAssists(count ?? 0);
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile stats:", err);
+      }
+    }
+    fetchStats();
+  }, []);
 
   const meta = (user?.user_metadata as any) || {};
   const provider = user?.app_metadata?.provider || "email";
@@ -365,6 +406,24 @@ const Profile: React.FC = () => {
     }
   };
 
+  const handleChangePassword = async () => {
+    if (!email) return;
+    setPasswordResetStatus("loading");
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      setPasswordResetStatus("success");
+      setTimeout(() => setPasswordResetStatus("idle"), 5000);
+    } catch (err: any) {
+      console.error("Password reset error:", err);
+      setPasswordResetStatus("error");
+      setPasswordResetMessage(err?.message || "Failed to send reset email.");
+      setTimeout(() => setPasswordResetStatus("idle"), 5000);
+    }
+  };
+
   return (
     <div className="w-full min-h-dvh">
       <SEO
@@ -375,7 +434,6 @@ const Profile: React.FC = () => {
         <Header title="Account" description="My Profile" />
 
         <div className="w-full pt-[72px] md:pt-[88px] lg:pt-[100px] px-5 lg:px-[42px] pb-16 max-w-[860px] mx-auto lg:max-w-none">
-
           {/* ── Hero banner + avatar ───────────────────────────────── */}
           <SlideIn direction="down">
             <div className="relative w-full rounded-3xl overflow-hidden mb-8 mt-4 shadow-sm">
@@ -388,7 +446,8 @@ const Profile: React.FC = () => {
                 }}
               />
               {/* Decorative dots */}
-              <div className="absolute inset-0 opacity-20"
+              <div
+                className="absolute inset-0 opacity-20"
                 style={{
                   backgroundImage:
                     "radial-gradient(circle, #fff 1px, transparent 1px)",
@@ -479,10 +538,8 @@ const Profile: React.FC = () => {
           </SlideIn>
 
           <div className="lg:grid lg:grid-cols-[1fr_340px] gap-6 items-start">
-
             {/* ── Left column ────────────────────────────────────────── */}
             <div className="space-y-6">
-
               {/* Stats row */}
               <PopIn>
                 <motion.div
@@ -494,19 +551,19 @@ const Profile: React.FC = () => {
                   <StatCard
                     icon={<MdOutlineHistory size={20} />}
                     label="Total Orders"
-                    value="—"
+                    value={totalOrders ?? "—"}
                     accent="purple"
                   />
                   <StatCard
-                    icon={<PiMedalThin size={20} />}
-                    label="Reward Points"
-                    value="—"
+                    icon={<LuTicket size={20} />}
+                    label="Total Coupons"
+                    value={totalCoupons ?? "—"}
                     accent="yellow"
                   />
                   <StatCard
                     icon={<HiOutlineSparkles size={20} />}
                     label="AI Assists"
-                    value="—"
+                    value={aiAssists ?? "—"}
                     accent="orange"
                   />
                 </motion.div>
@@ -536,28 +593,12 @@ const Profile: React.FC = () => {
                 </div>
               </FadeIn>
 
-              {/* Save toast */}
-              <AnimatePresence>
-                {saveSuccess && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-(--neutral-900) dark:bg-white text-white dark:text-(--neutral-800) px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-sm font-semibold"
-                  >
-                    <span className="w-6 h-6 rounded-full bg-(--yellow-1) flex items-center justify-center shrink-0">
-                      <IoCheckmark size={14} className="text-white" />
-                    </span>
-                    Profile updated successfully!
-                  </motion.div>
-                )}
-              </AnimatePresence>
+
             </div>
 
             {/* ── Right column ───────────────────────────────────────── */}
             <div className="space-y-6">
-
-
+              {/* Quick navigation */}
 
               {/* Account security */}
               <FadeIn>
@@ -568,7 +609,10 @@ const Profile: React.FC = () => {
                   <div className="bg-white dark:bg-(--neutral-700) rounded-2xl p-5 shadow-sm space-y-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-(--purple-2)/10 flex items-center justify-center">
-                        <RiShieldUserLine size={20} className="text-(--purple-2)" />
+                        <RiShieldUserLine
+                          size={20}
+                          className="text-(--purple-2)"
+                        />
                       </div>
                       <div>
                         <p className="font-semibold text-sm text-(--neutral-800) dark:text-white">
@@ -586,14 +630,18 @@ const Profile: React.FC = () => {
                       <motion.button
                         whileHover={{ scale: 1.015 }}
                         whileTap={{ scale: 0.985 }}
-                        onClick={() =>
-                          supabase.auth.resetPasswordForEmail(email, {
-                            redirectTo: `${window.location.origin}/reset-password`,
-                          })
-                        }
-                        className="w-full py-3 rounded-xl border border-(--neutral-200) dark:border-(--neutral-600) text-sm font-semibold text-(--neutral-700) dark:text-white hover:bg-(--neutral-100) dark:hover:bg-(--neutral-600) transition-colors cursor-pointer"
+                        onClick={handleChangePassword}
+                        disabled={passwordResetStatus === "loading"}
+                        className="w-full py-3 rounded-xl border border-(--neutral-200) dark:border-(--neutral-600) text-sm font-semibold text-(--neutral-700) dark:text-white hover:bg-(--neutral-100) dark:hover:bg-(--neutral-600) transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                       >
-                        Change Password
+                        {passwordResetStatus === "loading" ? (
+                          <>
+                            <ClipLoader color="currentColor" size={16} />
+                            <span>Sending...</span>
+                          </>
+                        ) : (
+                          "Change Password"
+                        )}
                       </motion.button>
                     )}
 
@@ -611,9 +659,132 @@ const Profile: React.FC = () => {
           </div>
         </div>
       </MotionContainer>
+
+      {/* ── Toasts (outside layout flow to prevent shifts) ──────── */}
+      <AnimatePresence>
+        {saveSuccess && (
+          <motion.div
+            key="save-toast"
+            initial={{ y: -120, opacity: 0, scale: 0.9 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: -120, opacity: 0, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-9999 w-[92%] max-w-[420px]"
+          >
+            <div
+              className="flex items-center gap-4 px-5 py-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(34,197,94,0.15) 0%, rgba(16,185,129,0.08) 100%)",
+                border: "1px solid rgba(34,197,94,0.3)",
+                backdropFilter: "blur(20px)",
+              }}
+            >
+              <motion.div
+                initial={{ rotate: -30, scale: 0 }}
+                animate={{ rotate: 0, scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 15, delay: 0.15 }}
+                className="shrink-0"
+              >
+                <div className="w-11 h-11 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                  <IoCheckmark size={22} className="text-emerald-500" />
+                </div>
+              </motion.div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-[15px] text-emerald-600 dark:text-emerald-400">
+                  Profile Updated
+                </p>
+                <p className="text-[13px] text-gray-600 dark:text-gray-300 mt-0.5">
+                  Your changes have been saved successfully.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {passwordResetStatus === "success" && (
+          <motion.div
+            key="pw-success-toast"
+            initial={{ y: -120, opacity: 0, scale: 0.9 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: -120, opacity: 0, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-9999 w-[92%] max-w-[420px]"
+          >
+            <div
+              className="flex items-center gap-4 px-5 py-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(34,197,94,0.15) 0%, rgba(16,185,129,0.08) 100%)",
+                border: "1px solid rgba(34,197,94,0.3)",
+                backdropFilter: "blur(20px)",
+              }}
+            >
+              <motion.div
+                initial={{ rotate: -30, scale: 0 }}
+                animate={{ rotate: 0, scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 15, delay: 0.15 }}
+                className="shrink-0"
+              >
+                <div className="w-11 h-11 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                  <IoCheckmark size={22} className="text-emerald-500" />
+                </div>
+              </motion.div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-[15px] text-emerald-600 dark:text-emerald-400">
+                  Reset Email Sent! ✉️
+                </p>
+                <p className="text-[13px] text-gray-600 dark:text-gray-300 mt-0.5">
+                  Check your inbox for the password reset link.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+        {passwordResetStatus === "error" && (
+          <motion.div
+            key="pw-error-toast"
+            initial={{ y: -120, opacity: 0, scale: 0.9 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: -120, opacity: 0, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-9999 w-[92%] max-w-[420px]"
+          >
+            <div
+              className="flex items-center gap-4 px-5 py-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.18)] backdrop-blur-xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(220,38,38,0.08) 100%)",
+                border: "1px solid rgba(239,68,68,0.3)",
+                backdropFilter: "blur(20px)",
+              }}
+            >
+              <motion.div
+                initial={{ rotate: -30, scale: 0 }}
+                animate={{ rotate: 0, scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 15, delay: 0.15 }}
+                className="shrink-0"
+              >
+                <div className="w-11 h-11 rounded-full bg-red-500/20 flex items-center justify-center">
+                  <IoClose size={22} className="text-red-500" />
+                </div>
+              </motion.div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-[15px] text-red-600 dark:text-red-400">
+                  Reset Failed
+                </p>
+                <p className="text-[13px] text-gray-600 dark:text-gray-300 mt-0.5">
+                  {passwordResetMessage || "Failed to send reset email."}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 export default Profile;
-
